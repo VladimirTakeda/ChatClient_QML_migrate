@@ -16,10 +16,13 @@ Rectangle{
             Layout.alignment: Qt.AlignTop
         }
         StackView{
+            id : stackview_id
             Layout.fillWidth: true
             Layout.fillHeight: true
+            //TODO: remove animation
+            //replaceEnter: StackView.Immediate
+            //replaceExit: StackView.Immediate
             initialItem: ContactsPanel{
-                anchors.fill: parent
             }
         }
     }

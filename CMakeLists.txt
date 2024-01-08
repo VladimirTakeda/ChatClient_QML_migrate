@@ -57,7 +57,7 @@ qt_add_qml_module(appChatClient_QML
         qml/MainWidgetInternal/RightSideBar/ChatHistory.qml
         qml/MainWidgetInternal/MidSideBar/SearchPanel/SearchPanel.qml
         qml/MainWidgetInternal/MidSideBar/StackPanels/ContactsPanel.qml
-        qml/MainWidgetInternal/MidSideBar/StackPanels/RearchResultPanel.qml
+        qml/MainWidgetInternal/MidSideBar/StackPanels/SearchResultPanel.qml
         qml/MainWidgetInternal/RightSideBar/ChatHistoryInternal/TopToolPanel.qml
         qml/MainWidgetInternal/RightSideBar/ChatHistoryInternal/BottomToolPanel.qml
         qml/MainWidgetInternal/RightSideBar/ChatHistoryInternal/ChatDisplayPanel.qml
@@ -65,6 +65,7 @@ qt_add_qml_module(appChatClient_QML
         icons/blank.jpg
     SOURCES
         src/model/contactsmodel.h src/model/contactsmodel.cpp
+        src/model/searchmodel.h src/model/searchmodel.cpp
 )
 
 # add_subdirectory(qml/MainWidgetInternal/LeftSideBar)
