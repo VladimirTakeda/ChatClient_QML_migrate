@@ -4,9 +4,6 @@ import QtQuick.Layouts
 
 
 ColumnLayout{
-    // anchors.fill: parent
-    // Layout.fillWidth: true
-
     ListView{
         Layout.fillWidth: true
         Layout.fillHeight: true
