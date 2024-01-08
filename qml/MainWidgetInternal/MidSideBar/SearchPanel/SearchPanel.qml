@@ -1,0 +1,41 @@
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+
+
+Rectangle{
+    id: searchPanel_id
+    width: parent.width
+    height: 50
+    color: "grey"
+    Rectangle{
+        readonly property int margineSize: 15
+
+        width: parent.width - margineSize
+        height: parent.height - margineSize
+        anchors.centerIn: parent
+        radius: 15
+        color: "white"
+
+        TextInput{
+            id: inputText_id
+            anchors.fill: parent
+            verticalAlignment: TextInput.AlignVCenter
+            leftPadding: 10
+            onTextEdited: {
+
+            }
+
+        }
+        Text {
+            id: customPlaceholder_id
+            anchors.fill: inputText_id
+            anchors.left: inputText_id.left
+            anchors.leftMargin: 10
+            verticalAlignment: Text.AlignVCenter
+            text: "Search"
+            color: inputText_id.cursorVisible ? "lightgray" : "gray"
+            visible: !inputText_id.text.length
+        }
+    }
+}
