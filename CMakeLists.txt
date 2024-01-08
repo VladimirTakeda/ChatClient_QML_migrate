@@ -46,7 +46,7 @@ qt_add_qml_module(appChatClient_QML
     URI ChatClient_QML
     VERSION 1.0
     RESOURCE_PREFIX
-        /chatClient.com/imports
+        /ChatClient
     QML_FILES
         Main.qml
         qml/StartWidget.qml
@@ -62,7 +62,9 @@ qt_add_qml_module(appChatClient_QML
         qml/MainWidgetInternal/RightSideBar/ChatHistoryInternal/BottomToolPanel.qml
         qml/MainWidgetInternal/RightSideBar/ChatHistoryInternal/ChatDisplayPanel.qml
     RESOURCES
-    SOURCES src/model/contactsmodel.h src/model/contactsmodel.cpp
+        icons/blank.jpg
+    SOURCES
+        src/model/contactsmodel.h src/model/contactsmodel.cpp
 )
 
 # add_subdirectory(qml/MainWidgetInternal/LeftSideBar)

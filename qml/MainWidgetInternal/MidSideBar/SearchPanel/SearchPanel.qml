@@ -7,7 +7,7 @@ Rectangle{
     id: searchPanel_id
     width: parent.width
     height: 50
-    color: "grey"
+    color: "green"
     Rectangle{
         readonly property int margineSize: 15
 
