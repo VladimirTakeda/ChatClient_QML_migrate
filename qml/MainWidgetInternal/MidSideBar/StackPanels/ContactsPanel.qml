@@ -63,12 +63,12 @@ ColumnLayout{
                     Text{
                         text: name
                         Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignTop
+                        Layout.alignment: Qt.AlignLeft
                         Layout.leftMargin: icon_id.width + 10
                     }
                     Text{
                         text: time
-                        Layout.alignment: Qt.AlignTop
+                        Layout.alignment: Qt.AlignRight
                         Layout.rightMargin: 10
 
                     }
@@ -78,10 +78,13 @@ ColumnLayout{
                     Layout.alignment: Qt.AlignBottom
                     Text{
                         id: lastText_id
-                        Layout.alignment: Qt.AlignBottom
+                        Layout.alignment: Qt.AlignLeft
                         Layout.leftMargin: icon_id.width + 10
                         Layout.bottomMargin: 10
+                        Layout.preferredWidth: 100
+                        Layout.fillWidth: true
                         wrapMode: Text.WordWrap
+                        maximumLineCount: 1
                         text: "loooooooooooooooooooooooooooong message from contact"
                     }
                     Rectangle{
@@ -89,7 +92,7 @@ ColumnLayout{
                         width: sizeMissMessage
                         height: sizeMissMessage
                         radius: width / 2
-                        Layout.alignment: Qt.AlignBottom
+                        Layout.alignment: Qt.AlignRight
                         Layout.bottomMargin: 5
                         Layout.rightMargin: 10
                         Rectangle{
@@ -104,14 +107,6 @@ ColumnLayout{
                                 anchors.centerIn: innerRadius_id
                                 text: "2"
                             }
-                        }
-                    }
-
-                    Component.onCompleted: {
-                        if (lastText_id.paintedWidth > 200) {
-                            width = 200
-                        } else {
-                            width = lastText_id.paintedWidth
                         }
                     }
                 }
