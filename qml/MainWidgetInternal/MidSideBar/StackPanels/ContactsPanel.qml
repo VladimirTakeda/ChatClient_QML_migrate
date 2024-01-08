@@ -56,50 +56,62 @@ ColumnLayout{
                 }
             }
 
-            RowLayout{
+            ColumnLayout{
                 anchors.fill: parent
-
-                Text{
-                    text: name
-                    Layout.fillWidth: true
+                RowLayout{
                     Layout.alignment: Qt.AlignTop
-                    Layout.leftMargin: icon_id.width + 10
-                }
-                Text{
-                    text: time
-                    Layout.alignment: Qt.AlignTop
-                    Layout.rightMargin: 10
+                    Text{
+                        text: name
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
+                        Layout.leftMargin: icon_id.width + 10
+                    }
+                    Text{
+                        text: time
+                        Layout.alignment: Qt.AlignTop
+                        Layout.rightMargin: 10
 
+                    }
                 }
-            }
-            RowLayout{
-                anchors.fill: parent
 
-                Text{
+                RowLayout{
                     Layout.alignment: Qt.AlignBottom
-                    Layout.leftMargin: icon_id.width + 10
-                    Layout.bottomMargin: 10
-                    text: "loooooooooooooooooooooooooooong message from contact"
-                }
-                Rectangle{
-                    readonly property int sizeMissMessage: 20
-                    width: sizeMissMessage
-                    height: sizeMissMessage
-                    radius: width / 2
-                    Layout.alignment: Qt.AlignBottom
-                    Layout.bottomMargin: 5
-                    Layout.rightMargin: 10
+                    Text{
+                        id: lastText_id
+                        Layout.alignment: Qt.AlignBottom
+                        Layout.leftMargin: icon_id.width + 10
+                        Layout.bottomMargin: 10
+                        wrapMode: Text.WordWrap
+                        text: "loooooooooooooooooooooooooooong message from contact"
+                    }
                     Rectangle{
-                        id: innerRadius_id
-                        width: parent.width - 4
-                        height: parent.height - 4
+                        readonly property int sizeMissMessage: 20
+                        width: sizeMissMessage
+                        height: sizeMissMessage
                         radius: width / 2
-                        color: "transparent"
-                        anchors.centerIn: parent
-                        // color: "grey"
-                        Text{
-                            anchors.centerIn: innerRadius_id
-                            text: "2"
+                        Layout.alignment: Qt.AlignBottom
+                        Layout.bottomMargin: 5
+                        Layout.rightMargin: 10
+                        Rectangle{
+                            id: innerRadius_id
+                            width: parent.width - 4
+                            height: parent.height - 4
+                            radius: width / 2
+                            color: "transparent"
+                            anchors.centerIn: parent
+                            // color: "grey"
+                            Text{
+                                anchors.centerIn: innerRadius_id
+                                text: "2"
+                            }
+                        }
+                    }
+
+                    Component.onCompleted: {
+                        if (lastText_id.paintedWidth > 200) {
+                            width = 200
+                        } else {
+                            width = lastText_id.paintedWidth
                         }
                     }
                 }
