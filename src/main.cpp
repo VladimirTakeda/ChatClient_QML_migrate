@@ -11,8 +11,8 @@ int main(int argc, char *argv[])
     ChatClient chatClient;
 
     QQmlApplicationEngine engine;
-    engine.addImportPath(":/chatClient.com/imports");
-    const QUrl url(u"qrc:/chatClient.com/imports/ChatClient_QML/Main.qml"_qs);
+    engine.addImportPath(":/ChatClient");
+    const QUrl url(QStringLiteral("qrc:/ChatClient/ChatClient_QML/Main.qml"));
 
     QObject::connect(
         &engine,

@@ -7,6 +7,7 @@ import ChatClient_QML 1.0
 Rectangle{
     id: midToolPanel_id
     color: "green"
+
     ColumnLayout{
         anchors.fill: parent
         SearchPanel{
@@ -14,11 +15,8 @@ Rectangle{
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop
         }
-        StackView{
-            id: mainWindowStack_id
-            initialItem: ContactsPanel{
-                id: contactsPanel_id
-            }
+        ContactsPanel{
+            Layout.fillWidth: true
             Layout.fillHeight: true
         }
     }
