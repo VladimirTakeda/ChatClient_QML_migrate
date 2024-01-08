@@ -2,6 +2,7 @@
 
 #include <src/model/data/dialogsmanager.h>
 #include <src/model/contactsmodel.h>
+#include <src/model/searchmodel.h>
 
 #include <src/network/websocketclient.h>
 #include <src/network/httpclient.h>
@@ -17,10 +18,6 @@
 #include <QDir>
 
 class QListWidgetItem;
-
-UserInfo::UserInfo(int userId, QString&& userNickname) : userId(userId), userLogin(std::move(userNickname)){
-
-}
 
 namespace{
 

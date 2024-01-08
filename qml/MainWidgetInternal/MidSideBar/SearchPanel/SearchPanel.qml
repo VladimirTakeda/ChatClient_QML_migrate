@@ -2,8 +2,13 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-
 Rectangle{
+
+    Loader {
+        id: searchResultPanelLoader
+        source: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/SearchResultPanel.qml"
+    }
+
     id: searchPanel_id
     width: parent.width
     height: 50
@@ -23,9 +28,12 @@ Rectangle{
             verticalAlignment: TextInput.AlignVCenter
             leftPadding: 10
             onTextEdited: {
-
+                if (text.trim() === "" && stackview_id.currentItem !== ContactsPanel) {
+                    stackview_id.push(ContactsPanel)
+                } else if (text.trim() !== "" && stackview_id.currentItem !== searchResultPanelLoader.item) {
+                    stackview_id.push(searchResultPanelLoader.item)
+                }
             }
-
         }
         Text {
             id: customPlaceholder_id

@@ -4,16 +4,10 @@
 #include <QString>
 #include <QObject>
 
-struct UserInfo
-{
-    UserInfo(int, QString&&);
-    QString userLogin;
-    int userId;
-};
-
 class QNetworkAccessManager;
 class QNetworkReply;
 class HttpClient;
+class UserInfo;
 
 namespace WebSocket{
 class Message;
