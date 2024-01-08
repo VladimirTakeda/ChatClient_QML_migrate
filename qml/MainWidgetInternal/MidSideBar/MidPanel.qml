@@ -15,9 +15,12 @@ Rectangle{
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop
         }
-        ContactsPanel{
+        StackView{
             Layout.fillWidth: true
             Layout.fillHeight: true
+            initialItem: ContactsPanel{
+                anchors.fill: parent
+            }
         }
     }
 }
