@@ -15,7 +15,7 @@ Rectangle{
         anchors.fill: parent
         hoverEnabled: true
         onEntered: { delegat_id.color = "lightcoral" }
-        onExited: { delegat_id.color = "lightseagreen" }
+        onExited: { delegat_id.color = "transparent" }
     }
 
     Rectangle{
@@ -52,7 +52,6 @@ Rectangle{
                 text: time
                 Layout.alignment: Qt.AlignRight
                 Layout.rightMargin: 10
-
             }
         }
 
@@ -60,16 +59,16 @@ Rectangle{
             Layout.alignment: Qt.AlignBottom
             Text{
                 id: lastText_id
+                Layout.fillWidth: true
                 Layout.alignment: Qt.AlignLeft
                 Layout.leftMargin: icon_id.width + 10
                 Layout.bottomMargin: 10
-                Layout.preferredWidth: 100
-                Layout.fillWidth: true
                 wrapMode: Text.WordWrap
                 maximumLineCount: 1
                 text: "loooooooooooooooooooooooooooong message from contact"
             }
             Rectangle{
+                id: missMassages_id
                 readonly property int sizeMissMessage: 20
                 width: sizeMissMessage
                 height: sizeMissMessage
@@ -77,18 +76,15 @@ Rectangle{
                 Layout.alignment: Qt.AlignRight
                 Layout.bottomMargin: 5
                 Layout.rightMargin: 10
-                Rectangle{
-                    id: innerRadius_id
-                    width: parent.width - 4
-                    height: parent.height - 4
-                    radius: width / 2
-                    color: "transparent"
-                    anchors.centerIn: parent
-                    // color: "grey"
-                    Text{
-                        anchors.centerIn: innerRadius_id
-                        text: "2"
+                Text{
+                    anchors {
+                        fill: parent
+                        centerIn: parent
+                        bottomMargin: 1 // to center text within the inner circle
                     }
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    text: missMessage
                 }
             }
         }

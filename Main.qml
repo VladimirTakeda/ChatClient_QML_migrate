@@ -16,4 +16,6 @@ Window {
         anchors.fill: parent
         initialItem: "qml/MainWidget.qml"
     }
+
+
 }
