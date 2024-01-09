@@ -35,7 +35,7 @@ public:
     QString ChatName() const;
     void setChatName(const QString &newChatName);
 
-    void SetDataSource(std::vector<UserInfo> &&results);
+    void SetDataSource(const std::vector<UserInfo> &results);
     const std::vector<UserInfo>& dataSource() const;
 
 signals:

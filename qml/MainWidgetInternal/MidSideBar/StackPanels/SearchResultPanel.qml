@@ -33,17 +33,7 @@ Rectangle{
             right: parent.right
             // bottom: parent.bottom
         }
-        model: ListModel{
-            id: searchModel_id
-            ListElement{
-                name: "Contact 1"
-                domen: "@sdlfkjdlskfjs"
-            }
-            ListElement{
-                name: "Contact 2"
-                domen: "@7907sdfjlksdfj"
-            }
-        }
+        model: SearchModel
 
         delegate: DelegateSearchPanel{
 
