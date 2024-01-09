@@ -4,10 +4,10 @@ import QtQuick.Layouts
 
 Rectangle{
 
-    Loader {
-        id: searchResultPanelLoader
-        source: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/SearchResultPanel.qml"
-    }
+    // Loader {
+    //     id: searchResultPanelLoader
+    //     source: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/SearchResultPanel.qml"
+    // }
 
     id: searchPanel_id
     width: parent.width
@@ -23,16 +23,19 @@ Rectangle{
         color: "white"
 
         TextInput{
+            readonly property string pathContactsPanel: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/ContactsPanel.qml"
+            readonly property string pathSearchResultPanel: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/SearchResultPanel.qml"
             id: inputText_id
             anchors.fill: parent
             verticalAlignment: TextInput.AlignVCenter
             leftPadding: 10
             onTextEdited: {
-                if (text.trim() === "" && stackview_id.currentItem !== ContactsPanel) {
-                    stackview_id.push(ContactsPanel)
-                } else if (text.trim() !== "" && stackview_id.currentItem !== searchResultPanelLoader.item) {
-                    stackview_id.push(searchResultPanelLoader.item)
+                if (text.trim() === "" && stackViewSearchPanel_id.currentItem !== pathContactsPanel) {
+                    stackViewSearchPanel_id.replace(pathContactsPanel)
+                } else if (text.trim() !== "" && stackViewSearchPanel_id.currentItem !== stackViewSearchPanel_id.item) {
+                    stackViewSearchPanel_id.replace(pathSearchResultPanel)
                 }
+                console.log("count of stackview: ",  stackViewSearchPanel_id.depth)
             }
         }
         Text {
