@@ -3,12 +3,6 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 Rectangle{
-
-    // Loader {
-    //     id: searchResultPanelLoader
-    //     source: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/SearchResultPanel.qml"
-    // }
-
     id: searchPanel_id
     width: parent.width
     height: 50

@@ -14,10 +14,12 @@ ColumnLayout{
             ListElement{
                 name: "Contact 1"
                 time: "20:30"
+                missMessage: 1
             }
             ListElement{
                 name: "Contact 2"
                 time: "20:40"
+                missMessage: 3
             }
         }
 

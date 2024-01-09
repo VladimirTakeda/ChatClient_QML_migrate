@@ -20,9 +20,7 @@ Rectangle{
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            //TODO: remove animation
-            //replaceEnter: StackView.Immediate
-            //replaceExit: StackView.Immediate
+            // initialItem: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/SearchResultPanel.qml"
             initialItem: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/ContactsPanel.qml"
             replaceEnter: Transition {
                 PropertyAnimation { properties: "opacity"; duration: 0 }
