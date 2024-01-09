@@ -58,6 +58,7 @@ qt_add_qml_module(appChatClient_QML
         qml/MainWidgetInternal/MidSideBar/SearchPanel/SearchPanel.qml
         qml/MainWidgetInternal/MidSideBar/StackPanels/ContactsPanel.qml
         qml/MainWidgetInternal/MidSideBar/StackPanels/SearchResultPanel.qml
+        qml/MainWidgetInternal/MidSideBar/StackPanels/DelegateContactPanel.qml
         qml/MainWidgetInternal/RightSideBar/ChatHistoryInternal/TopToolPanel.qml
         qml/MainWidgetInternal/RightSideBar/ChatHistoryInternal/BottomToolPanel.qml
         qml/MainWidgetInternal/RightSideBar/ChatHistoryInternal/ChatDisplayPanel.qml

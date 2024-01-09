@@ -13,11 +13,7 @@ Window {
 
     StackView{
         id: mainWindowStack_id
-        initialItem: MainWidget{
-            id: mainWidget_id
-        }
-        anchors{
-            fill: parent
-        }
+        anchors.fill: parent
+        initialItem: "qml/MainWidget.qml"
     }
 }
