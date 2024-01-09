@@ -41,20 +41,20 @@ Rectangle{
     ColumnLayout{
         anchors.fill: parent
         Text{
-            text: name
+            text: chatName
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignLeft
             Layout.leftMargin: icon_id.width + 10
             Layout.topMargin: 3
             wrapMode: Text.WordWrap
         }
-        Text{
+        /*Text{
             text: domen
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignLeft
             Layout.leftMargin: icon_id.width + 10
             Layout.bottomMargin: 3
             wrapMode: Text.WordWrap
-        }
+        }*/
     }
 }

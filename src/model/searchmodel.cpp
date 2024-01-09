@@ -53,7 +53,7 @@ const std::vector<UserInfo>& SearchModel::dataSource() const
     return m_foundedUsers;
 }
 
-void SearchModel::SetDataSource(std::vector<UserInfo> &&results)
+void SearchModel::SetDataSource(const std::vector<UserInfo> &results)
 {
     beginResetModel();      //reset data of model
 

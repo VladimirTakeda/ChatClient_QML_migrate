@@ -39,13 +39,15 @@ std::vector<UserInfo> ParseUsers(QByteArray reply)
 
 }
 
-ChatClient::ChatClient(QObject *parent) :
+ChatClient::ChatClient(std::shared_ptr<ContactsModel> contactsModel, std::shared_ptr<SearchModel> searchModel, QObject *parent) :
     QObject(parent),
     m_httpClient(std::make_shared<HttpClient>()),
     m_dialogsManager(std::make_shared<DialogsManager>()),
-    m_contactsModel(std::make_shared<ContactsModel>())
+    m_contactsModel(contactsModel),
+    m_searchModel(searchModel)
 {
     m_contactsModel->SetDataSource(m_dialogsManager);
+    m_searchModel->SetDataSource(std::vector<UserInfo>());
     //connect(ui->lineEdit, &QLineEdit::textEdited, this, &ChatWidget::LookingForPeople);
     //connect(ui->listWidget_2, &QListWidget::itemClicked, this, &ChatWidget::SetNewDialog);
     //connect(ui->listWidget, &QListWidget::itemClicked, this, &ChatWidget::SetDialog);
@@ -152,18 +154,10 @@ void ChatClient::on_lineEdit_2_returnPressed()
 
 void ChatClient::LookingForPeople(const QString& prefix)
 {
-    /*if (prefix.isEmpty() && ui->stackedWidget->currentIndex() == 1){
-        ui->stackedWidget->setCurrentIndex(0);
-        return;
-    }
-
-    if (!prefix.isEmpty() && ui->stackedWidget->currentIndex() == 0)
-        ui->stackedWidget->setCurrentIndex(1);
-
     QNetworkRequest request;
 
     QJsonObject obj;
-    obj["search_prefix"] = ui->lineEdit->text();
+    obj["search_prefix"] = prefix;
     obj["this_user_id"] = getCurrUserId();
     QJsonDocument doc(obj);
     QByteArray data = doc.toJson();
@@ -177,7 +171,7 @@ void ChatClient::LookingForPeople(const QString& prefix)
     request.setUrl(url);
     request.setRawHeader("Content-Type", "application/json");
 
-    m_httpClient->sendHttpRequest(std::move(request), std::move(data), {}, std::bind(&ChatWidget::LookingForPeopleReply, this, std::placeholders::_1));*/
+    m_httpClient->sendHttpRequest(std::move(request), std::move(data), {}, std::bind(&ChatClient::LookingForPeopleReply, this, std::placeholders::_1));
 }
 
 void ChatClient::LookingForPeopleReply(QNetworkReply *reply){
@@ -191,6 +185,7 @@ void ChatClient::LookingForPeopleReply(QNetworkReply *reply){
 
 void ChatClient::SetSearchResults(const std::vector<UserInfo>& results)
 {
+    m_searchModel->SetDataSource(results);
     /*ui->listWidget_2->clear();
     for (const UserInfo& userInfo : results){
         QListWidgetItem *contactItem = new QListWidgetItem(ui->listWidget_2);
@@ -274,4 +269,18 @@ void ChatClient::OnGotNotification(const QString& name, const QString& text, int
 {
     /*m_popUp->setPopupText(name, text, unreadCount, time);
     m_popUp->show();*/
+}
+
+QString ChatClient::SearchPrefix() const
+{
+    return m_SearchPrefix;
+}
+
+void ChatClient::setSearchPrefix(const QString &newSearchPrefix)
+{
+    if (m_SearchPrefix == newSearchPrefix)
+        return;
+    m_SearchPrefix = newSearchPrefix;
+    LookingForPeople(m_SearchPrefix);
+    emit SearchPrefixChanged();
 }

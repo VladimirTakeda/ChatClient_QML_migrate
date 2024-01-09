@@ -3,6 +3,8 @@
 #include <memory>
 #include <QString>
 #include <QObject>
+#include <QQmlEngine>
+#include <qqml.h>
 
 class QNetworkAccessManager;
 class QNetworkReply;
@@ -15,18 +17,26 @@ class WebSocketClient;
 }
 
 class ContactsModel;
+class SearchModel;
 
 class DialogsManager;
 
 class ChatClient : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString SearchPrefix READ SearchPrefix WRITE setSearchPrefix NOTIFY SearchPrefixChanged FINAL)
 public:
-    ChatClient(QObject *parent = nullptr);
+    ChatClient(std::shared_ptr<ContactsModel> contactsModel, std::shared_ptr<SearchModel> searchModel, QObject *parent = nullptr);
     void SetUpWSConnection();
     void LoadDialogs();
     void SaveDialogs() const;
     ~ChatClient();
+
+    QString SearchPrefix() const;
+    void setSearchPrefix(const QString &newSearchPrefix);
+
+signals:
+    void SearchPrefixChanged();
 
 private:
     void AddNewWidgetDialog(int chatId, const QString& name, bool needSetItem);
@@ -54,4 +64,6 @@ private:
     std::shared_ptr<DialogsManager> m_dialogsManager;
 
     std::shared_ptr<ContactsModel> m_contactsModel;
+    std::shared_ptr<SearchModel> m_searchModel;
+    QString m_SearchPrefix;
 };

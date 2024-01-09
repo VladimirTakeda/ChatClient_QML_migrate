@@ -95,6 +95,7 @@ target_link_libraries(appChatClient_QML
 target_include_directories(appChatClient_QML PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/model
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/core
 )
 
 include(GNUInstallDirs)

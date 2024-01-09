@@ -29,7 +29,7 @@ Rectangle{
                 } else if (text.trim() !== "" && stackViewSearchPanel_id.currentItem !== stackViewSearchPanel_id.item) {
                     stackViewSearchPanel_id.replace(pathSearchResultPanel)
                 }
-                console.log("count of stackview: ",  stackViewSearchPanel_id.depth)
+                chatClientObj.SearchPrefix = text
             }
         }
         Text {
