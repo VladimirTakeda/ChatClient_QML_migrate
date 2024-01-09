@@ -33,7 +33,7 @@ Rectangle{
             right: parent.right
             // bottom: parent.bottom
         }
-        model: SearchModel
+        model: searchModel
 
         delegate: DelegateSearchPanel{
 

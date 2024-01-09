@@ -41,20 +41,12 @@ Rectangle{
     ColumnLayout{
         anchors.fill: parent
         Text{
-            text: chatName
+            text: model.chatName
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignLeft
             Layout.leftMargin: icon_id.width + 10
             Layout.topMargin: 3
             wrapMode: Text.WordWrap
         }
-        /*Text{
-            text: domen
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignLeft
-            Layout.leftMargin: icon_id.width + 10
-            Layout.bottomMargin: 3
-            wrapMode: Text.WordWrap
-        }*/
     }
 }

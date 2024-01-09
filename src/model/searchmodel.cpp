@@ -4,15 +4,19 @@ UserInfo::UserInfo(int userId, QString&& userNickname) : userId(userId), userLog
 
 }
 
+bool operator == (const UserInfo& left, const UserInfo& right){
+    return left.userId == right.userId && left.userLogin == right.userLogin;
+}
+
 SearchModel::SearchModel(QObject *parent)
     : QAbstractListModel{parent}, m_signalConnected{false}
 
 {
+
 }
 
 int SearchModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
     return m_foundedUsers.size();
 }
 
@@ -42,9 +46,9 @@ Qt::ItemFlags SearchModel::flags(const QModelIndex &index) const
 //names will be used in qml
 QHash<int, QByteArray> SearchModel::roleNames() const
 {
-    QHash<int, QByteArray> roles{
-        {ChatNameRole, "chatName"},
-    };
+    static QHash<int, QByteArray> roles{
+                                 {ChatNameRole, "chatName"}
+                                 };
     return roles;
 }
 
@@ -55,28 +59,15 @@ const std::vector<UserInfo>& SearchModel::dataSource() const
 
 void SearchModel::SetDataSource(const std::vector<UserInfo> &results)
 {
-    beginResetModel();      //reset data of model
+    if (m_foundedUsers != results) {
+        beginResetModel();
 
-    m_foundedUsers = results;
+        m_foundedUsers = results;
 
-    //TODO: add signals
+        m_signalConnected = true;
 
-    m_signalConnected = true;
+        endResetModel();
 
-    endResetModel();
-}
-
-
-
-QString SearchModel::ChatName() const
-{
-    return m_ChatName;
-}
-
-void SearchModel::setChatName(const QString &newChatName)
-{
-    if (m_ChatName == newChatName)
-        return;
-    m_ChatName = newChatName;
-    emit ChatNameChanged();
+        emit layoutChanged();
+    }
 }

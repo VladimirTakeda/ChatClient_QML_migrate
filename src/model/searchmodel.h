@@ -11,15 +11,15 @@ struct UserInfo
     int userId;
 };
 
+bool operator == (const UserInfo& left, const UserInfo& right);
+
 class SearchModel : public QAbstractListModel
 {
     Q_OBJECT
     QML_ELEMENT
-    Q_PROPERTY(QString ChatName READ ChatName WRITE setChatName NOTIFY ChatNameChanged FINAL)
-
     enum ContactsRoles{
         ChatNameRole = Qt::UserRole + 1,
-        DialogIconRole
+        DialogIconRole = Qt::UserRole + 2
     };
 
 public:
@@ -40,10 +40,9 @@ public:
 
 signals:
 
-    void ChatNameChanged();
+    void DataSourceChanged();
 
 private:
-    QString m_ChatName;
 
     std::vector<UserInfo> m_foundedUsers;
     bool m_signalConnected;
