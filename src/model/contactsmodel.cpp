@@ -72,65 +72,9 @@ void ContactsModel::SetDataSource(std::shared_ptr<DialogsManager> manager)
 {
     beginResetModel();      //reset data of model
 
-    if(m_dialogsManager && m_signalConnected)
-        m_dialogsManager->disconnect(this);
-
     m_dialogsManager = manager;
-
-    //TODO: add signals
 
     m_signalConnected = true;
 
     endResetModel();
-}
-
-
-
-QString ContactsModel::ChatName() const
-{
-    return m_ChatName;
-}
-
-void ContactsModel::setChatName(const QString &newChatName)
-{
-    if (m_ChatName == newChatName)
-        return;
-    m_ChatName = newChatName;
-    emit ChatNameChanged();
-}
-
-QString ContactsModel::LastMessage() const
-{
-    return m_LastMessage;
-}
-
-void ContactsModel::setLastMessage(const QString &newLastMessage)
-{
-    m_LastMessage = newLastMessage;
-}
-
-QString ContactsModel::LastMessageTime() const
-{
-    return m_LastMessageTime;
-}
-
-void ContactsModel::setLastMessageTime(const QString &newLastMessageTime)
-{
-    if (m_LastMessageTime == newLastMessageTime)
-        return;
-    m_LastMessageTime = newLastMessageTime;
-    emit LastMessageTimeChanged();
-}
-
-QString ContactsModel::MissedMessageCount() const
-{
-    return m_MissedMessageCount;
-}
-
-void ContactsModel::setMissedMessageCount(const QString &newMissedMessageCount)
-{
-    if (m_MissedMessageCount == newMissedMessageCount)
-        return;
-    m_MissedMessageCount = newMissedMessageCount;
-    emit MissedMessageCountChanged();
 }

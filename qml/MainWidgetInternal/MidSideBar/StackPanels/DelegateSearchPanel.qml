@@ -17,6 +17,14 @@ Rectangle{
         hoverEnabled: true
         onEntered: { delegat_id.color = "lightcoral" }
         onExited: { delegat_id.color = "transparent" }
+        readonly property string pathContactsPanel: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/ContactsPanel.qml"
+        readonly property string pathSearchResultPanel: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/SearchResultPanel.qml"
+        onClicked:{
+            console.log("current index", index)
+            searchModel.onItemClicked(index)
+            stackViewSearchPanel_id.replace(pathContactsPanel)
+            inputText_id.clear()
+        }
     }
 
     Rectangle{

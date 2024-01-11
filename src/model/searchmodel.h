@@ -13,15 +13,15 @@ struct UserInfo
 
 bool operator == (const UserInfo& left, const UserInfo& right);
 
+enum ContactsRoles{
+    ChatNameRole = Qt::UserRole + 1,
+    UserIdRole,
+    DialogIconRole
+};
+
 class SearchModel : public QAbstractListModel
 {
     Q_OBJECT
-    QML_ELEMENT
-    enum ContactsRoles{
-        ChatNameRole = Qt::UserRole + 1,
-        DialogIconRole = Qt::UserRole + 2
-    };
-
 public:
     explicit SearchModel(QObject *parent = nullptr);
 
@@ -38,12 +38,13 @@ public:
     void SetDataSource(const std::vector<UserInfo> &results);
     const std::vector<UserInfo>& dataSource() const;
 
-signals:
+    Q_INVOKABLE void onItemClicked(int index);
 
+signals:
     void DataSourceChanged();
+    void ItemClicked(int index);
 
 private:
-
     std::vector<UserInfo> m_foundedUsers;
     bool m_signalConnected;
 };

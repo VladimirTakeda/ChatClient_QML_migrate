@@ -44,6 +44,7 @@ private:
     void AddMessageToWidgetDialog(int userId, const QString &lastMessage, bool NeedIncrement, const QDateTime& localMsgTime);
     void SetExistingDialogs();
     void SetSearchResults(const std::vector<UserInfo>& results);
+    void SetNewDialog(int index);
     void SendCreateDialogReq(int fromUser, int toUser, const QString& toUserName);
     void GotNewMessage(WebSocket::Message mgs);
     void UpdateTextBrowser(int selectedContactId);

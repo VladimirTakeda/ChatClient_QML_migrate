@@ -48,7 +48,7 @@ ChatClient::ChatClient(std::shared_ptr<ContactsModel> contactsModel, std::shared
 {
     m_contactsModel->SetDataSource(m_dialogsManager);
     m_searchModel->SetDataSource(std::vector<UserInfo>());
-    //connect(ui->lineEdit, &QLineEdit::textEdited, this, &ChatWidget::LookingForPeople);
+    connect(m_searchModel.get(), &SearchModel::ItemClicked, this, &ChatClient::SetNewDialog);
     //connect(ui->listWidget_2, &QListWidget::itemClicked, this, &ChatWidget::SetNewDialog);
     //connect(ui->listWidget, &QListWidget::itemClicked, this, &ChatWidget::SetDialog);
 }
@@ -127,7 +127,7 @@ void ChatClient::GotNewMessage(WebSocket::Message msg)
 
     AddMessageToWidgetDialog(msg.chatTo, msg.text, !IsSelectedDialog, msg.time);
 
-    OnGotNotification(msg.chatName, msg.text, m_dialogsManager->m_IdToDialog.at(msg.chatTo)->m_unreadCount, msg.time);
+    OnGotNotification(msg.chatName, msg.text, (*m_dialogsManager->m_IdToDialog.at(msg.chatTo))->m_unreadCount, msg.time);
 }
 
 void ChatClient::UpdateTextBrowser(int selectedContactId)
@@ -216,18 +216,17 @@ void ChatClient::SetExistingDialogs()
     UpdateTextBrowser(clickedItem->data(Qt::UserRole).toInt());
 }*/
 
-/*void ChatClient::SetNewDialog(QListWidgetItem * clickedItem)
+void ChatClient::SetNewDialog(int index)
 {
-    ui->lineEdit->clear();
+    QString login = m_searchModel->data(m_searchModel->index(index), ContactsRoles::ChatNameRole).toString();
+    int userId = m_searchModel->data(m_searchModel->index(index), ContactsRoles::UserIdRole).toInt();
 
-    UserItemWidget *itemWidget = qobject_cast<UserItemWidget*>(ui->listWidget_2->itemWidget(clickedItem));
-
-    ui->stackedWidget_2->setCurrentIndex(1);
-    ui->label_4->setText(itemWidget->GetName());
-    if (!m_dialogsManager->IsDialogWithUserExist(clickedItem->data(Qt::UserRole).toInt())){
-        SendCreateDialogReq(getCurrUserId(), clickedItem->data(Qt::UserRole).toInt(), itemWidget->GetName());
+    //ui->stackedWidget_2->setCurrentIndex(1, ContactsRoles::ChatNameRole);
+    //ui->label_4->setText(itemWidget->GetName());
+    if (!m_dialogsManager->IsDialogWithUserExist(userId)){
+        SendCreateDialogReq(getCurrUserId(), userId, login);
     }
-}*/
+}
 
 void ChatClient::SendCreateDialogReq(int fromUser, int toUser, const QString& toUserName){
     QNetworkRequest request;
@@ -257,8 +256,9 @@ void ChatClient::CreateChatReply(QNetworkReply *reply){
         QJsonDocument itemDoc = QJsonDocument::fromJson(reply->readAll());
         QJsonObject rootObject = itemDoc.object();
         m_dialogsManager->CreateNewChat(reply->property("toUserId").toInt(), rootObject.value("chatId").toInt(), reply->property("toUserName").toString());
-        AddNewWidgetDialog(rootObject.value("chatId").toInt(), reply->property("toUserName").toString(), true);
-        UpdateTextBrowser(rootObject.value("chatId").toInt());
+        m_contactsModel->SetDataSource(m_dialogsManager);
+        //AddNewWidgetDialog(rootObject.value("chatId").toInt(), reply->property("toUserName").toString(), true);
+        //UpdateTextBrowser(rootObject.value("chatId").toInt());
     }
     else {
         qDebug() << "Failure" <<reply->errorString();

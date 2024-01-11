@@ -28,7 +28,8 @@ QVariant SearchModel::data(const QModelIndex &index, int role) const
     const auto &user = m_foundedUsers[index.row()];
     if (role == ChatNameRole)
         return user.userLogin;
-
+    if (role == UserIdRole)
+        return user.userId;
     return {};
 }
 
@@ -70,4 +71,8 @@ void SearchModel::SetDataSource(const std::vector<UserInfo> &results)
 
         emit layoutChanged();
     }
+}
+
+void SearchModel::onItemClicked(int index){
+    emit ItemClicked(index);
 }
