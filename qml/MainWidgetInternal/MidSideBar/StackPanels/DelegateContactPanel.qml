@@ -43,13 +43,13 @@ Rectangle{
         RowLayout{
             Layout.alignment: Qt.AlignTop
             Text{
-                text: name
+                text: model.chatName
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignLeft
                 Layout.leftMargin: icon_id.width + 10
             }
             Text{
-                text: time
+                text: model.lastMessageTime
                 Layout.alignment: Qt.AlignRight
                 Layout.rightMargin: 10
             }
@@ -65,7 +65,7 @@ Rectangle{
                 Layout.bottomMargin: 10
                 wrapMode: Text.WordWrap
                 maximumLineCount: 1
-                text: "loooooooooooooooooooooooooooong message from contact"
+                text: model.lastMessage
             }
             Rectangle{
                 id: missMassages_id
@@ -84,7 +84,7 @@ Rectangle{
                     }
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    text: missMessage
+                    text: model.missedMessageCount
                 }
             }
         }

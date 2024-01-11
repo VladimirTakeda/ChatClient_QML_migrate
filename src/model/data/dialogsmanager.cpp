@@ -14,26 +14,30 @@ DialogsManager::DialogsManager(QObject *parent) : QObject(parent)
 
 void DialogsManager::CreateNewChat(std::optional<int> userId, int chatId, const QString &userToName)
 {
-    //m_UserToChatId[UserToId] = chatId;
     if (userId)
         m_users.insert(userId.value());
     m_IdToName[chatId] = userToName;
-    m_IdToDialog.emplace(chatId, std::make_shared<Dialog>(chatId, userToName));
+    m_modelData.push_front(std::make_shared<Dialog>(chatId, userToName));
+    m_IdToDialog.emplace(chatId, m_modelData.begin());
 }
 
 void DialogsManager::AddMessage(int chatId, const Message& msg)
 {
-    m_IdToDialog.at(chatId)->addMessage(msg);
+    auto iter = m_IdToDialog.at(chatId);
+    std::shared_ptr<Dialog> dialog = *iter;
+    dialog->addMessage(msg);
+    m_modelData.erase(iter);
+    m_modelData.push_front(dialog);
 }
 
 const Dialog& DialogsManager::GetDialog(int chatId)
 {
-    return  *m_IdToDialog.at(chatId);
+    return  **m_IdToDialog.at(chatId);
 }
 
-const Dialog& DialogsManager::GetDialogByIndex(int chatId)
+const Dialog& DialogsManager::GetDialogByIndex(int index)
 {
-    return *m_modelData[chatId];
+    return **(std::next(m_modelData.begin(), index));
 }
 
 bool DialogsManager::IsChatExist(int chatId) const
@@ -70,11 +74,11 @@ void DialogsManager::SaveDialogs() const
         for (int32_t elem : m_users)
             out << elem;
 
-        out << static_cast<uint64_t>(m_IdToDialog.size());
-
-        for (const auto& [dialogId, dialog] : m_IdToDialog) {
-            out << static_cast<uint64_t>(dialogId);
+        out << static_cast<uint64_t>(m_modelData.size());
+        for (auto &dialog : m_modelData){
+            out << static_cast<uint64_t>(dialog->m_chatId);
             out << dialog->m_unreadCount;
+            out << dialog->m_dialogName;
             out << static_cast<uint64_t>(dialog->m_messages.size());
 
             for (const std::shared_ptr<Message>& msg : dialog->m_messages) {
@@ -121,6 +125,7 @@ void DialogsManager::LoadDialogs()
     QFile inFile("dialogs");
     if (inFile.open(QIODevice::ReadOnly)) {
         m_IdToDialog.clear();
+        m_modelData.clear();
 
         QDataStream in(&inFile);
 
@@ -138,11 +143,14 @@ void DialogsManager::LoadDialogs()
         for (uint64_t i = 0; i < dialogsCount; i++){
             uint64_t dialogId = 0;
             uint64_t messagesCount = 0;
+            uint64_t unreadCount = 0;
+            QString dialogName;
             in >> dialogId;
-            //TODO add name
-            std::shared_ptr<Dialog> currentDialog = std::make_shared<Dialog>(dialogId, "");
-            in >> currentDialog->m_unreadCount;
+            in >> unreadCount;
+            in >> dialogName;
             in >> messagesCount;
+
+            std::shared_ptr<Dialog> currentDialog = std::make_shared<Dialog>(dialogId, dialogName);
 
             bool isMyMessage;
 
@@ -161,7 +169,8 @@ void DialogsManager::LoadDialogs()
             }
 
             if (!currentDialog->m_messages.empty()) {
-                m_IdToDialog.emplace(dialogId, currentDialog);
+                m_modelData.push_back(currentDialog);
+                m_IdToDialog.emplace(dialogId, std::prev(m_modelData.end()));
             }
         }
 

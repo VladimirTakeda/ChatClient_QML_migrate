@@ -9,19 +9,7 @@ ColumnLayout{
         Layout.fillWidth: true
         Layout.fillHeight: true
 
-        model: ListModel{
-            id: contactsModel_id
-            ListElement{
-                name: "Contact 1"
-                time: "20:30"
-                missMessage: 1
-            }
-            ListElement{
-                name: "Contact 2"
-                time: "20:40"
-                missMessage: 3
-            }
-        }
+        model: contactsModel
 
         delegate: DelegateContactPanel{
 

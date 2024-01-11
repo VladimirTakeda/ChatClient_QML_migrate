@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
     engine.addImportPath(":/ChatClient");
     engine.rootContext()->setContextProperty("chatClientObj", &chatClient);
     engine.rootContext()->setContextProperty("searchModel", searchModel.get());
+    engine.rootContext()->setContextProperty("contactsModel", contactsModel.get());
     //engine.setInitialProperties({{"chatClientObj", QVariant::fromValue(&chatClient)}});
 
     const QUrl url(QStringLiteral("qrc:/ChatClient/ChatClient_QML/Main.qml"));
