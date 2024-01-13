@@ -18,15 +18,17 @@ class WebSocketClient;
 
 class ContactsModel;
 class SearchModel;
+class ChatHistoryModel;
 
 class DialogsManager;
+class Dialog;
 
 class ChatClient : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString SearchPrefix READ SearchPrefix WRITE setSearchPrefix NOTIFY SearchPrefixChanged FINAL)
 public:
-    ChatClient(std::shared_ptr<ContactsModel> contactsModel, std::shared_ptr<SearchModel> searchModel, QObject *parent = nullptr);
+    ChatClient(std::shared_ptr<ContactsModel> contactsModel, std::shared_ptr<SearchModel> searchModel, std::shared_ptr<ChatHistoryModel> chatHistoryModel, QObject *parent = nullptr);
     void SetUpWSConnection();
     void LoadDialogs();
     void SaveDialogs() const;
@@ -34,6 +36,15 @@ public:
 
     QString SearchPrefix() const;
     void setSearchPrefix(const QString &newSearchPrefix);
+
+    Q_INVOKABLE bool isRegistered();
+
+    Q_INVOKABLE void sendNewMessage(const QString& message);
+    Q_INVOKABLE void updateCurrentChat(int index);
+
+    Q_INVOKABLE void registerUser(const QString& login, const QString& password);
+    void RegisterUserReply(QNetworkReply *reply);
+    void SaveUserInfo(int userId, const QString& deviceId, const QString& userName);
 
 signals:
     void SearchPrefixChanged();
@@ -50,7 +61,6 @@ private:
     void UpdateTextBrowser(int selectedContactId);
 
 private slots:
-    void on_lineEdit_2_returnPressed();
     void LookingForPeople(const QString& prefix);
     void LookingForPeopleReply(QNetworkReply *rep);
     void CreateChatReply(QNetworkReply *rep);
@@ -66,5 +76,8 @@ private:
 
     std::shared_ptr<ContactsModel> m_contactsModel;
     std::shared_ptr<SearchModel> m_searchModel;
+    std::shared_ptr<ChatHistoryModel> m_chatHistoryModel;
+
     QString m_SearchPrefix;
+    std::shared_ptr<Dialog> m_currChat;
 };

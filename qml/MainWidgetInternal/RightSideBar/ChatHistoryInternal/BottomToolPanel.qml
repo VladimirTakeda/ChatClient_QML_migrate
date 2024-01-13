@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 
+import ChatClient_QML 1.0
+
 Rectangle{
     id: bottomPanel_id
     width: parent.width
@@ -23,12 +25,10 @@ Rectangle{
                 implicitHeight: parent.height
                 color: "transparent"
             }
-            // onPressed: {
-            //     console.log(messageField_id.text)
-            // }
 
-            Keys.onEnterPressed: event => {
+            Keys.onReturnPressed: event => {
                                 console.log(messageField_id.text)
+                                chatClientObj.sendNewMessage(messageField_id.text)
                                 messageField_id.clear()
                             }
         }

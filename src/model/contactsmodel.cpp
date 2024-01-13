@@ -21,21 +21,21 @@ QVariant ContactsModel::data(const QModelIndex &index, int role) const
 
     const auto &dialog = m_dialogsManager->GetDialogByIndex(index.row());
     if (role == ChatNameRole)
-        return dialog.GetName();
+        return dialog->GetName();
     if (role == LastMessageRole){
-        auto lastMessage = dialog.GetLastMessage();
+        auto lastMessage = dialog->GetLastMessage();
         if (lastMessage)
             return lastMessage->text;
         return "";
     }
     if (role == LastMessageTimeRole){
-        auto lastMessage = dialog.GetLastMessage();
+        auto lastMessage = dialog->GetLastMessage();
         if (lastMessage)
             return lastMessage->time.toString();
         return "";
     }
     if(role == MissedMessageCountRole)
-        return dialog.GetUnreadCount();
+        return dialog->GetUnreadCount();
 
     return {};
 }

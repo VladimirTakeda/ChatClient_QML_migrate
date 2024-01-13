@@ -9,7 +9,7 @@ Rectangle{
     readonly property int sizeTextPlaceholder: 12
     // readonly property int heightPaddingItems: 30
 
-    id: startWidget_id
+    id: registrationWidget_id
     width: parent.width; height: parent.height
     anchors{
         fill: parent
@@ -94,6 +94,12 @@ Rectangle{
                     radius: 4
                     color: "#0088CC"
                     //TODO: Add hovered handler
+                }
+
+                onClicked: {
+                    chatClientObj.registerUser(login_id.text, password.text)
+                    //TODO make replace in void ChatClient::RegisterUserReply(QNetworkReply *reply)
+                    mainWindowStack_id.replace("qrc:/ChatClient/ChatClient_QML/qml/MainWidget.qml")
                 }
             }
 

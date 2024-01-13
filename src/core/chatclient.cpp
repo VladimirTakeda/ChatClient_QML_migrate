@@ -3,6 +3,7 @@
 #include <src/model/data/dialogsmanager.h>
 #include <src/model/contactsmodel.h>
 #include <src/model/searchmodel.h>
+#include <src/model/chathistorymodel.h>
 
 #include <src/network/websocketclient.h>
 #include <src/network/httpclient.h>
@@ -10,6 +11,7 @@
 #include <src/utils/utils.h>
 
 #include <QNetworkAccessManager>
+#include <QApplication>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QNetworkReply>
@@ -39,12 +41,13 @@ std::vector<UserInfo> ParseUsers(QByteArray reply)
 
 }
 
-ChatClient::ChatClient(std::shared_ptr<ContactsModel> contactsModel, std::shared_ptr<SearchModel> searchModel, QObject *parent) :
+ChatClient::ChatClient(std::shared_ptr<ContactsModel> contactsModel, std::shared_ptr<SearchModel> searchModel, std::shared_ptr<ChatHistoryModel> chatHistoryModel, QObject *parent) :
     QObject(parent),
     m_httpClient(std::make_shared<HttpClient>()),
     m_dialogsManager(std::make_shared<DialogsManager>()),
     m_contactsModel(contactsModel),
-    m_searchModel(searchModel)
+    m_searchModel(searchModel),
+    m_chatHistoryModel(chatHistoryModel)
 {
     m_contactsModel->SetDataSource(m_dialogsManager);
     m_searchModel->SetDataSource(std::vector<UserInfo>());
@@ -127,6 +130,9 @@ void ChatClient::GotNewMessage(WebSocket::Message msg)
 
     AddMessageToWidgetDialog(msg.chatTo, msg.text, !IsSelectedDialog, msg.time);
 
+    // hack
+    m_chatHistoryModel->SetDataSource(m_currChat);
+
     OnGotNotification(msg.chatName, msg.text, (*m_dialogsManager->m_IdToDialog.at(msg.chatTo))->m_unreadCount, msg.time);
 }
 
@@ -136,20 +142,34 @@ void ChatClient::UpdateTextBrowser(int selectedContactId)
     //ui->textBrowser->setHtml(m_dialogsManager->GetDialog(selectedContactId).GetHtmlDialog());
 }
 
-void ChatClient::on_lineEdit_2_returnPressed()
+bool ChatClient::isRegistered(){
+    QSettings settings(QApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat);
+    qDebug() << "dir path " << QApplication::applicationDirPath();
+    qDebug() << "curr path" << settings.fileName();
+
+    bool IsRegistered = settings.value("registered", false).toBool();
+    if (IsRegistered)
+        SetUpWSConnection();
+
+    return IsRegistered;
+}
+
+void ChatClient::sendNewMessage(const QString& message)
 {
-    /*qDebug() << "here";
     QJsonObject obj;
-    obj["content"] = ui->lineEdit_2->text();
+    obj["content"] = message;
     obj["user_from_id"] = getCurrUserId();
-    obj["chat_to_id"] = ui->listWidget->currentItem()->data(Qt::UserRole).toInt();
-    obj["chat_name"] = getCurrUserName();
+    obj["chat_to_id"] = m_currChat ? m_currChat->GetChatId() : -1;
+    obj["chat_name"] = m_currChat? m_currChat->GetName() : "";
 
     QJsonDocument doc(obj);
 
     m_client->SendTextMessage(doc.toJson(QJsonDocument::Compact));
+}
 
-    ui->lineEdit_2->clear();*/
+void ChatClient::updateCurrentChat(int index){
+    qDebug() << "update curr Chat: " << index;
+    m_currChat = m_dialogsManager->GetDialogByIndex(index);
 }
 
 void ChatClient::LookingForPeople(const QString& prefix)
@@ -283,4 +303,53 @@ void ChatClient::setSearchPrefix(const QString &newSearchPrefix)
     m_SearchPrefix = newSearchPrefix;
     LookingForPeople(m_SearchPrefix);
     emit SearchPrefixChanged();
+}
+
+
+void ChatClient::registerUser(const QString& login, const QString& password)
+{
+    QNetworkRequest request;
+
+    QJsonObject requestData;
+    requestData["deviceId"] = QString(QSysInfo::machineUniqueId());
+    requestData["deviceType"] = QSysInfo::productType();
+    requestData["login"] = login;
+    requestData["password"] = password;
+
+
+    QJsonDocument doc(requestData);
+    QByteArray data = doc.toJson();
+
+    QUrl url;
+
+    url.setScheme("http");
+    url.setHost("localhost");
+    url.setPath("/user/register");
+    url.setPort(8080);
+    request.setUrl(url);
+    request.setRawHeader("Content-Type", "application/json");
+
+    m_httpClient->sendHttpRequest(std::move(request), std::move(data), {{"currUserName", login}}, std::bind(&ChatClient::RegisterUserReply, this, std::placeholders::_1));
+}
+
+void ChatClient::RegisterUserReply(QNetworkReply *reply){
+    if (reply->error() == QNetworkReply::NoError) {
+        QJsonDocument itemDoc = QJsonDocument::fromJson(reply->readAll());
+        QJsonObject rootObject = itemDoc.object();
+        qDebug() << rootObject;
+        SaveUserInfo(rootObject.value("userId").toInt(), rootObject.value("deviceId").toString(),  reply->property("currUserName").toString());
+        SetUpWSConnection();
+    }
+    else {
+        qDebug() << "Failure" <<reply->errorString();
+    }
+}
+
+void ChatClient::SaveUserInfo(int userId, const QString& deviceId, const QString& userName)
+{
+    QSettings settings(QApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat);
+    settings.setValue("userId", userId);
+    settings.setValue("deviceId", deviceId);
+    settings.setValue("registered", true);
+    settings.setValue("currUserName", userName);
 }
