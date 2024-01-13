@@ -4,13 +4,9 @@ import QtQuick.Controls
 
 import ChatClient_QML 1.0
 
-//TODO: singleton includes files
-
 Rectangle{
     id: mainWidget_id
     anchors.fill: parent
-    focus: true
-    Keys.onEscapePressed: {console.log("ESC pressed, let's quit"); Qt.quit()}
     RowLayout{
         anchors.fill: parent
 

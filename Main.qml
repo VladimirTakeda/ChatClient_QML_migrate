@@ -16,6 +16,9 @@ Window {
         anchors.fill: parent
         initialItem: "qml/MainWidget.qml"
     }
-
+    Item{
+        focus: true
+        Keys.onEscapePressed: {Qt.quit()}
+    }
 
 }
