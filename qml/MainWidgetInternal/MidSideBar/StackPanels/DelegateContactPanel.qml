@@ -5,17 +5,21 @@ import QtQuick.Layouts
 Rectangle{
     id: delegat_id
     height: 45
-    width: parent.width
-    // color: "lightseagreen"
-    color: "transparent"
+    width: ListView.view.width
+    // color: "transparent"
+    color: parent.isCurrentItem ? "cadetblue" : "transparent"
+
     border.color: "black"
 
     MouseArea{
         id: mouseCursor_id
         anchors.fill: parent
         hoverEnabled: true
-        onEntered: { delegat_id.color = "lightcoral" }
-        onExited: { delegat_id.color = "transparent" }
+        // onEntered: { delegat_id.color = "lightcoral" }
+        // onExited: { delegat_id.color = "transparent" }
+        onClicked: {
+            listViewContacts_id.currentIndex = index;
+        }
     }
 
     Rectangle{

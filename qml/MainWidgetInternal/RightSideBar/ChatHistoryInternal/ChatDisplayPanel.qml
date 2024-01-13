@@ -5,6 +5,8 @@ import QtQuick.Controls
 ListView{
     id: listViewDisplayPanel_id
     spacing: 4
+    // signal messageSelected(int index)
+
     model: ListModel{
         ListElement {
             message: "Стоимость мелкомягких оценивается в $2.888 триллиона, а у Apple — Apple — $2.887. Инвестиции в нейросети приносят свои плоды."
@@ -28,6 +30,7 @@ ListView{
             rightMargin: boolFlag ? rlSideMargins : undefined
             leftMargin: boolFlag ? undefined : rlSideMargins
         }
+
 
         width: Math.min(messageText_id.implicitWidth + 24,
                         listViewDisplayPanel_id.width - 100)
