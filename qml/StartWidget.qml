@@ -51,6 +51,9 @@ Rectangle{
             Button{
                 id: startMessage_id
                 Layout.preferredWidth: textSecond_id.width
+                onClicked: {
+                    mainWindowStack_id.replace("qrc:/ChatClient/ChatClient_QML/qml/Registration.qml")
+                }
             }
 
             Item {

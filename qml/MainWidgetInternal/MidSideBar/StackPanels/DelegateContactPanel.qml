@@ -5,7 +5,7 @@ import QtQuick.Layouts
 Rectangle{
     id: delegat_id
     height: 45
-    width: parent.width
+    width: ListView.view.width
     // color: "lightseagreen"
     color: "transparent"
     border.color: "black"
@@ -14,8 +14,12 @@ Rectangle{
         id: mouseCursor_id
         anchors.fill: parent
         hoverEnabled: true
-        onEntered: { delegat_id.color = "lightcoral" }
-        onExited: { delegat_id.color = "transparent" }
+        //onEntered: { delegat_id.color = "lightcoral" }
+        //onExited: { delegat_id.color = "transparent" }
+        onClicked: {
+            contactsList_id.currentIndex = index
+            chatClientObj.updateCurrentChat(index)
+        }
     }
 
     Rectangle{

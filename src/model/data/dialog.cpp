@@ -4,6 +4,11 @@ Dialog::Dialog(int64_t chatId, const QString& name) : m_chatId(chatId), m_dialog
 {
 }
 
+size_t Dialog::Size() const
+{
+    return m_messages.size();
+}
+
 void Dialog::addMessage(const Message& msg)
 {
     m_messages.push_back(std::make_shared<Message>(msg));
@@ -26,4 +31,10 @@ std::shared_ptr<Message> Dialog::GetLastMessage() const
 
 int Dialog::GetUnreadCount() const{
     return m_unreadCount;
+}
+
+std::shared_ptr<Message> Dialog::operator[](size_t index) const{
+    if (m_messages.size() <= index)
+        throw std::out_of_range("");
+    return m_messages[index];
 }

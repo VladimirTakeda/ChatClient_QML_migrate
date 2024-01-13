@@ -35,9 +35,9 @@ const Dialog& DialogsManager::GetDialog(int chatId)
     return  **m_IdToDialog.at(chatId);
 }
 
-const Dialog& DialogsManager::GetDialogByIndex(int index)
+std::shared_ptr<Dialog> DialogsManager::GetDialogByIndex(int index)
 {
-    return **(std::next(m_modelData.begin(), index));
+    return *(std::next(m_modelData.begin(), index));
 }
 
 bool DialogsManager::IsChatExist(int chatId) const

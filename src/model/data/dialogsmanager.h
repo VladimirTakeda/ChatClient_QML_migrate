@@ -16,7 +16,7 @@ public:
     void CreateNewChat(std::optional<int> userId, int chatId, const QString& userToName);
     void AddMessage(int userId, const Message& msg);
     const Dialog& GetDialog(int userId);
-    const Dialog& GetDialogByIndex(int modelIndex);
+    std::shared_ptr<Dialog> GetDialogByIndex(int modelIndex);
     bool IsChatExist(int chatId) const;
     bool IsDialogWithUserExist(int userId) const;
     void LoadFromMemory();

@@ -68,6 +68,7 @@ qt_add_qml_module(appChatClient_QML
     SOURCES
         src/model/contactsmodel.h src/model/contactsmodel.cpp
         src/model/searchmodel.h src/model/searchmodel.cpp
+        src/model/chathistorymodel.h src/model/chathistorymodel.cpp
 )
 
 # add_subdirectory(qml/MainWidgetInternal/LeftSideBar)

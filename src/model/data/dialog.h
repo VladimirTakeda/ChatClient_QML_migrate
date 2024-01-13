@@ -20,12 +20,14 @@ class Dialog
     friend ChatClient;
 public:
     Dialog(int64_t chatId,const QString& name);
+    size_t Size() const;
     void addMessage(const Message& msg);
     int GetChatId() const;
     QString GetName() const;
     std::shared_ptr<Message> GetLastMessage() const;
     const QString & GetHtmlDialog() const;
     int GetUnreadCount() const;
+    std::shared_ptr<Message> operator[](size_t index) const;
 private:
     uint64_t m_unreadCount;
     int64_t m_chatId;
