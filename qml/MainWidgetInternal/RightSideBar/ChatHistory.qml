@@ -16,7 +16,8 @@ Rectangle{
         }
 
         ChatDisplayPanel{
-
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
 
         BottomToolPanel{

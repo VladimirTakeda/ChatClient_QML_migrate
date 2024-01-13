@@ -6,6 +6,8 @@ import ChatClient_QML 1.0
 
 
 Rectangle{
+
+
     id: searchResultPanel_id
     color: "transparent"
 

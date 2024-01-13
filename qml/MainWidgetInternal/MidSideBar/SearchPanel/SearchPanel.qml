@@ -3,11 +3,16 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 Rectangle{
+    property alias innerSearch: innerSearchArea_id
     id: searchPanel_id
     width: parent.width
     height: 50
     color: "green"
+
     Rectangle{
+        property alias textInput: inputText_id
+        id: innerSearchArea_id
+
         readonly property int margineSize: 15
 
         width: parent.width - margineSize
@@ -19,6 +24,7 @@ Rectangle{
         TextInput{
             readonly property string pathContactsPanel: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/ContactsPanel.qml"
             readonly property string pathSearchResultPanel: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/SearchResultPanel.qml"
+            // property alias textInput: inputText_id
             id: inputText_id
             anchors.fill: parent
             verticalAlignment: TextInput.AlignVCenter
