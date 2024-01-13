@@ -6,18 +6,18 @@ Rectangle{
     id: delegat_id
     height: 45
     width: ListView.view.width
-    // color: "lightseagreen"
-    color: "transparent"
+    // color: "transparent"
+    color: parent.isCurrentItem ? "cadetblue" : "transparent"
     border.color: "black"
 
     MouseArea{
         id: mouseCursor_id
         anchors.fill: parent
         hoverEnabled: true
-        //onEntered: { delegat_id.color = "lightcoral" }
-        //onExited: { delegat_id.color = "transparent" }
+        // onEntered: { delegat_id.color = "lightcoral" }
+        // onExited: { delegat_id.color = "transparent" }
         onClicked: {
-            contactsList_id.currentIndex = index
+            listViewContacts_id.currentIndex = index;
             chatClientObj.updateCurrentChat(index)
         }
     }

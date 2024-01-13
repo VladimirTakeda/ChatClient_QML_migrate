@@ -16,6 +16,7 @@ ListView{
             leftMargin: model.isMyMessage ? undefined : rlSideMargins
         }
 
+
         width: Math.min(messageText_id.implicitWidth + 24,
                         listViewDisplayPanel_id.width - 100)
         height: messageText_id.implicitHeight + 24

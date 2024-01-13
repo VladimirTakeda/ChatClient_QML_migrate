@@ -25,6 +25,4 @@ Rectangle{
             Layout.alignment: Qt.AlignBottom
         }
     }
-
-
 }
