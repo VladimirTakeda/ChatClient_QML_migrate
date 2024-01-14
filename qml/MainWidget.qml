@@ -6,7 +6,7 @@ import ChatClient_QML 1.0
 
 Rectangle{
     id: mainWidget_id
-    anchors.fill: parent
+    // anchors.fill: parent
     RowLayout{
         anchors.fill: parent
 

@@ -7,7 +7,7 @@ Rectangle{
     height: 45
     width: ListView.view.width
     // color: "transparent"
-    color: parent.isCurrentItem ? "cadetblue" : "transparent"
+    color: ListView.isCurrentItem ? "cadetblue" : "transparent"
     border.color: "black"
 
     MouseArea{

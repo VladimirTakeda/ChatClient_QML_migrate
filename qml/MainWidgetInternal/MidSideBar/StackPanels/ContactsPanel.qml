@@ -13,7 +13,7 @@ ColumnLayout{
 
         model: contactsModel
 
-        highlight: Rectangle{ color: listViewContacts_id.highlighted === index ? "cadetblue" : "transparent"}
+        // highlight: Rectangle{ color: listViewContacts_id.view === listViewContacts_id.index ? "cadetblue" : "transparent"}
 
         delegate: DelegateContactPanel{
 

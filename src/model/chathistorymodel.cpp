@@ -1,4 +1,4 @@
-#include "chathistorymodel.h".h"
+#include "chathistorymodel.h"
 
 #include <src/model/data/dialog.h>
 
