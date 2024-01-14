@@ -10,14 +10,6 @@ Rectangle{
     height: 50
     color: "crimson"
 
-    // property int currentIndex: -1
-    // Connections {
-    //     target: listViewDisplayPanel_id
-    //     function onMessageSelected() {
-    //         bottomPanel_id.currentIndex = index;
-    //     }
-    // }
-
     RowLayout{
         width: parent.width
         anchors.centerIn: parent
@@ -25,7 +17,7 @@ Rectangle{
         TextArea{
             id: messageField_id
             Layout.fillWidth: true
-            placeholderText: qsTr("<font color = 'darkgrey' Compose message...")
+            placeholderText: qsTr("<font color='lightgray'>Compose message...")
             color: "darkgray"
 
             wrapMode: TextArea.Wrap
@@ -37,12 +29,9 @@ Rectangle{
 
             onActiveFocusChanged: {
                 if (activeFocus) {
-                    // При получении фокуса изменить цвет placeholder
-                    messageField_id.placeholderText = "lightgray";
-                    console.log("activeFocus --> true")
+                    messageField_id.placeholderText = "<font color='gray'>Compose message...";
                 } else {
-                    // При потере фокуса вернуть исходный цвет placeholder
-                    messageField_id.placeholderText = "blue";
+                    messageField_id.placeholderText = "<font color='lightgray'>Compose message...";
                 }
             }
 

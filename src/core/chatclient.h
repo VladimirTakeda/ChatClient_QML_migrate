@@ -28,7 +28,10 @@ class ChatClient : public QObject
     Q_OBJECT
     Q_PROPERTY(QString SearchPrefix READ SearchPrefix WRITE setSearchPrefix NOTIFY SearchPrefixChanged FINAL)
 public:
-    ChatClient(std::shared_ptr<ContactsModel> contactsModel, std::shared_ptr<SearchModel> searchModel, std::shared_ptr<ChatHistoryModel> chatHistoryModel, QObject *parent = nullptr);
+    ChatClient(std::shared_ptr<ContactsModel> contactsModel,
+               std::shared_ptr<SearchModel> searchModel,
+               std::shared_ptr<ChatHistoryModel> chatHistoryModel,
+               QObject *parent = nullptr);
     void SetUpWSConnection();
     void LoadDialogs();
     void SaveDialogs() const;

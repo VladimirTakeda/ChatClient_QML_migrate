@@ -15,6 +15,7 @@ Window {
         id: mainWindowStack_id
         anchors.fill: parent
         initialItem: chatClientObj.isRegistered() ? "qml/MainWidget.qml" : "qml/StartWidget.qml"
+        // initialItem: "qml/MainWidget.qml"
     }
     Item{
         focus: true

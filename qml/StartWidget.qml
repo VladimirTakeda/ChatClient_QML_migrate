@@ -7,10 +7,8 @@ Rectangle{
     //TODO: collapse hides a part of content
 
     id: startWidget_id
-    width: parent.width; height: parent.height
-    anchors{
-        fill: parent
-    }
+    // width: parent.width; height: parent.height
+    // anchors.fill: parent
     readonly property real minSize: textSecond_id.width
     color: "grey"
 
@@ -32,7 +30,6 @@ Rectangle{
             Item{
                 Layout.fillHeight: true
             }
-
             Text{
                 text: "<b>P2P Chat Desktop\n\n<b>"
                 font.pointSize: 12
@@ -40,14 +37,11 @@ Rectangle{
                 horizontalAlignment: Text.AlignHCenter
                 Layout.alignment: Qt.AlignHCenter
             }
-
             Text{
                 id: textSecond_id
                 text: "Welcome to the official P2P Chat app.\n It's fast and secure\n\n\n"
                 horizontalAlignment: Text.AlignHCenter
             }
-
-
             Button{
                 id: startMessage_id
                 Layout.preferredWidth: textSecond_id.width

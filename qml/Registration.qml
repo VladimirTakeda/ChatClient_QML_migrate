@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Basic
 import QtQuick.Layouts
 
 
@@ -10,18 +10,17 @@ Rectangle{
     // readonly property int heightPaddingItems: 30
 
     id: registrationWidget_id
-    width: parent.width; height: parent.height
-    anchors{
-        fill: parent
-    }
+    // width: parent.width; height: parent.height
+    // anchors{
+    //     fill: parent
+    // }
     color: "white"
 
     RowLayout{
+        anchors.fill: parent
+
         Layout.alignment: Qt.AlignVCenter
         Layout.minimumWidth: minSize
-        anchors{
-            fill: parent
-        }
         Item{
             Layout.fillWidth: true
         }
