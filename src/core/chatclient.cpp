@@ -133,6 +133,18 @@ void ChatClient::GotNewMessage(WebSocket::Message msg)
     // hack
     m_chatHistoryModel->SetDataSource(m_currChat);
 
+    if (!m_dialogsManager)
+        qDebug() << "null manager";
+    if (m_dialogsManager->m_IdToDialog.count(msg.chatTo) == 0){
+        qDebug() << "can't find chat " << msg.chatTo;
+    }
+    try{
+        qDebug() << (*m_dialogsManager->m_IdToDialog.at(msg.chatTo))->m_unreadCount;
+    }
+    catch (...){
+        qDebug() << "can't dereference list iterator";
+    }
+
     OnGotNotification(msg.chatName, msg.text, (*m_dialogsManager->m_IdToDialog.at(msg.chatTo))->m_unreadCount, msg.time);
 }
 
@@ -174,6 +186,9 @@ void ChatClient::updateCurrentChat(int index){
 
 void ChatClient::LookingForPeople(const QString& prefix)
 {
+    if (prefix.isEmpty())
+        return;
+
     QNetworkRequest request;
 
     QJsonObject obj;
@@ -191,11 +206,13 @@ void ChatClient::LookingForPeople(const QString& prefix)
     request.setUrl(url);
     request.setRawHeader("Content-Type", "application/json");
 
+    qDebug() << "send search request with prefix: " << prefix;
     m_httpClient->sendHttpRequest(std::move(request), std::move(data), {}, std::bind(&ChatClient::LookingForPeopleReply, this, std::placeholders::_1));
 }
 
 void ChatClient::LookingForPeopleReply(QNetworkReply *reply){
     if (reply->error() == QNetworkReply::NoError) {
+        qDebug() << "got search reques";
         SetSearchResults(ParseUsers(reply->readAll()));
     }
     else {
