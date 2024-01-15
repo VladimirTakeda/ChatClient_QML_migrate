@@ -35,19 +35,13 @@ Rectangle{
                 }
             }
 
-            Keys.onEnterPressed: event => {
-                                     console.log(messageField_id.text)
-                                     messageField_id.clear()
-                                 }
-            Keys.onReturnPressed: event => {
-                                      console.log(messageField_id.text)
-                                      chatClientObj.sendNewMessage(messageField_id.text)
-                                      messageField_id.clear()
-
-                                  }
-            Keys.onEscapePressed: event => {
-                                      messageField_id.focus = false
-                                  }
+            Keys.onPressed: (event)=> {
+                                if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return) {
+                                    console.log(messageField_id.text)
+                                    chatClientObj.sendNewMessage(messageField_id.text)
+                                    messageField_id.clear()
+                                }
+                            }
         }
     }
 }

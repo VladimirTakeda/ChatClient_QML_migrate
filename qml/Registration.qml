@@ -67,6 +67,11 @@ Rectangle{
                 echoMode: TextInput.Password
                 placeholderText: "Password"
                 font.pointSize: sizeTextPlaceholder
+                Keys.onPressed: (event)=> {
+                                    if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return) {
+                                        signUp_id.clicked()
+                                    }
+                                }
             }
 
             Item{
