@@ -2,6 +2,10 @@
 
 #include <src/model/data/dialogsmanager.h>
 
+namespace {
+const QString timeFormat = "h:mm AP";
+}
+
 ContactsModel::ContactsModel(QObject *parent)
     : QAbstractListModel{parent}, m_signalConnected{false}
 
@@ -31,7 +35,7 @@ QVariant ContactsModel::data(const QModelIndex &index, int role) const
     if (role == LastMessageTimeRole){
         auto lastMessage = dialog->GetLastMessage();
         if (lastMessage)
-            return lastMessage->time.toString();
+            return lastMessage->time.toString(timeFormat);
         return "";
     }
     if(role == MissedMessageCountRole)

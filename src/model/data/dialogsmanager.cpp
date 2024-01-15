@@ -209,5 +209,5 @@ void DialogsManager::LoadGuiDialogs()
 
 int DialogsManager::DialogsCount() const
 {
-    return m_IdToDialog.size();
+    return m_modelData.size();
 }
