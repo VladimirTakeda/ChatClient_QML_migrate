@@ -28,6 +28,7 @@ void DialogsManager::AddMessage(int chatId, const Message& msg)
     dialog->addMessage(msg);
     m_modelData.erase(iter);
     m_modelData.push_front(dialog);
+    m_IdToDialog[chatId] =  m_modelData.begin();
 }
 
 const Dialog& DialogsManager::GetDialog(int chatId)

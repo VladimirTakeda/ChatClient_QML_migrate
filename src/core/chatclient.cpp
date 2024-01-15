@@ -133,18 +133,6 @@ void ChatClient::GotNewMessage(WebSocket::Message msg)
     // hack
     m_chatHistoryModel->SetDataSource(m_currChat);
 
-    if (!m_dialogsManager)
-        qDebug() << "null manager";
-    if (m_dialogsManager->m_IdToDialog.count(msg.chatTo) == 0){
-        qDebug() << "can't find chat " << msg.chatTo;
-    }
-    try{
-        qDebug() << (*m_dialogsManager->m_IdToDialog.at(msg.chatTo))->m_unreadCount;
-    }
-    catch (...){
-        qDebug() << "can't dereference list iterator";
-    }
-
     OnGotNotification(msg.chatName, msg.text, (*m_dialogsManager->m_IdToDialog.at(msg.chatTo))->m_unreadCount, msg.time);
 }
 
