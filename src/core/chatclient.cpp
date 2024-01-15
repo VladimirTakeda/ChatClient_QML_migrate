@@ -132,6 +132,7 @@ void ChatClient::GotNewMessage(WebSocket::Message msg)
 
     // hack
     m_chatHistoryModel->SetDataSource(m_currChat);
+    m_contactsModel->SetDataSource(m_dialogsManager);
 
     OnGotNotification(msg.chatName, msg.text, (*m_dialogsManager->m_IdToDialog.at(msg.chatTo))->m_unreadCount, msg.time);
 }
