@@ -6,19 +6,21 @@ Rectangle{
     property alias innerSearch: innerSearchArea_id
     id: searchPanel_id
     width: parent.width
-    height: 50
-    color: "green"
+    height: 54
+    color: "transparent"
+    // color: "lightblue"
+
 
     Rectangle{
-        property alias textInput: inputText_id
+        // property alias textInput: inputText_id
         id: innerSearchArea_id
 
-        readonly property int margineSize: 15
+        readonly property int margineSize: 20
 
         width: parent.width - margineSize
         height: parent.height - margineSize
         anchors.centerIn: parent
-        radius: 15
+        radius: 20
         color: "white"
 
         TextInput{

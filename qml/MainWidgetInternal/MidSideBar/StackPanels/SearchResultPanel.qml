@@ -6,8 +6,6 @@ import ChatClient_QML 1.0
 
 
 Rectangle{
-
-
     id: searchResultPanel_id
     color: "transparent"
 
@@ -35,6 +33,7 @@ Rectangle{
             right: parent.right
             // bottom: parent.bottom
         }
+        interactive: false
         model: searchModel
 
         delegate: DelegateSearchPanel{

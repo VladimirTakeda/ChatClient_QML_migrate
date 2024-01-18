@@ -10,7 +10,7 @@ ColumnLayout{
         currentIndex: -1
         Layout.fillWidth: true
         Layout.fillHeight: true
-
+        interactive: false
         model: contactsModel
 
         // highlight: Rectangle{ color: listViewContacts_id.view === listViewContacts_id.index ? "cadetblue" : "transparent"}

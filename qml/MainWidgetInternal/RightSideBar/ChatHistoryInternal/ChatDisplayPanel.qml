@@ -6,16 +6,17 @@ ListView{
     id: listViewDisplayPanel_id
     spacing: 4
     model: chatHistoryModel
+    interactive: false
 
     delegate: Rectangle{
         readonly property real rlSideMargins: 5
+
         anchors {
             right: model.isMyMessage ? listViewDisplayPanel_id.contentItem.right : undefined
             left: model.isMyMessage ? undefined : listViewDisplayPanel_id.contentItem.left
             rightMargin: model.isMyMessage ? rlSideMargins : undefined
             leftMargin: model.isMyMessage ? undefined : rlSideMargins
         }
-
 
         width: Math.min(messageText_id.implicitWidth + 24,
                         listViewDisplayPanel_id.width - 100)
