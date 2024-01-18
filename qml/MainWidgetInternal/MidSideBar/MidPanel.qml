@@ -13,6 +13,7 @@ Rectangle{
         SearchPanel{
             id: searchPanel_id
             Layout.fillWidth: true
+
             Layout.alignment: Qt.AlignTop
         }
         StackView{

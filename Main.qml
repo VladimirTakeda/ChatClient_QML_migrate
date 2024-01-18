@@ -10,6 +10,7 @@ Window {
 
     //TODO: main window shrinks inner elements during collapsing
     minimumWidth: main_id.width - 500
+    minimumHeight: 500
 
     StackView{
         id: mainWindowStack_id

@@ -6,7 +6,7 @@ import ChatClient_QML 1.0
 
 Rectangle{
     id: delegat_id
-    height: 45
+    height: 62
     width: ListView.view.width
     // color: "lightseagreen"
     color: "transparent"
@@ -29,33 +29,34 @@ Rectangle{
     }
 
     Rectangle{
-        readonly property real iconMargins: 10
+        readonly property real iconLeftMargin: 10
         id: icon_id
-        width: 45 - iconMargins
-        height: parent.height - iconMargins
+        width: 45
+        height: 45
         anchors.verticalCenter: delegat_id.verticalCenter
         anchors.left: parent.left
-        anchors.leftMargin: 5
-        // color: "transparent"
+        anchors.leftMargin: icon_id.iconLeftMargin
         radius: width / 2
         border.width: 1
         border.color: "darkred"
         Image {
             anchors.fill: parent
+            fillMode: Image.PreserveAspectFit
             visible: true
-            source: "qrc:/ChatClient/ChatClient_QML/icons/blank.jpg"
+            source: "qrc:/ChatClient/ChatClient_QML/icons/user_blank.png"
         }
     }
 
     ColumnLayout{
         anchors.fill: parent
         Text{
-            text: model.chatName
+            id: userInfo_id
             Layout.fillWidth: true
-            Layout.alignment: Qt.AlignLeft
-            Layout.leftMargin: icon_id.width + 10
-            Layout.topMargin: 3
+            Layout.alignment: Qt.AlignTop
+            Layout.topMargin: 14
+            Layout.leftMargin: icon_id.width + icon_id.iconLeftMargin + 12
             wrapMode: Text.WordWrap
+            text: model.chatName
         }
     }
 }

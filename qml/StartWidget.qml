@@ -7,8 +7,8 @@ Rectangle{
     //TODO: collapse hides a part of content
 
     id: startWidget_id
-    // width: parent.width; height: parent.height
-    // anchors.fill: parent
+    implicitWidth: 1034
+    implicitHeight: 734
     readonly property real minSize: textSecond_id.width
     color: "grey"
 

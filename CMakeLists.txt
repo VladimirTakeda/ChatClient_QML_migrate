@@ -64,7 +64,10 @@ qt_add_qml_module(appChatClient_QML
         qml/MainWidgetInternal/RightSideBar/ChatHistoryInternal/BottomToolPanel.qml
         qml/MainWidgetInternal/RightSideBar/ChatHistoryInternal/ChatDisplayPanel.qml
     RESOURCES
-        icons/blank.jpg
+        icons/user_blank.png
+        icons/sendMessage.png
+        icons/smileButton.png
+        icons/paper_clip.svg
     SOURCES
         src/model/contactsmodel.h src/model/contactsmodel.cpp
         src/model/searchmodel.h src/model/searchmodel.cpp

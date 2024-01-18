@@ -10,10 +10,9 @@ Rectangle{
     // readonly property int heightPaddingItems: 30
 
     id: registrationWidget_id
-    // width: parent.width; height: parent.height
-    // anchors{
-    //     fill: parent
-    // }
+    implicitWidth: 1034
+    implicitHeight: 734
+
     color: "white"
 
     RowLayout{

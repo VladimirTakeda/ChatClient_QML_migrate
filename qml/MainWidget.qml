@@ -6,15 +6,17 @@ import ChatClient_QML 1.0
 
 Rectangle{
     id: mainWidget_id
-    // anchors.fill: parent
+    implicitWidth: 1034
+    implicitHeight: 734
     RowLayout{
         anchors.fill: parent
+        spacing: 0
 
         LeftToolPanel {
             id: leftToolPanel_id
-            Layout.minimumWidth:80
-            Layout.preferredWidth: 100
-            Layout.maximumWidth: 80
+            Layout.minimumWidth:72
+            Layout.preferredWidth: 72
+            Layout.maximumWidth: 72
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
@@ -30,21 +32,18 @@ Rectangle{
 
             MidPanel {
                 id: midToolPanel_id
-                SplitView.minimumHeight: 25
-                SplitView.preferredHeight: 50
-                SplitView.maximumHeight: 50
+                SplitView.minimumHeight: 500
                 SplitView.fillWidth: true
-                SplitView.preferredWidth: 200 // до какого размера будет сжиматься
-                SplitView.minimumWidth: 250 //значение, которое меняет ширину мид панели
+                SplitView.preferredWidth: 260
+                SplitView.minimumWidth: 260 // до какого размера будет сжиматься
             }
             ChatHistory {
+                //TODO: add limit width to 375
                 id: chatHistory_id
-                SplitView.minimumHeight: 25
-                SplitView.preferredHeight: 50
-                SplitView.maximumHeight: 100
+                SplitView.minimumHeight: 500
+                SplitView.minimumWidth: 375
+                SplitView.preferredWidth: 550
                 SplitView.fillWidth: false
-                SplitView.minimumWidth: 500
-                SplitView.preferredWidth: 500
             }
         }
     }
