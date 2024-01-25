@@ -52,6 +52,7 @@ qt_add_qml_module(appChatClient_QML
         qml/StartWidget.qml
         qml/Registration.qml
         qml/MainWidget.qml
+        qml/StyleModule/Style.qml
         qml/MainWidgetInternal/LeftSideBar/LeftToolPanel.qml
         qml/MainWidgetInternal/MidSideBar/MidPanel.qml
         qml/MainWidgetInternal/RightSideBar/ChatHistory.qml
@@ -68,11 +69,16 @@ qt_add_qml_module(appChatClient_QML
         icons/sendMessage.png
         icons/smileButton.png
         icons/paper_clip.svg
+        icons/walls2.jpg
+        # icons/walls3.jpg
+        qml/StyleModule/CMakeLists.txt
     SOURCES
         src/model/contactsmodel.h src/model/contactsmodel.cpp
         src/model/searchmodel.h src/model/searchmodel.cpp
         src/model/chathistorymodel.h src/model/chathistorymodel.cpp
 )
+
+add_subdirectory(qml/StyleModule)
 
 # add_subdirectory(qml/MainWidgetInternal/LeftSideBar)
     # qml/MainWidgetInternal/MidSideBar
@@ -93,7 +99,7 @@ set_target_properties(appChatClient_QML PROPERTIES
 )
 
 target_link_libraries(appChatClient_QML
-    PRIVATE Qt6::Quick Qt6::Widgets Qt6::WebSockets
+    PRIVATE Qt6::Gui Qt6::Quick Qt6::Widgets Qt6::WebSockets StyleLibplugin
 )
 
 target_include_directories(appChatClient_QML PUBLIC

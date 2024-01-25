@@ -3,12 +3,13 @@ import QtQuick.Controls.Basic
 import QtQuick.Layouts
 
 import ChatClient_QML 1.0
+import StyleModule 1.0
 
 Rectangle{
     id: bottomPanel_id
     width: parent.width
     height: 45
-    color: "crimson"
+    color: Style.base_color
 
     readonly property real iconsSize: 22
     RowLayout{
@@ -43,11 +44,16 @@ Rectangle{
 
             wrapMode: TextArea.Wrap
 
-            // background: Rectangle {
-            //     // implicitWidth: parent.width
-            //     // implicitHeight: parent.height
-            //     color: "white"
-            // }
+            Text {
+                id: customPlaceholder_id
+                anchors.fill: parent
+                anchors.left: messageField_id.left
+                anchors.leftMargin: 2
+                verticalAlignment: Text.AlignVCenter
+                text: "Compose message..."
+                color: messageField_id.cursorVisible ? Style.placeholderLight_color : Style.placeholderDark_color
+                visible: !messageField_id.text.length
+            }
 
             // onActiveFocusChanged: {
             //     if (activeFocus) {

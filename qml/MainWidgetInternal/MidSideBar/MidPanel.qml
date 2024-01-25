@@ -4,16 +4,19 @@ import QtQuick.Layouts
 
 import ChatClient_QML 1.0
 
+import StyleModule 1.0
+
+
 Rectangle{
     id: midToolPanel_id
-    color: "green"
+    color: Style.base_color
 
     ColumnLayout{
         anchors.fill: parent
+        spacing: 0
         SearchPanel{
             id: searchPanel_id
             Layout.fillWidth: true
-
             Layout.alignment: Qt.AlignTop
         }
         StackView{
