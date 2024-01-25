@@ -6,7 +6,14 @@ import ChatClient_QML 1.0
 
 Rectangle{
     id: chatHistory_id
-    color: "blue"
+    color: "transparent"
+
+    Image {
+        id: walls_id
+        anchors.fill: parent
+        source: "qrc:/ChatClient/ChatClient_QML/icons/walls2.jpg"
+        fillMode: Image.Stretch
+    }
 
     ColumnLayout{
         anchors.fill: parent

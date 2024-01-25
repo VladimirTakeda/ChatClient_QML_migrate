@@ -2,25 +2,36 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import StyleModule 1.0
+
+//TODO: delete change index on c++ side
+
 Rectangle{
+    readonly property ListView __lv: ListView.view
     readonly property real leftRightInnerMargin: 10
     id: delegat_id
-    height: 62
-    width: ListView.view.width
-    // color: "transparent"
-    color: ListView.isCurrentItem ? "cadetblue" : "transparent"
-    border.color: "black"
+    implicitHeight: 62
+    implicitWidth: __lv.width
+    color: __lv.currentIndex === model.index ? Style.baseFilled_color : "transparent"
+    // border.color: "black"
 
     MouseArea{
         id: mouseCursor_id
         anchors.fill: parent
         hoverEnabled: true
-        // onEntered: { delegat_id.color = "lightcoral" }
-        // onExited: { delegat_id.color = "transparent" }
         onClicked: {
-            listViewContacts_id.currentIndex = index;
-            chatClientObj.updateCurrentChat(index)
+            __lv.currentIndex = model.index
+            chatClientObj.updateCurrentChat(model.index)
+            // delegat_id.color = "#419FD9"
         }
+        // onEntered: {
+        //     if(__lv.currentIndex !== model.index)
+        //         delegat_id.color = "#F1F1F1"
+        // }
+        // onExited: {
+        //     if(__lv.currentIndex !== model.index)
+        //         delegat_id.color = "transparent"
+        // }
     }
 
     Rectangle{
@@ -31,8 +42,8 @@ Rectangle{
         anchors.left: parent.left
         anchors.leftMargin: delegat_id.leftRightInnerMargin
         radius: width / 2
-        border.width: 1
-        border.color: "darkred"
+        // border.width: 1
+        // border.color: "darkred"
         Image {
             anchors.fill: parent
             fillMode: Image.PreserveAspectFit
@@ -85,6 +96,7 @@ Rectangle{
                 Layout.alignment: Qt.AlignRight | Qt.AlignBottom
                 Layout.rightMargin: delegat_id.leftRightInnerMargin
                 Layout.bottomMargin: 12
+                color: Style.filledDark_color
                 Text{
                     anchors {
                         fill: parent

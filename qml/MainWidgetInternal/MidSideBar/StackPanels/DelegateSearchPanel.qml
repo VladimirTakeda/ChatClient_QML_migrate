@@ -2,21 +2,19 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import ChatClient_QML 1.0
-
 Rectangle{
     id: delegat_id
     height: 62
     width: ListView.view.width
     // color: "lightseagreen"
     color: "transparent"
-    border.color: "black"
+    // border.color: "black"
 
     MouseArea{
         id: mouseCursor_id
         anchors.fill: parent
         hoverEnabled: true
-        onEntered: { delegat_id.color = "lightcoral" }
+        onEntered: { delegat_id.color = "#F1F1F1" }
         onExited: { delegat_id.color = "transparent" }
         readonly property string pathContactsPanel: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/ContactsPanel.qml"
         readonly property string pathSearchResultPanel: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/SearchResultPanel.qml"
@@ -24,12 +22,14 @@ Rectangle{
             console.log("current index", index)
             searchModel.onItemClicked(index)
             stackViewSearchPanel_id.replace(pathContactsPanel)
-            //TODO: add the call's method clear() from SearchPanel
+
+            searchPanel_id.innerSearch.messageBox_id.clear()
         }
     }
 
     Rectangle{
         readonly property real iconLeftMargin: 10
+
         id: icon_id
         width: 45
         height: 45
@@ -37,8 +37,8 @@ Rectangle{
         anchors.left: parent.left
         anchors.leftMargin: icon_id.iconLeftMargin
         radius: width / 2
-        border.width: 1
-        border.color: "darkred"
+        // border.width: 1
+        // border.color: "darkred"
         Image {
             anchors.fill: parent
             fillMode: Image.PreserveAspectFit

@@ -2,42 +2,35 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import ChatClient_QML 1.0
-
+import StyleModule 1.0
 
 Rectangle{
     id: searchResultPanel_id
     color: "transparent"
 
-    Rectangle{
-        id: resultGlobalSearch_id
-        width: parent.width
-        height: 30
-        color: "cornsilk"
-        Text{
-            anchors{
-                fill: parent
-                leftMargin: 10
-            }
-            verticalAlignment: Text.AlignVCenter
-            text: "Results global search"
-        }
-    }
-
     ListView{
-        height: parent.height - resultGlobalSearch_id.height
-        anchors{
-            // fill: parent
-            top: resultGlobalSearch_id.bottom
-            left: parent.left
-            right: parent.right
-            // bottom: parent.bottom
-        }
+        anchors.fill: parent
         interactive: false
+        clip: true
         model: searchModel
+        spacing: 0
 
         delegate: DelegateSearchPanel{
+        }
 
+        header: Rectangle{
+            id: resultGlobalSearch_id
+            width: parent.width
+            height: 30
+            color: Style.filled_color
+            Text{
+                anchors{
+                    fill: parent
+                    leftMargin: 10
+                }
+                verticalAlignment: Text.AlignVCenter
+                text: "Results global search"
+            }
         }
     }
 }

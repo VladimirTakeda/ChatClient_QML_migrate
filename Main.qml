@@ -6,7 +6,7 @@ Window {
     width: 1034
     height: 734
     visible: true
-    title: qsTr("Hello World")
+    title: qsTr("ChatClient")
 
     //TODO: main window shrinks inner elements during collapsing
     minimumWidth: main_id.width - 500
