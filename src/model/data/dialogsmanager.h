@@ -30,7 +30,6 @@ private:
     void LoadGuiDialogs();
 
 private:
-    //std::unordered_map<int, int> m_UserToChatId;
     std::unordered_set<int32_t> m_users; // users, we have dialog with
 
     std::unordered_map<int32_t, std::list<std::shared_ptr<Dialog>>::iterator> m_IdToDialog;

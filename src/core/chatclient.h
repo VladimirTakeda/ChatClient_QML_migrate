@@ -51,6 +51,7 @@ public:
 
 signals:
     void SearchPrefixChanged();
+    void dialogIndexChanged(int index);
 
 private:
     void AddNewWidgetDialog(int chatId, const QString& name, bool needSetItem);
