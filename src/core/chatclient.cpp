@@ -133,6 +133,8 @@ void ChatClient::GotNewMessage(WebSocket::Message msg)
     // hack
     m_chatHistoryModel->SetDataSource(m_currChat);
     m_contactsModel->SetDataSource(m_dialogsManager);
+    //update qml index
+    emit dialogIndexChanged(std::distance(m_dialogsManager->m_modelData.begin(), m_dialogsManager->m_IdToDialog[m_currChat->m_chatId]));
 
     OnGotNotification(msg.chatName, msg.text, (*m_dialogsManager->m_IdToDialog.at(msg.chatTo))->m_unreadCount, msg.time);
 }
@@ -144,8 +146,14 @@ void ChatClient::UpdateTextBrowser(int selectedContactId)
 }
 
 bool ChatClient::isRegistered(){
-    QSettings settings(QApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat);
-    qDebug() << "dir path " << QApplication::applicationDirPath();
+#ifdef Q_OS_WIN
+    QSettings settings(QCoreApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat);
+#endif
+
+#ifdef Q_OS_MAC
+    QSettings settings(QCoreApplication::applicationDirPath() + "/../../../settings.ini", QSettings::IniFormat);
+#endif
+
     qDebug() << "curr path" << settings.fileName();
 
     bool IsRegistered = settings.value("registered", false).toBool();
@@ -171,6 +179,7 @@ void ChatClient::sendNewMessage(const QString& message)
 void ChatClient::updateCurrentChat(int index){
     qDebug() << "update curr Chat: " << index;
     m_currChat = m_dialogsManager->GetDialogByIndex(index);
+    m_chatHistoryModel->SetDataSource(m_currChat);
 }
 
 void ChatClient::LookingForPeople(const QString& prefix)
@@ -353,7 +362,13 @@ void ChatClient::RegisterUserReply(QNetworkReply *reply){
 
 void ChatClient::SaveUserInfo(int userId, const QString& deviceId, const QString& userName)
 {
-    QSettings settings(QApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat);
+#ifdef Q_OS_WIN
+    QSettings settings(QCoreApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat);
+#endif
+
+#ifdef Q_OS_MAC
+    QSettings settings(QCoreApplication::applicationDirPath() + "/../../../settings.ini", QSettings::IniFormat);
+#endif
     settings.setValue("userId", userId);
     settings.setValue("deviceId", deviceId);
     settings.setValue("registered", true);

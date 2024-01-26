@@ -4,19 +4,37 @@
 #include <QApplication>
 
 int getCurrUserId(){
-    QSettings settings(QApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat);
+#ifdef Q_OS_WIN
+    QSettings settings(QCoreApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat);
+#endif
+
+#ifdef Q_OS_MAC
+    QSettings settings(QCoreApplication::applicationDirPath() + "/../../../settings.ini", QSettings::IniFormat);
+#endif
     qDebug() << settings.fileName();
     return settings.value("userId").toInt();
 }
 
 QString getCurrDeviceId(){
-    QSettings settings(QApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat);
+#ifdef Q_OS_WIN
+    QSettings settings(QCoreApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat);
+#endif
+
+#ifdef Q_OS_MAC
+    QSettings settings(QCoreApplication::applicationDirPath() + "/../../../settings.ini", QSettings::IniFormat);
+#endif
     qDebug() << settings.fileName();
     return settings.value("deviceId").toString();
 }
 
 QString getCurrUserName(){
-    QSettings settings(QApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat);
+#ifdef Q_OS_WIN
+    QSettings settings(QCoreApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat);
+#endif
+
+#ifdef Q_OS_MAC
+    QSettings settings(QCoreApplication::applicationDirPath() + "/../../../settings.ini", QSettings::IniFormat);
+#endif
     qDebug() << settings.fileName();
     return settings.value("currUserName").toString();
 }

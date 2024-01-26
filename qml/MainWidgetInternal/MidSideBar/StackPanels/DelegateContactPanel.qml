@@ -34,6 +34,14 @@ Rectangle{
         // }
     }
 
+    Connections {
+      target: chatClientObj
+      onDialogIndexChanged: {
+         console.log(index)
+       __lv.currentIndex = index;
+      }
+    }
+
     Rectangle{
         id: icon_id
         width: 45
