@@ -292,6 +292,9 @@ void ChatClient::CreateChatReply(QNetworkReply *reply){
         QJsonObject rootObject = itemDoc.object();
         m_dialogsManager->CreateNewChat(reply->property("toUserId").toInt(), rootObject.value("chatId").toInt(), reply->property("toUserName").toString());
         m_contactsModel->SetDataSource(m_dialogsManager);
+        m_currChat = m_dialogsManager->GetDialogByIndex(0);
+        emit dialogIndexChanged(0);
+        m_chatHistoryModel->SetDataSource(m_currChat);
         //AddNewWidgetDialog(rootObject.value("chatId").toInt(), reply->property("toUserName").toString(), true);
         //UpdateTextBrowser(rootObject.value("chatId").toInt());
     }
