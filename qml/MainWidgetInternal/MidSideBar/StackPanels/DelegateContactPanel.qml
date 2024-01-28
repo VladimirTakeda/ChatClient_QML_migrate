@@ -4,16 +4,15 @@ import QtQuick.Layouts
 
 import StyleModule 1.0
 
-//TODO: delete change index on c++ side
 
 Rectangle{
+    property alias __delegatContactMouseArea: mouseCursor_id
     readonly property ListView __lv: ListView.view
     readonly property real leftRightInnerMargin: 10
     id: delegat_id
     implicitHeight: 62
     implicitWidth: __lv.width
     color: __lv.currentIndex === model.index ? Style.baseFilled_color : "transparent"
-    // border.color: "black"
 
     MouseArea{
         id: mouseCursor_id
@@ -22,6 +21,10 @@ Rectangle{
         onClicked: {
             __lv.currentIndex = model.index
             chatClientObj.updateCurrentChat(model.index)
+            // called method from BottomToolPanel
+           chatHistory_id.__bottomToolPanel_id.__rowLayoutBottomToolPanel_id.__messageBox.focus = true
+
+
             // delegat_id.color = "#419FD9"
         }
         // onEntered: {
@@ -36,7 +39,7 @@ Rectangle{
 
     Connections {
       target: chatClientObj
-      onDialogIndexChanged: {
+      function onDialogIndexChanged() {
          console.log(index)
        __lv.currentIndex = index;
       }
@@ -50,8 +53,6 @@ Rectangle{
         anchors.left: parent.left
         anchors.leftMargin: delegat_id.leftRightInnerMargin
         radius: width / 2
-        // border.width: 1
-        // border.color: "darkred"
         Image {
             anchors.fill: parent
             fillMode: Image.PreserveAspectFit
@@ -91,9 +92,16 @@ Rectangle{
                 Layout.alignment: Qt.AlignBottom
                 Layout.bottomMargin: dataDelegat_id.marginInner
                 Layout.leftMargin: icon_id.width + delegat_id.leftRightInnerMargin + 12
-                wrapMode: Text.WordWrap
+                elide: Text.ElideRight
+                // property wrapper for ... at the end of the text
+                property TextMetrics textMetrics: TextMetrics {
+                    text: model.lastMessage
+                    elideWidth: delegat_id.width
+                    elide: Text.ElideRight
+                }
+                wrapMode: Text.WrapAnywhere
                 maximumLineCount: 1
-                text: model.lastMessage
+                text: textMetrics.text
             }
             Rectangle{
                 id: missMassages_id

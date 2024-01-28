@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import ChatClient_QML 1.0
 
 Rectangle{
+    property alias __bottomToolPanel_id: bottomToolPanel_id
     id: chatHistory_id
     color: "transparent"
 
@@ -28,6 +29,7 @@ Rectangle{
         }
 
         BottomToolPanel{
+            id: bottomToolPanel_id
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignBottom
         }
