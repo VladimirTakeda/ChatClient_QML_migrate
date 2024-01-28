@@ -6,9 +6,7 @@ Rectangle{
     id: delegat_id
     height: 62
     width: ListView.view.width
-    // color: "lightseagreen"
     color: "transparent"
-    // border.color: "black"
 
     MouseArea{
         id: mouseCursor_id
@@ -24,6 +22,7 @@ Rectangle{
             stackViewSearchPanel_id.replace(pathContactsPanel)
 
             searchPanel_id.innerSearch.messageBox_id.clear()
+            chatHistory_id.__bottomToolPanel_id.__rowLayoutBottomToolPanel_id.__messageBox.focus = true
         }
     }
 
@@ -45,6 +44,7 @@ Rectangle{
             visible: true
             source: "qrc:/ChatClient/ChatClient_QML/icons/user_blank.png"
         }
+
     }
 
     ColumnLayout{

@@ -8,10 +8,13 @@ import StyleModule 1.0
 
 
 Rectangle{
+    property alias __columnLayout: columnLayout_id
     id: midToolPanel_id
     color: Style.base_color
 
     ColumnLayout{
+        property alias __stackViewSearchPanel: stackViewSearchPanel_id
+        id: columnLayout_id
         anchors.fill: parent
         spacing: 0
         SearchPanel{
@@ -20,12 +23,17 @@ Rectangle{
             Layout.alignment: Qt.AlignTop
         }
         StackView{
-            id : stackViewSearchPanel_id
+            property alias __contactsPanel: contactsPanel_id
+            id: stackViewSearchPanel_id
             Layout.fillWidth: true
             Layout.fillHeight: true
 
             // initialItem: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/SearchResultPanel.qml"
-            initialItem: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/ContactsPanel.qml"
+            // initialItem: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/ContactsPanel.qml"
+            initialItem: ContactsPanel{
+                id: contactsPanel_id
+            }
+
             replaceEnter: Transition {
                 PropertyAnimation { properties: "opacity"; duration: 0 }
             }

@@ -6,6 +6,7 @@ import ChatClient_QML 1.0
 import StyleModule 1.0
 
 Rectangle{
+    property alias __rowLayoutBottomToolPanel_id: rowLayoutBottomToolPanel_id
     id: bottomPanel_id
     width: parent.width
     height: 45
@@ -13,6 +14,8 @@ Rectangle{
 
     readonly property real iconsSize: 22
     RowLayout{
+        property alias __messageBox: messageField_id
+        id: rowLayoutBottomToolPanel_id
         width: parent.width
         anchors.centerIn: parent
 
