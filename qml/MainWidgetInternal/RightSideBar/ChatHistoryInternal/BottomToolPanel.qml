@@ -7,12 +7,12 @@ import StyleModule 1.0
 
 Rectangle{
     property alias __rowLayoutBottomToolPanel_id: rowLayoutBottomToolPanel_id
+    readonly property real iconsSize: 22
     id: bottomPanel_id
-    width: parent.width
+    implicitWidth: parent.width
     height: 45
     color: Style.base_color
 
-    readonly property real iconsSize: 22
     RowLayout{
         property alias __messageBox: messageField_id
         id: rowLayoutBottomToolPanel_id
@@ -26,8 +26,6 @@ Rectangle{
             Layout.leftMargin: 14
             color: "transparent"
 
-            // border.width: 1
-            // border.color: "darkred"
             Image {
                 anchors.fill: parent
                 autoTransform: true
@@ -36,44 +34,56 @@ Rectangle{
             }
         }
 
-        TextInput{
-            id: messageField_id
+        Rectangle {
+            id: inputContainer
             Layout.fillWidth: true
+            Layout.fillHeight: true
             Layout.leftMargin: 12
             Layout.rightMargin: 10
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            // placeholderText: qsTr("<font color='lightgray'>Compose message...")
-            color: "black"
+            color: Style.base_color
+            // height: Math.max(messageField_id.implicitHeight, bottomPanel_id.height)
+            // border.color: "black"
+            TextInput{
+                id: messageField_id
+                anchors{
+                    fill: parent
+                    // topMargin: 10
+                    // bottomMargin: 10
+                }
 
-            wrapMode: TextArea.Wrap
-
-            Text {
-                id: customPlaceholder_id
-                anchors.fill: parent
-                anchors.left: messageField_id.left
-                anchors.leftMargin: 2
                 verticalAlignment: Text.AlignVCenter
-                text: "Compose message..."
-                color: messageField_id.cursorVisible ? Style.placeholderLight_color : Style.placeholderDark_color
-                visible: !messageField_id.text.length
-            }
+                color: "black"
 
-            // onActiveFocusChanged: {
-            //     if (activeFocus) {
-            //         messageField_id.placeholderText = "<font color='gray'>Compose message...";
-            //     } else {
-            //         messageField_id.placeholderText = "<font color='lightgray'>Compose message...";
-            //     }
-            // }
+                wrapMode: TextInput.Wrap
 
-            Keys.onPressed:(event)=>{
-                               if ((event.key === Qt.Key_Enter || event.key === Qt.Key_Return) &&
-                                   messageField_id.length) {
-                                   console.log(messageField_id.text)
-                                   chatClientObj.sendNewMessage(messageField_id.text)
-                                   messageField_id.clear()
+                onTextChanged: {
+                    // Вызываем изменение размера inputContainer при изменении текста
+                    inputContainer.implicitHeight = Math.max(messageField_id.implicitHeight, 45)
+                    // inputContainer.width = bottomPanel_id.width
+                }
+
+                Text {
+                    id: customPlaceholder_id
+                    anchors{
+                        fill: parent
+                        left: messageField_id.left
+                        leftMargin: 2
+                    }
+                    verticalAlignment: Text.AlignVCenter
+                    text: "Compose message..."
+                    color: messageField_id.cursorVisible ? Style.placeholderLight_color : Style.placeholderDark_color
+                    visible: !messageField_id.text.length
+                }
+                Keys.onPressed:(event)=>{
+                                   if ((event.key === Qt.Key_Enter || event.key === Qt.Key_Return) &&
+                                       messageField_id.length) {
+                                       // console.log(messageField_id.text)
+                                       chatClientObj.sendNewMessage(messageField_id.text)
+                                       messageField_id.clear()
+                                   }
                                }
-                           }
+            }
         }
 
         Rectangle{
@@ -82,9 +92,6 @@ Rectangle{
             Layout.preferredHeight: bottomPanel_id.iconsSize
             Layout.rightMargin: 14
             color: "transparent"
-
-            // border.width: 1
-            // border.color: "darkred"
             Image {
                 anchors.fill: parent
                 autoTransform: true
@@ -99,13 +106,17 @@ Rectangle{
             Layout.preferredHeight: bottomPanel_id.iconsSize
             Layout.rightMargin: 14
             color: "transparent"
-
-            // border.width: 1
-            // border.color: "darkred"
             Image {
                 anchors.fill: parent
                 rotation: 45
                 source: "qrc:/ChatClient/ChatClient_QML/icons/sendMessage.png"
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        chatClientObj.sendNewMessage(messageField_id.text)
+                        messageField_id.clear()
+                    }
+                }
             }
         }
     }

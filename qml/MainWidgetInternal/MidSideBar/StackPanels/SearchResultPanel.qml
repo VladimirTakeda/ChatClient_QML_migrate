@@ -8,6 +8,8 @@ Rectangle{
     id: searchResultPanel_id
     color: "transparent"
 
+    // Component.onDestruction: print("Destroying searchResultPanel_id item")
+
     ListView{
         anchors.fill: parent
         interactive: false
