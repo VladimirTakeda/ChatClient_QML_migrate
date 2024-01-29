@@ -134,6 +134,7 @@ void ChatClient::GotNewMessage(WebSocket::Message msg)
     m_chatHistoryModel->SetDataSource(m_currChat);
     m_contactsModel->SetDataSource(m_dialogsManager);
     //update qml index
+    qDebug() << "new message changes the index";
     emit dialogIndexChanged(std::distance(m_dialogsManager->m_modelData.begin(), m_dialogsManager->m_IdToDialog[m_currChat->m_chatId]));
 
     OnGotNotification(msg.chatName, msg.text, (*m_dialogsManager->m_IdToDialog.at(msg.chatTo))->m_unreadCount, msg.time);
@@ -261,6 +262,14 @@ void ChatClient::SetNewDialog(int index)
     if (!m_dialogsManager->IsDialogWithUserExist(userId)){
         SendCreateDialogReq(getCurrUserId(), userId, login);
     }
+    else{
+        // set curr dialiog with userId
+        m_currChat = *m_dialogsManager->m_IdToDialog[m_dialogsManager->m_UserToChat[userId]];
+        int index = std::distance(m_dialogsManager->m_modelData.begin(), m_dialogsManager->m_IdToDialog[m_dialogsManager->m_UserToChat[userId]]);
+        qDebug() << "chat already created: " << index;
+        emit dialogIndexChanged(index);
+        m_chatHistoryModel->SetDataSource(m_currChat);
+    }
 }
 
 void ChatClient::SendCreateDialogReq(int fromUser, int toUser, const QString& toUserName){
@@ -293,6 +302,7 @@ void ChatClient::CreateChatReply(QNetworkReply *reply){
         m_dialogsManager->CreateNewChat(reply->property("toUserId").toInt(), rootObject.value("chatId").toInt(), reply->property("toUserName").toString());
         m_contactsModel->SetDataSource(m_dialogsManager);
         m_currChat = m_dialogsManager->GetDialogByIndex(0);
+        qDebug() << "changed index by new dialog";
         emit dialogIndexChanged(0);
         m_chatHistoryModel->SetDataSource(m_currChat);
         //AddNewWidgetDialog(rootObject.value("chatId").toInt(), reply->property("toUserName").toString(), true);

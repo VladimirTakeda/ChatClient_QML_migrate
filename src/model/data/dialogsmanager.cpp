@@ -14,8 +14,10 @@ DialogsManager::DialogsManager(QObject *parent) : QObject(parent)
 
 void DialogsManager::CreateNewChat(std::optional<int> userId, int chatId, const QString &userToName)
 {
-    if (userId)
+    if (userId){
         m_users.insert(userId.value());
+        m_UserToChat[userId.value()] = chatId;
+    }
     m_IdToName[chatId] = userToName;
     m_modelData.push_front(std::make_shared<Dialog>(chatId, userToName));
     m_IdToDialog.emplace(chatId, m_modelData.begin());
