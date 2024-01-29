@@ -31,6 +31,7 @@ private:
 
 private:
     std::unordered_set<int32_t> m_users; // users, we have dialog with
+    std::unordered_map<int32_t, int32_t> m_UserToChat;
 
     std::unordered_map<int32_t, std::list<std::shared_ptr<Dialog>>::iterator> m_IdToDialog;
     std::list<std::shared_ptr<Dialog>> m_modelData;

@@ -39,8 +39,8 @@ Rectangle{
 
     Connections {
       target: chatClientObj
-      function onDialogIndexChanged() {
-         console.log(index)
+      function onDialogIndexChanged(index) {
+         console.log("curr hightlight dialog is s" + index)
        __lv.currentIndex = index;
       }
     }

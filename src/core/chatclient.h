@@ -75,7 +75,6 @@ private:
     std::unique_ptr<WebSocket::WebSocketClient> m_client;
     std::shared_ptr<HttpClient> m_httpClient;
 
-    std::unordered_map<QString, int> m_DialogsToId;
     std::shared_ptr<DialogsManager> m_dialogsManager;
 
     std::shared_ptr<ContactsModel> m_contactsModel;
