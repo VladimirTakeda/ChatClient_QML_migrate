@@ -28,7 +28,6 @@ Rectangle{
 
     Rectangle{
         readonly property real iconLeftMargin: 10
-
         id: icon_id
         width: 45
         height: 45
@@ -36,15 +35,12 @@ Rectangle{
         anchors.left: parent.left
         anchors.leftMargin: icon_id.iconLeftMargin
         radius: width / 2
-        // border.width: 1
-        // border.color: "darkred"
         Image {
             anchors.fill: parent
             fillMode: Image.PreserveAspectFit
             visible: true
             source: "qrc:/ChatClient/ChatClient_QML/icons/user_blank.png"
         }
-
     }
 
     ColumnLayout{
