@@ -26,18 +26,16 @@ Rectangle{
 
 
         TextInput{
-            readonly property string pathContactsPanel: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/ContactsPanel.qml"
-            readonly property string pathSearchResultPanel: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/SearchResultPanel.qml"
             id: messageBox_id
             anchors.fill: parent
             verticalAlignment: TextInput.AlignVCenter
             leftPadding: 10
 
             onTextEdited: {
-                if (text.trim() === "" && stackViewSearchPanel_id.currentItem !== pathContactsPanel) {
-                    stackViewSearchPanel_id.replace(pathContactsPanel)
-                } else if (text.trim() !== "" && stackViewSearchPanel_id.currentItem !== stackViewSearchPanel_id.item) {
-                    stackViewSearchPanel_id.replace(pathSearchResultPanel)
+                if (text.trim() === "" && stackViewSearchPanel_id.currentItem !== contactStack_id) {
+                    stackViewSearchPanel_id.replace(contactStack_id)
+                } else if (text.trim() !== "" && stackViewSearchPanel_id.currentItem !== searchResultStack_id) {
+                    stackViewSearchPanel_id.replace(searchResultStack_id)
                 }
                 chatClientObj.SearchPrefix = text
             }

@@ -4,11 +4,12 @@ import QtQuick.Layouts
 
 import StyleModule 1.0
 
-Rectangle{
+Item{
     id: searchResultPanel_id
-    color: "transparent"
+    // color: "transparent"
 
-    // Component.onDestruction: print("Destroying searchResultPanel_id item")
+    Component.onDestruction: print("Destroying searchResultPanel_id item")
+    Component.onCompleted: print("Creating searchResultPanel_id item")
 
     ListView{
         anchors.fill: parent
