@@ -19,7 +19,7 @@ Rectangle{
         onClicked:{
             console.log("current index", index)
             searchModel.onItemClicked(index)
-            stackViewSearchPanel_id.replace(pathContactsPanel)
+            stackViewSearchPanel_id.replace(contactStack_id)
 
             searchPanel_id.innerSearch.messageBox_id.clear()
             chatHistory_id.__bottomToolPanel_id.__rowLayoutBottomToolPanel_id.__messageBox.focus = true

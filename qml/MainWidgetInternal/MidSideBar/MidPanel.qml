@@ -27,9 +27,25 @@ Rectangle{
             id: stackViewSearchPanel_id
             Layout.fillWidth: true
             Layout.fillHeight: true
+            Item{
+                id: contactStack_id
+                Loader{
+                    anchors.fill: parent
+                    source: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/ContactsPanel.qml"
+                }
+            }
+            Item{
+                id: searchResultStack_id
+                Loader{
+                    anchors.fill: parent
+                    source: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/SearchResultPanel.qml"
+                }
+            }
+
 
             // initialItem: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/SearchResultPanel.qml"
-            initialItem: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/ContactsPanel.qml"
+            // initialItem: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/ContactsPanel.qml"
+            initialItem: contactStack_id
             // initialItem: ContactsPanel{
             //     id: contactsPanel_id
             //     Layout.fillWidth: true
