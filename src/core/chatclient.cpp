@@ -85,13 +85,9 @@ void ChatClient::UpdateWidgetDialog(int userId, const QString &lastMessage, uint
 
 void ChatClient::AddMessageToWidgetDialog(int userId, const QString &lastMessage, bool NeedIncrement, const QDateTime& localMsgTime)
 {
-    /*UserItemWidget *itemWidget = qobject_cast<UserItemWidget*>(ui->listWidget->itemWidget(m_idToDialogWidget[userId]));
     if (NeedIncrement){
-        itemWidget->IncrementUnreadCount();
-        m_dialogsManager->m_IdToDialog.at(userId).m_unreadCount++;
+        (*(m_dialogsManager->m_IdToDialog.at(userId)))->m_unreadCount++;
     }
-    itemWidget->SetLastText(lastMessage);
-    itemWidget->SetLastTextTime(localMsgTime);*/
 }
 
 void ChatClient::SetUpWSConnection(){
@@ -115,33 +111,25 @@ void ChatClient::GotNewMessage(WebSocket::Message msg)
 {
     if (!m_dialogsManager->IsChatExist(msg.chatTo)){
         m_dialogsManager->CreateNewChat(msg.userFrom, msg.chatTo, msg.chatName);
-        AddNewWidgetDialog(msg.chatTo, msg.chatName, false);
     }
     m_dialogsManager->AddMessage(msg.chatTo, {msg.text, msg.isMyMessage, msg.time});
     //if it's current dialog then update otherwise no
     bool IsSelectedDialog = false;
-    //if (auto currItem = ui->listWidget->currentItem(); currItem != nullptr && currItem->data(Qt::UserRole).toInt() == msg.chatTo)
-        //IsSelectedDialog = true;
-
-    if (IsSelectedDialog)
-        UpdateTextBrowser(msg.chatTo);
+    if (m_currChat && m_currChat->m_chatId == msg.chatTo)
+        IsSelectedDialog = true;
 
     AddMessageToWidgetDialog(msg.chatTo, msg.text, !IsSelectedDialog, msg.time);
 
     // hack
-    m_chatHistoryModel->SetDataSource(m_currChat);
+    if (m_currChat)
+        m_chatHistoryModel->SetDataSource(m_currChat);
     m_contactsModel->SetDataSource(m_dialogsManager);
     //update qml index
     qDebug() << "new message changes the index";
-    emit dialogIndexChanged(std::distance(m_dialogsManager->m_modelData.begin(), m_dialogsManager->m_IdToDialog[m_currChat->m_chatId]));
+    if (m_currChat)
+        emit dialogIndexChanged(std::distance(m_dialogsManager->m_modelData.begin(), m_dialogsManager->m_IdToDialog[m_currChat->m_chatId]));
 
     OnGotNotification(msg.chatName, msg.text, (*m_dialogsManager->m_IdToDialog.at(msg.chatTo))->m_unreadCount, msg.time);
-}
-
-void ChatClient::UpdateTextBrowser(int selectedContactId)
-{
-    //ui->textBrowser->clear();
-    //ui->textBrowser->setHtml(m_dialogsManager->GetDialog(selectedContactId).GetHtmlDialog());
 }
 
 bool ChatClient::isRegistered(){
@@ -178,6 +166,8 @@ void ChatClient::sendNewMessage(const QString& message)
 void ChatClient::updateCurrentChat(int index){
     qDebug() << "update curr Chat: " << index;
     m_currChat = m_dialogsManager->GetDialogByIndex(index);
+    m_currChat->m_unreadCount = 0;
+    m_contactsModel->SetDataSource(m_dialogsManager);
     m_chatHistoryModel->SetDataSource(m_currChat);
 }
 
