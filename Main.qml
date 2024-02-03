@@ -16,11 +16,17 @@ Window {
         id: mainWindowStack_id
         anchors.fill: parent
         initialItem: chatClientObj.isRegistered() ? "qml/MainWidget.qml" : "qml/StartWidget.qml"
-        // initialItem: "qml/MainWidget.qml"
     }
     Item{
         focus: true
         Keys.onEscapePressed: {Qt.quit()}
     }
 
+    Connections {
+       target: Qt.application
+
+       function onAboutToQuit() {
+          chatClientObj.saveDialogs()
+       }
+    }
 }

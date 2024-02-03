@@ -71,6 +71,7 @@ void DialogsManager::SaveDialogs() const
 {
     QFile outFile("dialogs");
     if (outFile.open(QIODevice::WriteOnly)) {
+        //DataStream writes in binary format
         QDataStream out(&outFile);
 
         out << static_cast<uint64_t>(m_users.size());
@@ -93,6 +94,15 @@ void DialogsManager::SaveDialogs() const
                 out.writeRawData(text.constData(), msgSize);
                 out << msg->time;
             }
+        }
+
+        int32_t size = m_UserToChat.size();
+        out << size;
+
+        // Записываем элементы контейнера
+        for (const auto& [key, value] : m_UserToChat) {
+            out << key;
+            out << value;
         }
 
         outFile.close();
@@ -175,6 +185,17 @@ void DialogsManager::LoadDialogs()
                 m_modelData.push_back(currentDialog);
                 m_IdToDialog.emplace(dialogId, std::prev(m_modelData.end()));
             }
+        }
+
+        int32_t size;
+        in >> size;
+
+        int32_t userId;
+        int32_t chatId;
+
+        for (int i = 0; i < size; i++) {
+            in >> userId >> chatId;
+            m_UserToChat[userId] = chatId;
         }
 
         inFile.close();
