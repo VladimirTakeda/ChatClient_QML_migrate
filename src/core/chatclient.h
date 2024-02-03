@@ -33,8 +33,8 @@ public:
                std::shared_ptr<ChatHistoryModel> chatHistoryModel,
                QObject *parent = nullptr);
     void SetUpWSConnection();
-    void LoadDialogs();
-    void SaveDialogs() const;
+    Q_INVOKABLE void loadDialogs();
+    Q_INVOKABLE void saveDialogs() const;
     ~ChatClient();
 
     QString SearchPrefix() const;

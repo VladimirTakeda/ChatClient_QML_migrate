@@ -49,11 +49,11 @@ ChatClient::ChatClient(std::shared_ptr<ContactsModel> contactsModel, std::shared
     m_searchModel(searchModel),
     m_chatHistoryModel(chatHistoryModel)
 {
+    loadDialogs();
+
     m_contactsModel->SetDataSource(m_dialogsManager);
     m_searchModel->SetDataSource(std::vector<UserInfo>());
     connect(m_searchModel.get(), &SearchModel::ItemClicked, this, &ChatClient::SetNewDialog);
-    //connect(ui->listWidget_2, &QListWidget::itemClicked, this, &ChatWidget::SetNewDialog);
-    //connect(ui->listWidget, &QListWidget::itemClicked, this, &ChatWidget::SetDialog);
 }
 
 ChatClient::~ChatClient()
@@ -99,17 +99,15 @@ void ChatClient::SetUpWSConnection(){
     m_client.reset(new WebSocket::WebSocketClient(QUrl(url), std::bind(&ChatClient::GotNewMessage, this, std::placeholders::_1)));
 }
 
-void ChatClient::LoadDialogs()
+void ChatClient::loadDialogs()
 {
+    qDebug() << "Start loading dialogs";
     m_dialogsManager->LoadFromMemory();
-    for (const auto& [userId, value]: m_dialogsManager->m_IdToDialog){
-        //AddNewWidgetDialog(userId, m_dialogsManager->m_IdToName[userId], false);
-        //UpdateWidgetDialog(userId, value.m_messages.back().text, value.m_unreadCount, value.m_messages.back().time);
-    }
 }
 
-void ChatClient::SaveDialogs() const
+void ChatClient::saveDialogs() const
 {
+    qDebug() << "Start saving dialogs";
     m_dialogsManager->SaveToMemory();
 }
 
