@@ -156,7 +156,7 @@ void ChatClient::sendNewMessage(const QString& message)
     obj["content"] = message;
     obj["user_from_id"] = getCurrUserId();
     obj["chat_to_id"] = m_currChat ? m_currChat->GetChatId() : -1;
-    obj["chat_name"] = m_currChat? m_currChat->GetName() : "";
+    obj["chat_name"] = getCurrUserName();
 
     QJsonDocument doc(obj);
 
