@@ -355,6 +355,7 @@ void ChatClient::RegisterUserReply(QNetworkReply *reply){
         qDebug() << rootObject;
         SaveUserInfo(rootObject.value("userId").toInt(), rootObject.value("deviceId").toString(),  reply->property("currUserName").toString());
         SetUpWSConnection();
+        emit goToMainWidget();
     }
     else {
         qDebug() << "Failure" <<reply->errorString();

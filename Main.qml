@@ -29,4 +29,12 @@ Window {
           chatClientObj.saveDialogs()
        }
     }
+
+    Connections {
+       target: chatClientObj
+
+       function onGoToMainWidget() {
+           mainWindowStack_id.replace("qrc:/ChatClient/ChatClient_QML/qml/MainWidget.qml")
+       }
+    }
 }
