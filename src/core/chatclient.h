@@ -52,6 +52,7 @@ public:
 signals:
     void SearchPrefixChanged();
     void dialogIndexChanged(int index);
+    void goToMainWidget();
 
 private:
     void AddNewWidgetDialog(int chatId, const QString& name, bool needSetItem);

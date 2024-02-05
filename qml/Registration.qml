@@ -101,8 +101,6 @@ Rectangle{
 
                 onClicked: {
                     chatClientObj.registerUser(login_id.text, password.text)
-                    //TODO make replace in void ChatClient::RegisterUserReply(QNetworkReply *reply)
-                    mainWindowStack_id.replace("qrc:/ChatClient/ChatClient_QML/qml/MainWidget.qml")
                 }
             }
 
