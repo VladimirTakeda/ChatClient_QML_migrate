@@ -6,15 +6,16 @@ import ChatClient_QML 1.0
 import StyleModule 1.0
 
 Rectangle{
-    property alias __rowLayoutBottomToolPanel_id: rowLayoutBottomToolPanel_id
+    // property alias __rowLayoutBottomToolPanel_id: rowLayoutBottomToolPanel_id
     readonly property real iconsSize: 22
+    readonly property int constHeightSize: 45
     id: bottomPanel_id
     implicitWidth: parent.width
-    height: 45
+    height: constHeightSize
     color: Style.base_color
 
     RowLayout{
-        property alias __messageBox: messageField_id
+        // property alias __messageBox: messageField_id
         id: rowLayoutBottomToolPanel_id
         width: parent.width
         anchors.centerIn: parent
@@ -45,6 +46,7 @@ Rectangle{
             // height: Math.max(messageField_id.implicitHeight, bottomPanel_id.height)
             // border.color: "black"
             TextInput{
+                readonly property int sizeInputText: messageField_id.height
                 id: messageField_id
                 anchors{
                     fill: parent
@@ -59,8 +61,8 @@ Rectangle{
 
                 onTextChanged: {
                     // Вызываем изменение размера inputContainer при изменении текста
-                    inputContainer.implicitHeight = Math.max(messageField_id.implicitHeight, 45)
-                    // inputContainer.width = bottomPanel_id.width
+                    bottomPanel_id.height = bottomPanel_id.constHeightSize - sizeInputText + messageField_id.contentHeight
+                    console.log("messageBox.height = ", sizeInputText)
                 }
 
                 Text {
