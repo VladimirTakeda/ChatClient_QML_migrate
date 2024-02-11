@@ -6,16 +6,24 @@ import ChatClient_QML 1.0
 import StyleModule 1.0
 
 Rectangle{
-    // property alias __rowLayoutBottomToolPanel_id: rowLayoutBottomToolPanel_id
+    property alias __rowLayoutBottomToolPanel_id: rowLayoutBottomToolPanel_id
     readonly property real iconsSize: 22
     readonly property int constHeightSize: 45
     id: bottomPanel_id
     implicitWidth: parent.width
-    height: constHeightSize
+    implicitHeight: constHeightSize
     color: Style.base_color
 
+    Rectangle{
+        id: dynamicBox_id
+        width: parent.width
+        height: constHeightSize
+        anchors.bottom: parent.bottom
+        color: Style.base_color
+    }
+
     RowLayout{
-        // property alias __messageBox: messageField_id
+        property alias __inputConteiner: inputContainer_id
         id: rowLayoutBottomToolPanel_id
         width: parent.width
         anchors.centerIn: parent
@@ -36,23 +44,19 @@ Rectangle{
         }
 
         Rectangle {
-            id: inputContainer
+            property alias __messageBox: messageField_id
+            id: inputContainer_id
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.leftMargin: 12
             Layout.rightMargin: 10
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            color: Style.base_color
-            // height: Math.max(messageField_id.implicitHeight, bottomPanel_id.height)
-            // border.color: "black"
+
             TextInput{
-                readonly property int sizeInputText: messageField_id.height
+                readonly property int sizeInputText: 16
                 id: messageField_id
-                anchors{
-                    fill: parent
-                    // topMargin: 10
-                    // bottomMargin: 10
-                }
+                anchors.fill: parent
+                focus: false
 
                 verticalAlignment: Text.AlignVCenter
                 color: "black"
@@ -60,8 +64,8 @@ Rectangle{
                 wrapMode: TextInput.Wrap
 
                 onTextChanged: {
-                    // Вызываем изменение размера inputContainer при изменении текста
-                    bottomPanel_id.height = bottomPanel_id.constHeightSize - sizeInputText + messageField_id.contentHeight
+                    dynamicBox_id.height = bottomPanel_id.constHeightSize - sizeInputText + messageField_id.contentHeight
+                    console.log("dynamicBox_id.height = ", dynamicBox_id.height)
                     console.log("messageBox.height = ", sizeInputText)
                 }
 

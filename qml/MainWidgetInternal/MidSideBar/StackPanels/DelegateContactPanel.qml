@@ -22,7 +22,7 @@ Rectangle{
             __lv.currentIndex = model.index
             chatClientObj.updateCurrentChat(model.index)
             // called method from BottomToolPanel
-           chatHistory_id.__bottomToolPanel_id.__rowLayoutBottomToolPanel_id.__messageBox.focus = true
+           chatHistory_id.__bottomToolPanel_id.__rowLayoutBottomToolPanel_id.__inputConteiner.__messageBox.focus = true
 
 
             // delegat_id.color = "#419FD9"

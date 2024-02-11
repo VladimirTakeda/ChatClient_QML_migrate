@@ -6,11 +6,6 @@ import StyleModule 1.0
 
 Item{
     id: searchResultPanel_id
-    // color: "transparent"
-
-    Component.onDestruction: print("Destroying searchResultPanel_id item")
-    Component.onCompleted: print("Creating searchResultPanel_id item")
-
     ListView{
         anchors.fill: parent
         interactive: false
