@@ -42,17 +42,7 @@ Rectangle{
                 }
             }
 
-
-            // initialItem: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/SearchResultPanel.qml"
-            // initialItem: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/ContactsPanel.qml"
             initialItem: contactStack_id
-            // initialItem: ContactsPanel{
-            //     id: contactsPanel_id
-            //     Layout.fillWidth: true
-            //     Layout.fillHeight: true
-            // }
-            Component.onDestruction: print("Destroying initial item")
-
             replaceEnter: Transition {
                 PropertyAnimation { properties: "opacity"; duration: 0 }
             }
