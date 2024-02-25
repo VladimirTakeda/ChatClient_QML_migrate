@@ -4,15 +4,18 @@ import QtQuick.Controls.Basic
 Item {
     property alias __listViewDisplayPanel: listViewDisplayPanel_id
     id: root_id
+    onHeightChanged: {
+        listViewDisplayPanel_id.positionViewAtEnd()
+        console.log("call height change ")
+    }
     ListView{
         id: listViewDisplayPanel_id
         anchors.fill: parent
+        clip: true
         spacing: 4
         model: chatHistoryModel
         interactive: true
         verticalLayoutDirection: ListView.TopToBottom
-        contentHeight: contentItem.childrenRect.height
-        clip : true
         delegate: Rectangle{
             readonly property real rlSideMargins: 5
             anchors {
@@ -36,7 +39,6 @@ Item {
                 wrapMode: Label.Wrap
             }
         }
-
         Connections {
             target: chatHistoryModel
             function onScrollToBottom() {
