@@ -9,8 +9,10 @@ Item {
         anchors.fill: parent
         spacing: 4
         model: chatHistoryModel
-        // interactive: false
+        interactive: true
         verticalLayoutDirection: ListView.TopToBottom
+        contentHeight: contentItem.childrenRect.height
+        clip : true
         delegate: Rectangle{
             readonly property real rlSideMargins: 5
             anchors {
@@ -34,6 +36,16 @@ Item {
                 wrapMode: Label.Wrap
             }
         }
+
+        Connections {
+            target: chatHistoryModel
+            function onScrollToBottom() {
+                listViewDisplayPanel_id.positionViewAtEnd()
+            }
+        }
+
+        flickableDirection: Flickable.VerticalFlick
+        boundsBehavior: Flickable.StopAtBounds
     }
 
     //TODO: add custom ScrollBar as telegram

@@ -28,6 +28,8 @@ public:
 
     void SetDataSource(std::shared_ptr<Dialog>);
     std::shared_ptr<Dialog> dataSource() const;
+signals:
+    void scrollToBottom();
 
 private:
 

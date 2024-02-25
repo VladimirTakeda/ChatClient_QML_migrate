@@ -64,4 +64,6 @@ void ChatHistoryModel::SetDataSource(std::shared_ptr<Dialog> manager)
     m_signalConnected = true;
 
     endResetModel();
+
+    emit scrollToBottom();
 }
