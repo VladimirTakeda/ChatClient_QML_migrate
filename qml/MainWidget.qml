@@ -9,6 +9,7 @@ Rectangle{
     implicitWidth: 1034
     implicitHeight: 734
     RowLayout{
+        id: rowLayout_id
         anchors.fill: parent
         spacing: 0
 
@@ -21,6 +22,7 @@ Rectangle{
             Layout.fillHeight: true
         }
         SplitView{
+            id: splitView_id
             width: mainWidget_id.width
             height: mainWidget_id.height
             orientation: Qt.Horizontal

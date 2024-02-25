@@ -22,7 +22,7 @@ Rectangle{
             stackViewSearchPanel_id.replace(contactStack_id)
 
             searchPanel_id.innerSearch.messageBox_id.clear()
-            chatHistory_id.__bottomToolPanel_id.__rowLayoutBottomToolPanel_id.__messageBox.focus = true
+            chatHistory_id.__bottomToolPanel_id.__rowLayoutBottomToolPanel_id.__inputContainer.__messageBox.focus = true
         }
     }
 

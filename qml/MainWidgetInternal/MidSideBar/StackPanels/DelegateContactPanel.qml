@@ -20,12 +20,8 @@ Rectangle{
         hoverEnabled: true
         onClicked: {
             __lv.currentIndex = model.index
+            chatHistory_id.__bottomToolPanel_id.__rowLayoutBottomToolPanel_id.__inputContainer.__messageBox.focus = true
             chatClientObj.updateCurrentChat(model.index)
-            // called method from BottomToolPanel
-           chatHistory_id.__bottomToolPanel_id.__rowLayoutBottomToolPanel_id.__inputConteiner.__messageBox.focus = true
-
-
-            // delegat_id.color = "#419FD9"
         }
         // onEntered: {
         //     if(__lv.currentIndex !== model.index)

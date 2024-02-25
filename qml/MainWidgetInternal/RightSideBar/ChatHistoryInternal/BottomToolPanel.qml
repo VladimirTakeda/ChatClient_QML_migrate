@@ -1,9 +1,12 @@
+import QtCore
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
+import QtQuick.Dialogs
 
 import ChatClient_QML 1.0
 import StyleModule 1.0
+
 
 Rectangle{
     property alias __rowLayoutBottomToolPanel_id: rowLayoutBottomToolPanel_id
@@ -17,18 +20,19 @@ Rectangle{
     Rectangle{
         id: dynamicBox_id
         width: parent.width
-        height: constHeightSize
+        height: bottomPanel_id.constHeightSize - messageField_id.sizeInputText + messageField_id.contentHeight
         anchors.bottom: parent.bottom
         color: Style.base_color
     }
 
     RowLayout{
-        property alias __inputConteiner: inputContainer_id
+        property alias __inputContainer: inputContainer_id
         id: rowLayoutBottomToolPanel_id
         width: parent.width
         anchors.centerIn: parent
 
         Rectangle{
+            property url file: ""
             id: paperClip_id
             Layout.preferredWidth: bottomPanel_id.iconsSize
             Layout.preferredHeight: bottomPanel_id.iconsSize
@@ -41,9 +45,27 @@ Rectangle{
                 fillMode: Image.PreserveAspectFit
                 source: "qrc:/ChatClient/ChatClient_QML/icons/paper_clip.svg"
             }
+
+            FileDialog {
+                id: folderDialog_id
+                nameFilters: [ "Image files (*.png *.jpg)", "All files (*)" ]
+                currentFolder: StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0]
+                onAccepted: {
+
+                    console.log("url of the file: ", folderDialog_id.selectedFile)
+                }
+                onRejected: { console.log("Rejected") }
+            }
+
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    folderDialog_id.open()
+                }
+            }
         }
 
-        Rectangle {
+        Item {
             property alias __messageBox: messageField_id
             id: inputContainer_id
             Layout.fillWidth: true
@@ -62,13 +84,6 @@ Rectangle{
                 color: "black"
 
                 wrapMode: TextInput.Wrap
-
-                onTextChanged: {
-                    dynamicBox_id.height = bottomPanel_id.constHeightSize - sizeInputText + messageField_id.contentHeight
-                    console.log("dynamicBox_id.height = ", dynamicBox_id.height)
-                    console.log("messageBox.height = ", sizeInputText)
-                }
-
                 Text {
                     id: customPlaceholder_id
                     anchors{
