@@ -5,9 +5,9 @@ import QtQuick.Layouts
 import ChatClient_QML 1.0
 
 Rectangle{
-    property alias __bottomToolPanel_id: bottomToolPanel_id
+    property alias __bottomToolPanel: bottomToolPanel_id
     property alias __chatDisplayPanel: chatDisplayPanel_id
-    // id: chatHistory_id
+    id: chatHistory_id
     color: "transparent"
 
     Image {
@@ -28,9 +28,6 @@ Rectangle{
             id: chatDisplayPanel_id
             Layout.fillWidth: true
             Layout.fillHeight: true
-            onHeightChanged: {
-                console.log("height: ", chatDisplayPanel_id.height)
-            }
         }
 
         BottomToolPanel{

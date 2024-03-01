@@ -1,15 +1,15 @@
 import QtQuick
 import QtQuick.Controls
 
-Window {
-    id: main_id
+ApplicationWindow {
+    id: appWindow_id
     width: 1034
     height: 734
     visible: true
     title: qsTr("ChatClient")
 
     //TODO: main window shrinks inner elements during collapsing
-    minimumWidth: main_id.width - 500
+    minimumWidth: appWindow_id.width - 500
     minimumHeight: 500
 
     StackView{
@@ -24,7 +24,6 @@ Window {
 
     Connections {
        target: Qt.application
-
        function onAboutToQuit() {
           chatClientObj.saveDialogs()
        }
@@ -32,7 +31,6 @@ Window {
 
     Connections {
        target: chatClientObj
-
        function onGoToMainWidget() {
            mainWindowStack_id.replace("qrc:/ChatClient/ChatClient_QML/qml/MainWidget.qml")
        }
