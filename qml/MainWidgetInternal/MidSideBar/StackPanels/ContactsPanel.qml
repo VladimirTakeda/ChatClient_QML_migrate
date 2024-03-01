@@ -13,7 +13,7 @@ Item{
             currentIndex: -1
             Layout.fillWidth: true
             Layout.fillHeight: true
-            interactive: false
+            interactive: true
             clip: true
             spacing: 0
             model: contactsModel
@@ -29,6 +29,9 @@ Item{
             delegate: DelegateContactPanel{
                 Layout.alignment: Qt.AlignTop
             }
+
+            flickableDirection: Flickable.VerticalFlick
+            boundsBehavior: Flickable.StopAtBounds
         }
     }
 }

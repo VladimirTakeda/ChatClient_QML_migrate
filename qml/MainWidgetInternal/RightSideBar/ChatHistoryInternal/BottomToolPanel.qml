@@ -1,4 +1,3 @@
-import QtCore
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
@@ -9,7 +8,7 @@ import StyleModule 1.0
 
 
 Rectangle{
-    property alias __rowLayoutBottomToolPanel_id: rowLayoutBottomToolPanel_id
+    property alias __staticBox: staticBox_id
     readonly property real iconsSize: 22
     readonly property int constHeightSize: 45
     id: bottomPanel_id
@@ -18,12 +17,12 @@ Rectangle{
     color: Style.base_color
 
     Rectangle{
-        id: dynamicBox_id
+        property alias __rowLayoutBottomToolPanel_id: rowLayoutBottomToolPanel_id
+        id: staticBox_id
         width: parent.width
         height: bottomPanel_id.constHeightSize
         anchors.bottom: parent.bottom
         color: Style.base_color
-
 
         RowLayout{
             property alias __inputContainer: inputContainer_id
@@ -31,37 +30,11 @@ Rectangle{
             width: parent.width
             anchors.centerIn: parent
 
-            Rectangle{
+            FileDialogHandler{
                 id: paperClip_id
                 Layout.preferredWidth: bottomPanel_id.iconsSize
                 Layout.preferredHeight: bottomPanel_id.iconsSize
                 Layout.leftMargin: 14
-                color: "transparent"
-
-                Image {
-                    anchors.fill: parent
-                    autoTransform: true
-                    fillMode: Image.PreserveAspectFit
-                    source: "qrc:/ChatClient/ChatClient_QML/icons/paper_clip.svg"
-                }
-
-                FileDialog {
-                    id: folderDialog_id
-                    nameFilters: [ "Image files (*.png *.jpg)", "All files (*)" ]
-                    currentFolder: StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0]
-                    onAccepted: {
-
-                        console.log("url of the file: ", folderDialog_id.selectedFile)
-                    }
-                    onRejected: { console.log("Rejected") }
-                }
-
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: {
-                        folderDialog_id.open()
-                    }
-                }
             }
 
             Item {
@@ -77,7 +50,7 @@ Rectangle{
                     readonly property int sizeInputText: 16
                     id: messageField_id
                     anchors.fill: parent
-                    focus: false
+                    focus: true
 
                     verticalAlignment: Text.AlignVCenter
                     color: "black"
@@ -91,7 +64,7 @@ Rectangle{
                             leftMargin: 2
                         }
                         verticalAlignment: Text.AlignVCenter
-                        text: "Compose message..."
+                        text: "Write a message..."
                         color: messageField_id.cursorVisible ? Style.placeholderLight_color : Style.placeholderDark_color
                         visible: !messageField_id.text.length
                     }
@@ -99,12 +72,8 @@ Rectangle{
                     Keys.onPressed:(event)=>{
                                        if ((event.key === Qt.Key_Enter || event.key === Qt.Key_Return) &&
                                            messageField_id.length) {
-                                           // console.log(messageField_id.text)
                                            chatClientObj.sendNewMessage(messageField_id.text)
                                            messageField_id.clear()
-                                           // __chatDisplayPanel.__listViewDisplayPanel.positionViewAtEnd()
-
-                                           // console.log("width ",__chatDisplayPanel.__listViewDisplayPanel.width)
                                        }
                                    }
                 }
@@ -118,6 +87,8 @@ Rectangle{
                 color: "transparent"
                 Image {
                     anchors.fill: parent
+                    sourceSize.width: 1920
+                    sourceSize.height: 1080
                     autoTransform: true
                     fillMode: Image.PreserveAspectFit
                     source: "qrc:/ChatClient/ChatClient_QML/icons/smileButton.png"
@@ -132,6 +103,8 @@ Rectangle{
                 color: "transparent"
                 Image {
                     anchors.fill: parent
+                    sourceSize.width: 800
+                    sourceSize.height: 600
                     rotation: 45
                     source: "qrc:/ChatClient/ChatClient_QML/icons/sendMessage.png"
                     MouseArea{

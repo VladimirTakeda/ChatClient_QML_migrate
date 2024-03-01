@@ -19,21 +19,19 @@ Rectangle{
         anchors.fill: parent
         hoverEnabled: true
         onClicked: {
+            chatHistory_id.__bottomToolPanel.__staticBox.__rowLayoutBottomToolPanel_id.__inputContainer.__messageBox.forceActiveFocus()
             __lv.currentIndex = model.index
-            chatHistory_id.__bottomToolPanel_id.__rowLayoutBottomToolPanel_id.__inputContainer.__messageBox.focus = true
             chatClientObj.updateCurrentChat(model.index)
         }
-        // onEntered: {
-        //     if(__lv.currentIndex !== model.index)
-        //         delegat_id.color = "#F1F1F1"
-        // }
-        // onExited: {
-        //     if(__lv.currentIndex !== model.index)
-        //         delegat_id.color = "transparent"
-        // }
+        onEntered: {
+            if(__lv.currentIndex !== model.index)
+                delegat_id.color = Style.filled_color
+        }
+        onExited: {
+            if(__lv.currentIndex !== model.index)
+                delegat_id.color = "transparent"
+        }
     }
-
-
 
     Rectangle{
         id: icon_id

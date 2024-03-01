@@ -24,7 +24,6 @@ Rectangle{
         border.color: Style.filled_color
         border.width: 1
 
-
         TextInput{
             id: messageBox_id
             anchors.fill: parent
@@ -40,6 +39,7 @@ Rectangle{
                 chatClientObj.SearchPrefix = text
             }
         }
+
         Text {
             id: customPlaceholder_id
             anchors.fill: messageBox_id

@@ -64,19 +64,21 @@ qt_add_qml_module(appChatClient_QML
         qml/MainWidgetInternal/RightSideBar/ChatHistoryInternal/TopToolPanel.qml
         qml/MainWidgetInternal/RightSideBar/ChatHistoryInternal/BottomToolPanel.qml
         qml/MainWidgetInternal/RightSideBar/ChatHistoryInternal/ChatDisplayPanel.qml
+        qml/MainWidgetInternal/RightSideBar/ChatHistoryInternal/FileDialogHandler.qml
     RESOURCES
         icons/user_blank.png
         icons/sendMessage.png
         icons/smileButton.png
         icons/paper_clip.svg
         icons/walls2.jpg
-        # icons/walls3.jpg
+        icons/three_dots_vertical.svg
+        icons/check_white.svg
         qml/StyleModule/CMakeLists.txt
     SOURCES
         src/model/contactsmodel.h src/model/contactsmodel.cpp
         src/model/searchmodel.h src/model/searchmodel.cpp
         src/model/chathistorymodel.h src/model/chathistorymodel.cpp
-)
+    )
 
 add_subdirectory(qml/StyleModule)
 

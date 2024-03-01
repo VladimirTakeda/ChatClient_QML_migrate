@@ -4,10 +4,7 @@ import QtQuick.Controls.Basic
 Item {
     property alias __listViewDisplayPanel: listViewDisplayPanel_id
     id: root_id
-    onHeightChanged: {
-        listViewDisplayPanel_id.positionViewAtEnd()
-        console.log("call height change ")
-    }
+
     ListView{
         id: listViewDisplayPanel_id
         anchors.fill: parent
@@ -39,6 +36,8 @@ Item {
                 wrapMode: Label.Wrap
             }
         }
+
+        //TODO: fix reset missing messages ⬇
         Connections {
             target: chatHistoryModel
             function onScrollToBottom() {
@@ -46,6 +45,7 @@ Item {
             }
         }
 
+        onHeightChanged: listViewDisplayPanel_id.positionViewAtEnd()
         flickableDirection: Flickable.VerticalFlick
         boundsBehavior: Flickable.StopAtBounds
     }
