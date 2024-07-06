@@ -15,7 +15,7 @@ ApplicationWindow {
     StackView{
         id: mainWindowStack_id
         anchors.fill: parent
-        initialItem: chatClientObj.isRegistered() ? "qml/MainWidget.qml" : "qml/StartWidget.qml"
+        initialItem: chatClientObj.isUserRegistered() ? "qml/MainWidget.qml" : "qml/StartWidget.qml"
     }
     Item{
         focus: true

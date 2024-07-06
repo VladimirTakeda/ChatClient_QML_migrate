@@ -1,3 +1,15 @@
+#include <QNetworkAccessManager>
+#include <QApplication>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QNetworkReply>
+#include <QSettings>
+#include <QJsonArray>
+#include <QDir>
+#include <QFileDialog>
+#include <QHttpMultiPart>
+#include <QUrlQuery>
+
 #include "chatclient.h"
 
 #include <src/model/data/dialogsmanager.h>
@@ -9,15 +21,6 @@
 #include <src/network/httpclient.h>
 
 #include <src/utils/utils.h>
-
-#include <QNetworkAccessManager>
-#include <QApplication>
-#include <QJsonObject>
-#include <QJsonDocument>
-#include <QNetworkReply>
-#include <QSettings>
-#include <QJsonArray>
-#include <QDir>
 
 class QListWidgetItem;
 
@@ -60,34 +63,8 @@ ChatClient::~ChatClient()
 {
 }
 
-void ChatClient::AddNewWidgetDialog(int chatId, const QString& name, bool needSetItem)
-{
-    /*QListWidgetItem *contactItem = new QListWidgetItem(ui->listWidget);
-    auto newUser = new UserItemWidget();
-    newUser->SetName(name);
-    contactItem->setData(Qt::UserRole, chatId);
-    contactItem->setSizeHint(newUser->sizeHint());
-    ui->listWidget->addItem(contactItem);
-    ui->listWidget->setItemWidget(contactItem, newUser);
-    if (needSetItem)
-        contactItem->setSelected(true);
-    m_idToDialogWidget.emplace(chatId, contactItem);
-    ui->stackedWidget->setCurrentIndex(0);*/
-}
-
-void ChatClient::UpdateWidgetDialog(int userId, const QString &lastMessage, uint64_t unreadCount, const QDateTime& localMsgTime)
-{
-    /*UserItemWidget *itemWidget = qobject_cast<UserItemWidget*>(ui->listWidget->itemWidget(m_idToDialogWidget[userId]));
-    itemWidget->SetUnreadCount(unreadCount);
-    itemWidget->SetLastText(lastMessage);
-    itemWidget->SetLastTextTime(localMsgTime);*/
-}
-
 void ChatClient::AddMessageToWidgetDialog(int userId, const QString &lastMessage, bool NeedIncrement, const QDateTime& localMsgTime)
 {
-    if (NeedIncrement){
-        (*(m_dialogsManager->m_IdToDialog.at(userId)))->m_unreadCount++;
-    }
 }
 
 void ChatClient::SetUpWSConnection(){
@@ -118,7 +95,11 @@ void ChatClient::GotNewMessage(WebSocket::Message msg)
     if (m_currChat && m_currChat->m_chatId == msg.chatTo)
         IsSelectedDialog = true;
 
-    AddMessageToWidgetDialog(msg.chatTo, msg.text, !IsSelectedDialog, msg.time);
+    [&](int userId, const QString &lastMessage, bool NeedIncrement, const QDateTime& localMsgTime){
+        if (NeedIncrement){
+            (*(m_dialogsManager->m_IdToDialog.at(userId)))->m_unreadCount++;
+        }
+    }(msg.chatTo, msg.text, !IsSelectedDialog, msg.time);
 
     // hack
     if (m_currChat)
@@ -132,7 +113,7 @@ void ChatClient::GotNewMessage(WebSocket::Message msg)
     OnGotNotification(msg.chatName, msg.text, (*m_dialogsManager->m_IdToDialog.at(msg.chatTo))->m_unreadCount, msg.time);
 }
 
-bool ChatClient::isRegistered(){
+bool ChatClient::isUserRegistered(){
 #ifdef Q_OS_WIN
     QSettings settings(QCoreApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat);
 #endif
@@ -169,6 +150,69 @@ void ChatClient::updateCurrentChat(int index){
     m_currChat->m_unreadCount = 0;
     m_contactsModel->SetDataSource(m_dialogsManager);
     m_chatHistoryModel->SetDataSource(m_currChat);
+}
+
+QString ScaleSizeImage(const QString& filePath){
+    QPixmap pixmap(QUrl(filePath).toLocalFile());
+    if (pixmap.width() > 640 || pixmap.height() > 640) {
+        // Уменьшение изображения
+        qreal scaleFactor = qMin(640.0 / pixmap.width(), 640.0 / pixmap.height());
+        pixmap = pixmap.scaled(pixmap.size() * scaleFactor, Qt::KeepAspectRatio);
+    }
+    // Сохранение изображения
+    QString fileName = "/Users/vovatakeda/Desktop/QtProjects/secondInstance/build-ChatClient_QML_migrate-Qt_6_6_1_for_macOS-Debug/images/new.png";
+    QFileInfo fileInfo(fileName);
+    QDir().mkpath(fileInfo.absolutePath()); // Создаем папку, если её нет
+
+    if (!pixmap.toImage().save(fileName))
+        qDebug() << "Alarm";
+    return fileName;
+}
+
+void ChatClient::sendImage(const QString& path, const QString& message){
+    if (path.isEmpty() && message.isEmpty())
+        return;
+    QString scalesPath = path;
+    if (!path.isEmpty()){
+        scalesPath = ScaleSizeImage(path);
+    }
+
+    QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+    QHttpPart filePart;
+    filePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"file\"; filename=\"" + scalesPath + "\""));
+
+    QFile *file = new QFile(scalesPath);
+    file->open(QIODevice::ReadOnly);
+    filePart.setBodyDevice(file);
+    file->setParent(multiPart);
+
+    multiPart->append(filePart);
+
+    QUrl url;
+    url.setScheme("http");
+    url.setHost("localhost");
+    url.setPath("/uploadFile");
+    url.setPort(8080);
+
+    QUrlQuery urlQuery;
+    urlQuery.addQueryItem("userId", QString::number(getCurrUserId()));
+    urlQuery.addQueryItem("chatId", QString::number(m_currChat->m_chatId));
+
+    url.setQuery(urlQuery);
+
+    QNetworkRequest request(url);
+
+    m_httpClient->sendHttpRequest(std::move(request), multiPart, {}, std::bind(&ChatClient::LookingForPeopleReply, this, std::placeholders::_1));
+}
+
+void ChatClient::SendImageReply(QNetworkReply *reply){
+    if (reply->error() == QNetworkReply::NoError) {
+        qDebug() << reply->readAll();
+    }
+    else {
+        qDebug() << "Failure" <<reply->errorString();
+    }
 }
 
 void ChatClient::LookingForPeople(const QString& prefix)
@@ -210,43 +254,13 @@ void ChatClient::LookingForPeopleReply(QNetworkReply *reply){
 void ChatClient::SetSearchResults(const std::vector<UserInfo>& results)
 {
     m_searchModel->SetDataSource(results);
-    /*ui->listWidget_2->clear();
-    for (const UserInfo& userInfo : results){
-        QListWidgetItem *contactItem = new QListWidgetItem(ui->listWidget_2);
-        auto user = new UserItemWidget();
-        user->SetName(userInfo.userLogin);
-        user->SetLastText("");
-        contactItem->setData(Qt::UserRole, userInfo.userId);
-        contactItem->setSizeHint(user->sizeHint());
-        ui->listWidget_2->addItem(contactItem);
-        ui->listWidget_2->setItemWidget(contactItem, user);
-    }*/
 }
-
-void ChatClient::SetExistingDialogs()
-{
-
-}
-
-/*void ChatClient::SetDialog(QListWidgetItem * clickedItem)
-{
-    UserItemWidget *itemWidget = qobject_cast<UserItemWidget*>(ui->listWidget->itemWidget(clickedItem));
-
-    itemWidget->ClearUnreadCount();
-    m_dialogsManager->m_IdToDialog.at(clickedItem->data(Qt::UserRole).toInt()).m_unreadCount = 0;
-
-    ui->stackedWidget_2->setCurrentIndex(1);
-    ui->label_4->setText(itemWidget->GetName());
-    UpdateTextBrowser(clickedItem->data(Qt::UserRole).toInt());
-}*/
 
 void ChatClient::SetNewDialog(int index)
 {
     QString login = m_searchModel->data(m_searchModel->index(index), ContactsRoles::ChatNameRole).toString();
     int userId = m_searchModel->data(m_searchModel->index(index), ContactsRoles::UserIdRole).toInt();
 
-    //ui->stackedWidget_2->setCurrentIndex(1, ContactsRoles::ChatNameRole);
-    //ui->label_4->setText(itemWidget->GetName());
     if (!m_dialogsManager->IsDialogWithUserExist(userId)){
         SendCreateDialogReq(getCurrUserId(), userId, login);
     }
@@ -284,7 +298,6 @@ void ChatClient::SendCreateDialogReq(int fromUser, int toUser, const QString& to
 
 void ChatClient::CreateChatReply(QNetworkReply *reply){
     if (reply->error() == QNetworkReply::NoError) {
-        // CreateNewDialog
         QJsonDocument itemDoc = QJsonDocument::fromJson(reply->readAll());
         QJsonObject rootObject = itemDoc.object();
         m_dialogsManager->CreateNewChat(reply->property("toUserId").toInt(), rootObject.value("chatId").toInt(), reply->property("toUserName").toString());
@@ -293,8 +306,6 @@ void ChatClient::CreateChatReply(QNetworkReply *reply){
         qDebug() << "changed index by new dialog";
         emit dialogIndexChanged(0);
         m_chatHistoryModel->SetDataSource(m_currChat);
-        //AddNewWidgetDialog(rootObject.value("chatId").toInt(), reply->property("toUserName").toString(), true);
-        //UpdateTextBrowser(rootObject.value("chatId").toInt());
     }
     else {
         qDebug() << "Failure" <<reply->errorString();

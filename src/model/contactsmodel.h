@@ -6,6 +6,7 @@
 
 class DialogsManager;
 
+/// A QML model that represents current user contacts (on the left panel)
 class ContactsModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -22,14 +23,17 @@ class ContactsModel : public QAbstractListModel
 public:
     explicit ContactsModel(QObject *parent = nullptr);
 
-    QVariant data(const QModelIndex &index = {}, int role = Qt::DisplayRole) const override;                //for editable models
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;        //for editable models
+    /// returns the information about contact by index and role (index represents the contact, role represents the exact info about the contact)
+    QVariant data(const QModelIndex &index = {}, int role = Qt::DisplayRole) const override;
+    /// set an information about the contact by index
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
     int rowCount(const QModelIndex &parent = {}) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     QHash<int, QByteArray> roleNames() const override;
-
+    /// Changes the curretn model data source
     void SetDataSource(std::shared_ptr<DialogsManager>);
+    /// Returns curretn data source
     std::shared_ptr<DialogsManager> dataSource() const;
 
 private:

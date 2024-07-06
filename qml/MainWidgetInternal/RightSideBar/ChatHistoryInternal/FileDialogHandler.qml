@@ -295,6 +295,11 @@ Rectangle{
                     id: send_id
                     anchors.right: parent.right
                     text: "Send"
+
+                    onClicked: {
+                        chatClientObj.sendImage(folderDialog_id.selectedFile, messageBox_id.text)
+                    }
+
                     contentItem: Text {
                         text: send_id.text
                         font.pointSize: 12

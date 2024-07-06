@@ -8,6 +8,7 @@
 class QNetworkAccessManager;
 class QNetworkReply;
 class QNetworkRequest;
+class QHttpMultiPart;
 
 constexpr std::string_view createChatReq = "CreateChatReq";
 constexpr std::string_view getUsersListReq = "GetUsersListReq";
@@ -18,10 +19,14 @@ public:
     HttpClient(QObject* parent = nullptr);
 
 public:
+    /// sends http request to backend side and sets up a callbeck for the answer
     void sendHttpRequest(QNetworkRequest&& request, QByteArray&& data, const std::vector<std::pair<std::string, QVariant>>& properties, std::function<void(QNetworkReply *)>);
+    /// sends http request to backend side by blocks (for images and other large data)
+    void sendHttpRequest(QNetworkRequest&& request, QHttpMultiPart *multipart, const std::vector<std::pair<std::string, QVariant>>& properties, std::function<void(QNetworkReply *)> callBack);
 private slots:
+    /// default slot to avaluate any answer
     void onRequestFinished(QNetworkReply* reply);
-
+    /// default slot to avaluate any error
     void onSslErrors(QList<QSslError> errors);
 
 private:

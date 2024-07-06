@@ -21,6 +21,16 @@ void HttpClient::sendHttpRequest(QNetworkRequest&& request, QByteArray&& data, c
     connect(reply, &QNetworkReply::sslErrors, this, &HttpClient::onSslErrors);
 }
 
+void HttpClient::sendHttpRequest(QNetworkRequest&& request, QHttpMultiPart *multipart, const std::vector<std::pair<std::string, QVariant>>& properties, std::function<void(QNetworkReply *)> callBack) {
+    QNetworkReply* reply = m_networkManager->post(request, multipart);
+    for (const auto& [key, value] : properties){
+        reply->setProperty(key.c_str(), value);
+    }
+    m_reqToFunc[reply] = callBack;
+
+    connect(reply, &QNetworkReply::sslErrors, this, &HttpClient::onSslErrors);
+}
+
 void HttpClient::onRequestFinished(QNetworkReply* reply) {
     if (reply->error() == QNetworkReply::NoError) {
         m_reqToFunc[reply](reply);

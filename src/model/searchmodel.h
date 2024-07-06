@@ -19,29 +19,29 @@ enum ContactsRoles{
     DialogIconRole
 };
 
+/// A QML model that represents founded users by prefix
 class SearchModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
     explicit SearchModel(QObject *parent = nullptr);
 
-    QVariant data(const QModelIndex &index = {}, int role = Qt::DisplayRole) const override;                //for editable models
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;        //for editable models
+    QVariant data(const QModelIndex &index = {}, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
     int rowCount(const QModelIndex &parent = {}) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    QString ChatName() const;
-    void setChatName(const QString &newChatName);
-
+    /// Set a new data source
     void SetDataSource(const std::vector<UserInfo> &results);
+    /// Returns curretn data source
     const std::vector<UserInfo>& dataSource() const;
 
+    /// It's a slot to avaluate the click on item of the model, in this slot we should set up the dialog with clicked user
     Q_INVOKABLE void onItemClicked(int index);
 
 signals:
-    void DataSourceChanged();
     void ItemClicked(int index);
 
 private:
