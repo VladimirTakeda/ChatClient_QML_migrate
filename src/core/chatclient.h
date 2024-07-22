@@ -71,7 +71,7 @@ signals:
 
 private:
     /// @brief Set the result of searching contacts to Search Model
-    void SetSearchResults(const std::vector<UserInfo>& results);
+    void SetSearchResults(std::vector<UserInfo>&& results);
     /// @brief Create a new dialog with one contact from Search Model or set up an existina dialog
     void SetNewDialog(int index);
     /// @brief Send http request to create a new dialog

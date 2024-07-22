@@ -34,7 +34,7 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     /// Set a new data source
-    void SetDataSource(const std::vector<UserInfo> &results);
+    void SetDataSource(std::vector<UserInfo> &&results);
     /// Returns curretn data source
     const std::vector<UserInfo>& dataSource() const;
 

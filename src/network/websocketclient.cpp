@@ -28,6 +28,8 @@ WebSocketClient::WebSocketClient(const QUrl &url, std::function<void(Message)> c
     qDebug() << m_socket.state();
 }
 
+WebSocketClient::~WebSocketClient(){};
+
 void WebSocketClient::SendTextMessage(const QString& msg){
     qDebug() << msg;
     qDebug() << "Sended bytes : " << m_socket.sendTextMessage(msg);

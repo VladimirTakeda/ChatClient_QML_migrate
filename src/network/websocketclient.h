@@ -13,7 +13,7 @@ namespace WebSocket{
 /// A struct for websocket message
 struct Message{
     QString text;
-    QString chatName;
+    std::optional<QString> chatName;
     int userFrom;
     int chatTo;
     bool isMyMessage;
@@ -26,6 +26,7 @@ class WebSocketClient : public QObject{
 public:
     /// @brief Creates a socket and set up the slots for connection
     WebSocketClient(const QUrl &url, std::function<void(Message)> callBack, QObject* parent = nullptr);
+    ~WebSocketClient();
     /// @brief send text message to socket
     void SendTextMessage(const QString& msg);
 private slots:

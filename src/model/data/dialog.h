@@ -10,6 +10,8 @@ struct Message {
     bool isMyMessage;
     QDateTime time;
     //TODO: add attachments here
+    friend QDataStream &operator<<(QDataStream &out, const Message& myClass);
+    friend QDataStream &operator>>(QDataStream &in, Message& myClass);
 };
 
 class DialogsManager;
@@ -21,6 +23,7 @@ class Dialog
     friend DialogsManager;
     friend ChatClient;
 public:
+    Dialog();
     Dialog(int64_t chatId,const QString& name);
     /// @brief Returns a number of all messages in dialog
     size_t Size() const;
@@ -36,11 +39,15 @@ public:
     int GetUnreadCount() const;
     /// @brief Provide access to message by index
     std::shared_ptr<Message> operator[](size_t index) const;
+
+    friend QDataStream &operator<<(QDataStream &out, const Dialog& myClass);
+    friend QDataStream &operator>>(QDataStream &in, Dialog& myClass);
 private:
     uint64_t m_unreadCount;
     int64_t m_chatId;
     QList<std::shared_ptr<Message>> m_messages;
-    QString m_dialogName;
+    std::optional<QString> m_dialogName;
+    std::optional<QString> m_InterlocutorName;
 };
 
 #endif // DIALOG_H

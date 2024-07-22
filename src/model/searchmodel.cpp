@@ -58,12 +58,12 @@ const std::vector<UserInfo>& SearchModel::dataSource() const
     return m_foundedUsers;
 }
 
-void SearchModel::SetDataSource(const std::vector<UserInfo> &results)
+void SearchModel::SetDataSource(std::vector<UserInfo> &&results)
 {
     if (m_foundedUsers != results) {
         beginResetModel();
 
-        m_foundedUsers = results;
+        m_foundedUsers = std::move(results);
 
         m_signalConnected = true;
 

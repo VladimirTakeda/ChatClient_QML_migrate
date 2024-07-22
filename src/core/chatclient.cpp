@@ -59,13 +59,8 @@ ChatClient::ChatClient(std::shared_ptr<ContactsModel> contactsModel, std::shared
     connect(m_searchModel.get(), &SearchModel::ItemClicked, this, &ChatClient::SetNewDialog);
 }
 
-ChatClient::~ChatClient()
-{
-}
-
-void ChatClient::AddMessageToWidgetDialog(int userId, const QString &lastMessage, bool NeedIncrement, const QDateTime& localMsgTime)
-{
-}
+//need because of std::unique_ptr<WebSocket::WebSocketClient> m_client field
+ChatClient::~ChatClient(){};
 
 void ChatClient::SetUpWSConnection(){
     QString url = QString("ws://localhost:8080/create?user_id=%1&device_id=%2").arg(getCurrUserId()).arg(getCurrDeviceId());
@@ -87,7 +82,7 @@ void ChatClient::saveDialogs() const
 void ChatClient::GotNewMessage(WebSocket::Message msg)
 {
     if (!m_dialogsManager->IsChatExist(msg.chatTo)){
-        m_dialogsManager->CreateNewChat(msg.userFrom, msg.chatTo, msg.chatName);
+        m_dialogsManager->CreateNewChat(msg.userFrom, msg.chatTo, msg.chatName.value());
     }
     m_dialogsManager->AddMessage(msg.chatTo, {msg.text, msg.isMyMessage, msg.time});
     //if it's current dialog then update otherwise no
@@ -110,7 +105,7 @@ void ChatClient::GotNewMessage(WebSocket::Message msg)
     if (m_currChat)
         emit dialogIndexChanged(std::distance(m_dialogsManager->m_modelData.begin(), m_dialogsManager->m_IdToDialog[m_currChat->m_chatId]));
 
-    OnGotNotification(msg.chatName, msg.text, (*m_dialogsManager->m_IdToDialog.at(msg.chatTo))->m_unreadCount, msg.time);
+    OnGotNotification(msg.chatName.value(), msg.text, (*m_dialogsManager->m_IdToDialog.at(msg.chatTo))->m_unreadCount, msg.time);
 }
 
 bool ChatClient::isUserRegistered(){
@@ -203,7 +198,7 @@ void ChatClient::sendImage(const QString& path, const QString& message){
 
     QNetworkRequest request(url);
 
-    m_httpClient->sendHttpRequest(std::move(request), multiPart, {}, std::bind(&ChatClient::LookingForPeopleReply, this, std::placeholders::_1));
+    m_httpClient->sendHttpRequest(std::move(request), multiPart, {}, std::bind(&ChatClient::SendImageReply, this, std::placeholders::_1));
 }
 
 void ChatClient::SendImageReply(QNetworkReply *reply){
@@ -251,9 +246,9 @@ void ChatClient::LookingForPeopleReply(QNetworkReply *reply){
     }
 }
 
-void ChatClient::SetSearchResults(const std::vector<UserInfo>& results)
+void ChatClient::SetSearchResults(std::vector<UserInfo>&& results)
 {
-    m_searchModel->SetDataSource(results);
+    m_searchModel->SetDataSource(std::move(results));
 }
 
 void ChatClient::SetNewDialog(int index)
