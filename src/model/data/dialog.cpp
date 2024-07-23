@@ -11,6 +11,11 @@ QDataStream &operator<<(QDataStream &out, const Message& message)
     out.writeRawData(text.constData(), msgSize);
     out << message.time;
 
+    out << static_cast<uint64_t>(message.attachments.size());
+    for (const auto& elem : message.attachments){
+        out << elem;
+    }
+
     return out;
 }
 
@@ -26,6 +31,14 @@ QDataStream &operator>>(QDataStream &in, Message& message)
     message.text = QString::fromUtf8(text);
 
     in >> message.time;
+
+    uint64_t attachmentsSize;
+    in >> attachmentsSize;
+    for (int i = 0; i < attachmentsSize; ++i){
+        QString attachment;
+        in >> attachment;
+        message.attachments.push_back(attachment);
+    }
 
     return in;
 }

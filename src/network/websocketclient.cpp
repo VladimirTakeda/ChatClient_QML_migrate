@@ -4,6 +4,7 @@
 
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 
 namespace WebSocket{
 
@@ -55,6 +56,12 @@ void WebSocketClient::OnTextMessageRecieved(QString message){
     msg.chatTo = rootObject.value("chat_to_id").toInt();
     msg.chatName = rootObject.value("chat_name").toString();
     msg.isMyMessage = (msg.userFrom == getCurrUserId());
+
+    QJsonArray array = rootObject.value("attachments").toArray();
+
+    foreach (const QJsonValue & value, array) {
+        msg.attachments.push_back(value.toString());
+    }
 
     msg.time = QDateTime::fromString(rootObject.value("time").toString(), Qt::ISODate).toLocalTime();
 

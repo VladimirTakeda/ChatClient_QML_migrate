@@ -3,6 +3,7 @@
 #include <QAbstractListModel>
 #include <QObject>
 #include <QQmlEngine>
+#include <QCoreApplication>
 
 class Dialog;
 
@@ -11,10 +12,12 @@ class ChatHistoryModel : public QAbstractListModel
 {
     Q_OBJECT
     QML_ELEMENT
+    Q_PROPERTY(QString imagesPath READ imagesPath CONSTANT)
 
     enum ContactsRoles{
         MessageRole = Qt::UserRole + 1,
-        IsMyMessageRole
+        IsMyMessageRole,
+        AttachmentRole
     };
 
 public:
@@ -34,6 +37,10 @@ public:
     void SetDataSource(std::shared_ptr<Dialog>);
     /// Returns curretn data source
     std::shared_ptr<Dialog> dataSource() const;
+
+    QString imagesPath() const {
+        return QString("file:///") + QCoreApplication::applicationDirPath() + "/../../../images/";
+    }
 signals:
     /// A sigmal to QML to draw the history from the end (not from the start)
     void scrollToBottom();

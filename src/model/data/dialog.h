@@ -9,7 +9,7 @@ struct Message {
     QString text;
     bool isMyMessage;
     QDateTime time;
-    //TODO: add attachments here
+    QVector<QString> attachments;
     friend QDataStream &operator<<(QDataStream &out, const Message& myClass);
     friend QDataStream &operator>>(QDataStream &in, Message& myClass);
 };

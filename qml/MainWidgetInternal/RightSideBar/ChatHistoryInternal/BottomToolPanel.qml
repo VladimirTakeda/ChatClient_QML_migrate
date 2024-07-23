@@ -72,7 +72,7 @@ Rectangle{
                     Keys.onPressed:(event)=>{
                                        if ((event.key === Qt.Key_Enter || event.key === Qt.Key_Return) &&
                                            messageField_id.length) {
-                                           chatClientObj.sendNewMessage(messageField_id.text)
+                                           chatClientObj.sendNewMessage(messageField_id.text, {})
                                            messageField_id.clear()
                                        }
                                    }
@@ -110,7 +110,7 @@ Rectangle{
                     MouseArea{
                         anchors.fill: parent
                         onClicked: {
-                            chatClientObj.sendNewMessage(messageField_id.text)
+                            chatClientObj.sendNewMessage(messageField_id.text, {})
                             messageField_id.clear()
                         }
                     }

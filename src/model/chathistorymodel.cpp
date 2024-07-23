@@ -25,6 +25,9 @@ QVariant ChatHistoryModel::data(const QModelIndex &index, int role) const
     if (role == IsMyMessageRole){
         return message->isMyMessage;
     }
+    if (role == AttachmentRole){
+        return message->attachments;
+    }
 
     return {};
 }
@@ -46,6 +49,7 @@ QHash<int, QByteArray> ChatHistoryModel::roleNames() const
     static QHash<int, QByteArray> roles{
         {MessageRole, "message"},
         {IsMyMessageRole, "isMyMessage"},
+        {AttachmentRole, "attachments"},
     };
     return roles;
 }

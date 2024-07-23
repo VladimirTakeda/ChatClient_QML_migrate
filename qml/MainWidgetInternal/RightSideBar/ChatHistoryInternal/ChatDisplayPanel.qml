@@ -5,7 +5,7 @@ Item {
     property alias __listViewDisplayPanel: listViewDisplayPanel_id
     id: root_id
 
-    ListView{
+    ListView {
         id: listViewDisplayPanel_id
         anchors.fill: parent
         clip: true
@@ -13,27 +13,45 @@ Item {
         model: chatHistoryModel
         interactive: true
         verticalLayoutDirection: ListView.TopToBottom
-        delegate: Rectangle{
+        delegate: Rectangle {
             readonly property real rlSideMargins: 5
+            readonly property real maxWidth: listViewDisplayPanel_id.width - 100
             anchors {
                 right: model.isMyMessage ? listViewDisplayPanel_id.contentItem.right : undefined
                 left: model.isMyMessage ? undefined : listViewDisplayPanel_id.contentItem.left
                 rightMargin: model.isMyMessage ? rlSideMargins : undefined
                 leftMargin: model.isMyMessage ? undefined : rlSideMargins
             }
-
-            width: Math.min(messageText_id.implicitWidth + 24,
-                            listViewDisplayPanel_id.width - 100)
-            height: messageText_id.implicitHeight + 24
             radius: 10
 
-            Label{
-                id: messageText_id
-                text: model.message
-                color: "black"
-                anchors.fill: parent
-                anchors.margins: 12
-                wrapMode: Label.Wrap
+            width: Math.min(column.implicitWidth, maxWidth)
+            height: column.implicitHeight
+
+            Column {
+                id: column
+                spacing: 5
+
+                Loader {
+                    active: model.attachments && model.attachments.length > 0
+                    sourceComponent: Image {
+                        id: testImage_id
+                        width: 400
+                        height: sourceSize.width
+                                > 0 ? width * (sourceSize.height / sourceSize.width) : width
+                        fillMode: Image.PreserveAspectFit
+                        source: chatHistoryModel.imagesPath + model.attachments[0]
+                        mipmap: true
+                    }
+                }
+
+                Label {
+                    id: messageText_id
+                    text: model.message
+                    color: "black"
+                    leftPadding: 12
+                    anchors.margins: 12
+                    wrapMode: Label.Wrap
+                }
             }
         }
 
@@ -52,5 +70,4 @@ Item {
 
     //TODO: add custom ScrollBar as telegram
     // ScrollBar.vertical: ScrollBar { }
-
 }

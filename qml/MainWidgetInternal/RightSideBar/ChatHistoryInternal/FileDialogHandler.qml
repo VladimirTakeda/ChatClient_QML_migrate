@@ -298,6 +298,7 @@ Rectangle{
 
                     onClicked: {
                         chatClientObj.sendImage(folderDialog_id.selectedFile, messageBox_id.text)
+                        dialog_id.close()
                     }
 
                     contentItem: Text {

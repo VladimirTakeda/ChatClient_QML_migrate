@@ -17,7 +17,7 @@ struct Message{
     int userFrom;
     int chatTo;
     bool isMyMessage;
-    std::vector<std::string> attachments; //vector of path (1 right now)
+    QVector<QString> attachments; //vector of path (1 right now)
     QDateTime time;
 };
 

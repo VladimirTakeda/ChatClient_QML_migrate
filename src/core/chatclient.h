@@ -50,7 +50,9 @@ public:
     /// @brief Check if current user has been registered (if yes - establish websocket connection)
     Q_INVOKABLE bool isUserRegistered();
     /// @brief Send a text message from current user to another (using websocket)
-    Q_INVOKABLE void sendNewMessage(const QString& message);
+    Q_INVOKABLE void sendNewMessage(const QString& message, QVector<QString> attachments);
+    /// @brief Download the attachment if it doesn't presented in local storage
+    void DownLoadAttachments(const QString& message);
     /// @brief Set up curretn chat across the models by index (on UI update)
     Q_INVOKABLE void updateCurrentChat(int index);
     /// @brief Send image to backend and get it's id
@@ -69,6 +71,8 @@ signals:
     /// @brief We wants to see main widget with dialogs
     void goToMainWidget();
 
+    void AttachmentsDownloaded();
+
 private:
     /// @brief Set the result of searching contacts to Search Model
     void SetSearchResults(std::vector<UserInfo>&& results);
@@ -86,6 +90,7 @@ private slots:
     void SendImageReply(QNetworkReply *reply);
     void LookingForPeopleReply(QNetworkReply *reply);
     void CreateChatReply(QNetworkReply *reply);
+    void DownLoadAttachmentsReply(QNetworkReply *reply);
 
     /// @brief TODO: it's a slot for push notifications
     void OnGotNotification(const QString& name, const QString& text, int64_t unreadCount, const QDateTime& time);
