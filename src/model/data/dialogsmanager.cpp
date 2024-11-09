@@ -63,7 +63,7 @@ void DialogsManager::SaveToMemory() const
 void DialogsManager::SaveDialogs() const
 {
 #ifdef Q_OS_WIN
-    QFile inFile("dialogs");
+    QFile outFile("dialogs");
 #endif
 
 #ifdef Q_OS_MAC
