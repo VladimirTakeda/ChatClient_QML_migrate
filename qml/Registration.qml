@@ -2,11 +2,10 @@ import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 
-
 Rectangle{
-    readonly property real minSize: textSecond_id.width
-    readonly property real heightFields: 27
-    readonly property int sizeTextPlaceholder: 12
+    readonly property real minSize_: textSecond_id.width
+    readonly property real heightFields_: 27
+    readonly property int sizeTextPlaceholder_: 12
     // readonly property int heightPaddingItems: 30
 
     id: registrationWidget_id
@@ -15,11 +14,30 @@ Rectangle{
 
     color: "white"
 
+    Button {
+        readonly property int arrowSizeDefualt_: 30
+        id: arrow_back_button_id
+        icon.source: "qrc:/ChatClient/ChatClient_QML/icons/arrow-left-short-custom.svg"
+        icon.width: arrowSizeDefualt_
+        icon.height: arrowSizeDefualt_
+        icon.color: "transparent"
+        background: Item {  }
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            onEntered: arrow_back_button_id.icon.color = Qt.darker("#B2B2B2", 1.2)
+            onExited: arrow_back_button_id.icon.color = "transparent"
+            onClicked: {
+                mainWindowStack_id.replace("qrc:/ChatClient/ChatClient_QML/qml/StartWidget.qml")
+            }
+        }
+    }
+
     RowLayout{
         anchors.fill: parent
 
         Layout.alignment: Qt.AlignVCenter
-        Layout.minimumWidth: minSize
+        Layout.minimumWidth: minSize_
         Item{
             Layout.fillWidth: true
         }
@@ -49,10 +67,10 @@ Rectangle{
 
             TextField{
                 id: login_id
-                Layout.preferredHeight: heightFields
+                Layout.preferredHeight: heightFields_
                 Layout.preferredWidth: textSecond_id.width
                 placeholderText: "Login"
-                font.pointSize: sizeTextPlaceholder
+                font.pointSize: sizeTextPlaceholder_
             }
 
             Item{
@@ -61,11 +79,11 @@ Rectangle{
 
             TextField{
                 id: password
-                Layout.preferredHeight: heightFields
+                Layout.preferredHeight: heightFields_
                 Layout.preferredWidth: textSecond_id.width
                 echoMode: TextInput.Password
                 placeholderText: "Password"
-                font.pointSize: sizeTextPlaceholder
+                font.pointSize: sizeTextPlaceholder_
                 Keys.onPressed: (event)=> {
                                     if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return) {
                                         signUp_id.clicked()
@@ -81,8 +99,6 @@ Rectangle{
                 id: signUp_id
                 Layout.preferredWidth: textSecond_id.width
                 text: "Sign Up"
-                // font.pixelSize: 20
-                // palette.buttonText: "white"
                 contentItem: Text{
                     text: signUp_id.text
                     verticalAlignment: Text.AlignVCenter
@@ -93,10 +109,16 @@ Rectangle{
                 }
 
                 background: Rectangle{
+                    id: signUpRec_id
                     height: 35
                     radius: 4
                     color: "#0088CC"
-                    //TODO: Add hovered handler
+                    MouseArea{
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onEntered: signUpRec_id.color = Qt.darker("#0088CC", 1.4)
+                        onExited: signUpRec_id.color = "#0088CC"
+                    }
                 }
 
                 onClicked: {
