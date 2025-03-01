@@ -139,6 +139,8 @@ Item {
         delegate: messageDelegate
 
         ScrollBar.vertical: ScrollBar {
+            active: pressed || listViewDisplayPanel_id.moving
+            opacity: active ? 1:0
             policy: ScrollBar.AsNeeded
             width: 8
             background: Rectangle {
