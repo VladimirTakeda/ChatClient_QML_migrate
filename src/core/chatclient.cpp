@@ -189,6 +189,7 @@ void ChatClient::sendNewMessage(const QString& message, QVector<QString> attachm
 void ChatClient::DownLoadAttachments(const QString& attachedFileName){
     QString fileName = QString("QCoreApplication::applicationDirPath()") + "/../../../images/" + attachedFileName;
     if (!QFile::exists(fileName)){
+        qDebug() << "Error! File not exist!";
         QNetworkRequest request;
 
         QJsonObject obj;
@@ -390,8 +391,10 @@ void ChatClient::CreateChatReply(QNetworkReply *reply){
 void ChatClient::DownLoadAttachmentsReply(QNetworkReply *reply){
     if (reply->error() == QNetworkReply::NoError) {
         QByteArray data = reply->readAll();
+        qDebug() << "size byteArray" << data.size();
         QDir().mkpath(QCoreApplication::applicationDirPath() + "/../../../images/");
         QFile file(QString(QCoreApplication::applicationDirPath()) + "/../../../images/" + reply->property("attachmentName").toString());
+        qDebug() << "file path: =====>" << file.fileName();
         if (file.open(QIODevice::WriteOnly)) {
             file.write(data);
             file.close();

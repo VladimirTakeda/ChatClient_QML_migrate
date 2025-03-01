@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls.Basic
 import QtQuick.Layouts
 
 
@@ -10,7 +11,7 @@ Rectangle{
     implicitWidth: 1034
     implicitHeight: 734
     readonly property real minSize: textSecond_id.width
-    color: "grey"
+    color: "white"
 
     RowLayout{
         Layout.alignment: Qt.AlignVCenter
@@ -45,9 +46,29 @@ Rectangle{
             Button{
                 id: startMessage_id
                 Layout.preferredWidth: textSecond_id.width
+                contentItem: Text{
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    color: "white"
+                    font.pixelSize: 18
+                    text: "Continue"
+                }
+                background: Rectangle{
+                    id: startMessageRec_id
+                    height: 35
+                    radius: 4
+                    color: "#0088CC"
+                    MouseArea{
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onEntered: startMessageRec_id.color = Qt.darker("#0088CC", 1.4)
+                        onExited: startMessageRec_id.color = "#0088CC"
+                    }
+                }
                 onClicked: {
                     mainWindowStack_id.replace("qrc:/ChatClient/ChatClient_QML/qml/Registration.qml")
                 }
+
             }
 
             Item {
