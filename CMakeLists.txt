@@ -82,6 +82,10 @@ qt_add_qml_module(appChatClient_QML
 
 add_subdirectory(qml/StyleModule)
 
+add_custom_target(ExtraFiles
+	SOURCES ${CMAKE_SOURCE_DIR}/Makefile
+)
+
 # add_subdirectory(qml/MainWidgetInternal/LeftSideBar)
     # qml/MainWidgetInternal/MidSideBar
     # qml/MainWidgetInternal/RightSideBar
