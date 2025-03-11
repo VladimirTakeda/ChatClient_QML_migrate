@@ -21,10 +21,10 @@ WebSocketClient::WebSocketClient(const QUrl &url, std::function<void(Message)> c
     connect(&m_socket, &QWebSocket::disconnected, this, &WebSocketClient::OnCloseConnection);
     connect(&m_socket, QOverload<const QList<QSslError>&>::of(&QWebSocket::sslErrors),
             this, &WebSocketClient::handle_ssl_errors);
-    qDebug() << url.path();
-    qDebug() << url.port();
-    qDebug() << url.url();
-    qDebug() << url.host();
+    qDebug() << "websocket path " << url.path();
+    qDebug() << "websocket port " << url.port();
+    qDebug() << "websocket url " << url.url();
+    qDebug() << "websocket host " << url.host();
     m_socket.open(url);
     qDebug() << m_socket.state();
 }

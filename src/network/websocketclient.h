@@ -38,8 +38,9 @@ private slots:
     void OnTextMessageRecieved(QString message);
     /// @brief We don't use ssl right now, may be delete this?
     void handle_ssl_errors(const QList<QSslError> &errors);
-private:
+public:
     QWebSocket m_socket;
+private:
     std::function<void(Message)> m_callBack;
 };
 

@@ -67,8 +67,26 @@ ChatClient::ChatClient(std::shared_ptr<ContactsModel> contactsModel, std::shared
 ChatClient::~ChatClient(){};
 
 void ChatClient::SetUpWSConnection(){
-    QString url = QString("ws://%1:8080/create?user_id=%3&device_id=%3").arg(host).arg(getCurrUserId()).arg(getCurrDeviceId());
+    QString url = QString("ws://%1/create?user_id=%2&device_id=%3").arg(host).arg(getCurrUserId()).arg(getCurrDeviceId());
     m_client.reset(new WebSocket::WebSocketClient(QUrl(url), std::bind(&ChatClient::GotNewMessage, this, std::placeholders::_1)));
+    connect(&m_client->m_socket, &QWebSocket::connected, this, []() {
+        qDebug() << "WebSocket connected successfully";
+    });
+
+    connect(&m_client->m_socket, &QWebSocket::disconnected, this, []() {
+        qDebug() << "WebSocket disconnected";
+    });
+
+    connect(&m_client->m_socket, QOverload<QAbstractSocket::SocketError>::of(&QWebSocket::errorOccurred),
+            this, [](QAbstractSocket::SocketError error) {
+                qDebug() << "WebSocket error:" << error;
+            });
+
+    // Add state change monitoring
+    connect(&m_client->m_socket, &QWebSocket::stateChanged,
+            this, [](QAbstractSocket::SocketState state) {
+                qDebug() << "WebSocket state changed to:" << state;
+            });
 }
 
 void ChatClient::loadDialogs()
