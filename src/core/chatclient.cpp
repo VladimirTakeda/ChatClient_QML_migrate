@@ -22,6 +22,10 @@
 
 #include <src/utils/utils.h>
 
+//const int port = 49313;
+const QString host = "myapp.local";
+//const QString host = "localhost";
+
 class QListWidgetItem;
 
 namespace{
@@ -63,8 +67,26 @@ ChatClient::ChatClient(std::shared_ptr<ContactsModel> contactsModel, std::shared
 ChatClient::~ChatClient(){};
 
 void ChatClient::SetUpWSConnection(){
-    QString url = QString("ws://localhost:8080/create?user_id=%1&device_id=%2").arg(getCurrUserId()).arg(getCurrDeviceId());
+    QString url = QString("ws://%1/create?user_id=%2&device_id=%3").arg(host).arg(getCurrUserId()).arg(getCurrDeviceId());
     m_client.reset(new WebSocket::WebSocketClient(QUrl(url), std::bind(&ChatClient::GotNewMessage, this, std::placeholders::_1)));
+    connect(&m_client->m_socket, &QWebSocket::connected, this, []() {
+        qDebug() << "WebSocket connected successfully";
+    });
+
+    connect(&m_client->m_socket, &QWebSocket::disconnected, this, []() {
+        qDebug() << "WebSocket disconnected";
+    });
+
+    connect(&m_client->m_socket, QOverload<QAbstractSocket::SocketError>::of(&QWebSocket::errorOccurred),
+            this, [](QAbstractSocket::SocketError error) {
+                qDebug() << "WebSocket error:" << error;
+            });
+
+    // Add state change monitoring
+    connect(&m_client->m_socket, &QWebSocket::stateChanged,
+            this, [](QAbstractSocket::SocketState state) {
+                qDebug() << "WebSocket state changed to:" << state;
+            });
 }
 
 void ChatClient::loadDialogs()
@@ -177,9 +199,8 @@ void ChatClient::DownLoadAttachments(const QString& attachedFileName){
         QUrl url;
 
         url.setScheme("http");
-        url.setHost("localhost");
+        url.setHost(host);
         url.setPath("/getFile");
-        url.setPort(8080);
         request.setUrl(url);
         request.setRawHeader("Content-Type", "application/json");
         std::vector<std::pair<std::string, QVariant>> properties = {{"attachmentName", attachedFileName}};
@@ -243,9 +264,8 @@ void ChatClient::sendImage(const QString& path, const QString& message){
 
     QUrl url;
     url.setScheme("http");
-    url.setHost("localhost");
+    url.setHost(host);
     url.setPath("/uploadFile");
-    url.setPort(8080);
 
     QUrlQuery urlQuery;
     urlQuery.addQueryItem("userId", QString::number(getCurrUserId()));
@@ -288,9 +308,8 @@ void ChatClient::LookingForPeople(const QString& prefix)
     QUrl url;
 
     url.setScheme("http");
-    url.setHost("localhost");
+    url.setHost(host);
     url.setPath("/get_users_by_prefix");
-    url.setPort(8080);
     request.setUrl(url);
     request.setRawHeader("Content-Type", "application/json");
 
@@ -343,9 +362,8 @@ void ChatClient::SendCreateDialogReq(int fromUser, int toUser, const QString& to
     QUrl url;
 
     url.setScheme("http");
-    url.setHost("localhost");
+    url.setHost(host);
     url.setPath("/chats");
-    url.setPort(8080);
     request.setUrl(url);
     request.setRawHeader("Content-Type", "application/json");
 
@@ -428,10 +446,10 @@ void ChatClient::registerUser(const QString& login, const QString& password)
     QUrl url;
 
     url.setScheme("http");
-    url.setHost("localhost");
+    url.setHost(host);
     url.setPath("/user/register");
-    url.setPort(8080);
     request.setUrl(url);
+    qDebug() << url.toString();
     request.setRawHeader("Content-Type", "application/json");
 
     m_httpClient->sendHttpRequest(std::move(request), std::move(data), {{"currUserName", login}}, std::bind(&ChatClient::RegisterUserReply, this, std::placeholders::_1));
