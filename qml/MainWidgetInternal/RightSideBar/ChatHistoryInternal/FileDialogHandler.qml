@@ -8,15 +8,25 @@ import StyleModule 1.0
 Rectangle{
     id: fileDialogHandler_id
     color: "transparent"
+    readonly property int iconSize: 22
 
-    Image {
+    Button {
         id: paperClipIcon_id
-        anchors.fill: parent
-        sourceSize.width: 1920
-        sourceSize.height: 1080
-        autoTransform: true
-        fillMode: Image.PreserveAspectFit
-        source: "qrc:/ChatClient/ChatClient_QML/icons/paper_clip.svg"
+        anchors.centerIn: parent
+        icon.source: "qrc:/ChatClient/ChatClient_QML/icons/paper_clip.svg"
+        icon.width: fileDialogHandler_id.iconSize
+        icon.height: fileDialogHandler_id.iconSize
+        icon.color: "#999999"
+        background: Item {  }
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            onEntered: paperClipIcon_id.icon.color = Qt.darker("#9B9B9B", 1.2)
+            onExited: paperClipIcon_id.icon.color = "#999999"
+            onClicked: {
+                console.log("Empty")
+            }
+        }
     }
 
     FileDialog {
@@ -65,13 +75,24 @@ Rectangle{
                     font.weight: Font.DemiBold
                     renderType: Text.NativeRendering
                 }
-                Image {
+
+                Button {
                     id: verticalDotsIcon_id
-                    height: title_id.contentHeight - 3
-                    sourceSize.width: 1920
-                    sourceSize.height: 1080
-                    source: "qrc:/ChatClient/ChatClient_QML/icons/three_dots_vertical.svg"
-                    fillMode: Image.PreserveAspectFit
+                    icon.source: "qrc:/ChatClient/ChatClient_QML/icons/three-dots-vertical2.svg"
+                    icon.width: 0
+                    icon.height: title_id.height
+                    icon.color: "#999999"
+                    background: Item {  }
+                    display: AbstractButton.IconOnly
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onEntered: verticalDotsIcon_id.icon.color = Qt.darker("#9B9B9B", 1.2)
+                        onExited: verticalDotsIcon_id.icon.color = "#999999"
+                        onClicked: {
+                            console.log("Empty")
+                        }
+                    }
                 }
             }
 
@@ -118,7 +139,7 @@ Rectangle{
                 id: rootCompress_id
                 anchors{
                     top: indicatorHint_id.bottom
-                    topMargin: 20
+                    topMargin: 15
                     left: internalData_id.left
                     leftMargin: internalData_id._constLeftRightMargins
                     right: internalData_id.right
@@ -200,23 +221,41 @@ Rectangle{
                     font.pointSize: 12
                 }
 
-                Image {
+                Button {
                     id: smileIcon_id
-                    height: 20
-                    width: 20
-                    sourceSize.width: 512
-                    sourceSize.height: 512
-                    autoTransform: true
-                    fillMode: Image.PreserveAspectFit
-                    source: "qrc:/ChatClient/ChatClient_QML/icons/smileButton.png"
+                    icon.source: "qrc:/ChatClient/ChatClient_QML/icons/smileButton.png"
+                    icon.width: fileDialogHandler_id.iconSize
+                    icon.height: fileDialogHandler_id.iconSize
+                    icon.color: "#999999"
+                    background: Item {  }
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onEntered: smileIcon_id.icon.color = Qt.darker("#9B9B9B", 1.2)
+                        onExited: smileIcon_id.icon.color = "#999999"
+                        onClicked: {
+                            console.log("Empty")
+                        }
+                    }
                 }
+
+                // Image {
+                //     id: smileIcon_id
+                //     height: 20
+                //     width: 20
+                //     sourceSize.width: 512
+                //     sourceSize.height: 512
+                //     autoTransform: true
+                //     fillMode: Image.PreserveAspectFit
+                //     source: "qrc:/ChatClient/ChatClient_QML/icons/smileButton.png"
+                // }
             }
 
             Rectangle {
                 id: line_id
                 anchors{
                     top: rootMessageBox_id.bottom
-                    topMargin: 5
+                    topMargin: 0
                     left: internalData_id.left
                     leftMargin: internalData_id._constLeftRightMargins
                     right: internalData_id.right
@@ -232,7 +271,7 @@ Rectangle{
                 color: "transparent"
                 anchors{
                     top: line_id.bottom
-                    topMargin: 10
+                    topMargin: 8
                     left: internalData_id.left
                     right: internalData_id.right
                 }
@@ -252,7 +291,7 @@ Rectangle{
                         renderType: Text.NativeRendering
                     }
                     background: Rectangle {
-                        implicitWidth: 57; implicitHeight: 34
+                        implicitWidth: 57; implicitHeight: 30
                         opacity: enabled ? 1 : 0.3
                         color: add_id.hovered ? "#e3f1fa" : "transparent"
                         radius: 4
@@ -282,7 +321,7 @@ Rectangle{
                         renderType: Text.NativeRendering
                     }
                     background: Rectangle {
-                        implicitWidth: 75; implicitHeight: 34
+                        implicitWidth: 75; implicitHeight: 30
                         opacity: enabled ? 1 : 0.3
                         color: cancel_id.hovered ? "#e3f1fa" : "transparent"
                         radius: 4
@@ -300,7 +339,6 @@ Rectangle{
                         chatClientObj.sendImage(folderDialog_id.selectedFile, messageBox_id.text)
                         dialog_id.close()
                     }
-
                     contentItem: Text {
                         text: send_id.text
                         font.pointSize: 12
@@ -313,7 +351,7 @@ Rectangle{
                         renderType: Text.NativeRendering
                     }
                     background: Rectangle {
-                        implicitWidth: 64; implicitHeight: 34
+                        implicitWidth: 64; implicitHeight: 30
                         opacity: enabled ? 1 : 0.3
                         color: send_id.hovered ? "#e3f1fa" : "transparent"
                         radius: 4

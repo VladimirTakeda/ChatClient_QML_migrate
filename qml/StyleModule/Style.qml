@@ -9,6 +9,11 @@ QtObject{
     readonly property color contactElement_color: "#419FD9"
     readonly property color placeholderLight_color: "lightgray"
     readonly property color placeholderDark_color: "gray"
+
+    readonly property color icon_color: "#999999"
+    readonly property color icon_color_darker: "#9B9B9B"
+    readonly property color icon_color_send_message_darker: "#23B8EE"
+
     readonly property color filled_color: "#F1F1F1"
     readonly property color filledDark_color: "#BBBBBB"
     readonly property color border_color: "#e7e7e7"

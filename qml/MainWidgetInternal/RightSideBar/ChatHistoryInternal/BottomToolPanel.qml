@@ -9,7 +9,7 @@ import StyleModule 1.0
 
 Rectangle{
     property alias __staticBox: staticBox_id
-    readonly property real iconsSize: 22
+    readonly property int iconsSize: 22
     readonly property int constHeightSize: 45
     id: bottomPanel_id
     implicitWidth: parent.width
@@ -79,40 +79,39 @@ Rectangle{
                 }
             }
 
-            Rectangle{
+            Button {
                 id: smiles_id
-                Layout.preferredWidth: bottomPanel_id.iconsSize
-                Layout.preferredHeight: bottomPanel_id.iconsSize
-                Layout.rightMargin: 14
-                color: "transparent"
-                Image {
+                icon.source: "qrc:/ChatClient/ChatClient_QML/icons/smileButton.png"
+                icon.width: bottomPanel_id.iconsSize
+                icon.height: bottomPanel_id.iconsSize
+                icon.color: "#999999"
+                background: Item {  }
+                MouseArea {
                     anchors.fill: parent
-                    sourceSize.width: 1920
-                    sourceSize.height: 1080
-                    autoTransform: true
-                    fillMode: Image.PreserveAspectFit
-                    source: "qrc:/ChatClient/ChatClient_QML/icons/smileButton.png"
+                    hoverEnabled: true
+                    onEntered: smiles_id.icon.color = Qt.darker("#9B9B9B", 1.2)
+                    onExited: smiles_id.icon.color = "#999999"
+                    onClicked: {
+                        console.log("Empty")
+                    }
                 }
             }
-
-            Rectangle{
+            Button {
                 id: sendMessage_id
-                Layout.preferredWidth: bottomPanel_id.iconsSize
-                Layout.preferredHeight: bottomPanel_id.iconsSize
-                Layout.rightMargin: 14
-                color: "transparent"
-                Image {
+                icon.source: "qrc:/ChatClient/ChatClient_QML/icons/sendMessage.png"
+                icon.width: bottomPanel_id.iconsSize
+                icon.height: bottomPanel_id.iconsSize
+                icon.color: "transparent"
+                rotation: 50
+                background: Item {  }
+                MouseArea {
                     anchors.fill: parent
-                    sourceSize.width: 800
-                    sourceSize.height: 600
-                    rotation: 45
-                    source: "qrc:/ChatClient/ChatClient_QML/icons/sendMessage.png"
-                    MouseArea{
-                        anchors.fill: parent
-                        onClicked: {
-                            chatClientObj.sendNewMessage(messageField_id.text, {})
-                            messageField_id.clear()
-                        }
+                    hoverEnabled: true
+                    onEntered: sendMessage_id.icon.color = Qt.darker("#23B8EE", 1.2)
+                    onExited: sendMessage_id.icon.color = "transparent"
+                    onClicked: {
+                        chatClientObj.sendNewMessage(messageField_id.text, {})
+                        messageField_id.clear()
                     }
                 }
             }
