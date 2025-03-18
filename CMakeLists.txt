@@ -73,6 +73,8 @@ qt_add_qml_module(appChatClient_QML
         icons/walls2.jpg
         icons/three_dots_vertical.svg
         icons/check_white.svg
+        icons/arrow-left-short-custom.svg
+        icons/three-dots-vertical2.svg
         qml/StyleModule/CMakeLists.txt
     SOURCES
         src/model/contactsmodel.h src/model/contactsmodel.cpp

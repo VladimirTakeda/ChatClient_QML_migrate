@@ -9,27 +9,27 @@ Item {
     Component {
         id: messageDelegate
         Rectangle {
-            id: messageBubble
+            id: messageBubble_id
             property bool isMyMessage: model.isMyMessage
             property bool hasImage: model.attachments?.length > 0
             property int maxLineWidth: 300
 
             width: {
-                if (hasImage && !messageText.visible) {
-                    return image.width
-                } else if (!hasImage && messageText.visible) {
+                if (hasImage && !messageText_id.visible) {
+                    return image_id.width
+                } else if (!hasImage && messageText_id.visible) {
                     // Increased padding for text-only messages
                     var textWidth = Math.min(maxLineWidth + 32,
                                              // Increased from 24 to 32
-                                             messageText.implicitWidth + 32)
+                                             messageText_id.implicitWidth + 32)
                     return Math.min(textWidth,
                                     listViewDisplayPanel_id.width * 0.75)
                 } else {
                     var contentWidth = Math.max(
-                                image.width, Math.min(
+                                image_id.width, Math.min(
                                     maxLineWidth + 16,
                                     // Reduced from 24 to 16 for mixed content
-                                    messageText.implicitWidth + 16))
+                                    messageText_id.implicitWidth + 16))
                     return Math.min(contentWidth,
                                     listViewDisplayPanel_id.width * 0.75)
                 }
@@ -37,13 +37,13 @@ Item {
             // Adjust height based on content type
             height: contentColumn.implicitHeight
                     + (hasImage
-                       && messageText.visible ? 8 : // Reduced from 12 to 8 for mixed content
+                       && messageText_id.visible ? 8 : // Reduced from 12 to 8 for mixed content
                                                 !hasImage
-                                                && messageText.visible ? 16 : 0) // Increased padding for text-only
+                                                && messageText_id.visible ? 16 : 0) // Increased padding for text-only
 
             x: isMyMessage ? listViewDisplayPanel_id.width - width - 8 : 8
 
-            radius: hasImage && !messageText.visible ? 8 : 12
+            radius: hasImage && !messageText_id.visible ? 8 : 12
             color: isMyMessage ? "#DCF8C6" : "#FFFFFF"
             layer.enabled: true
             layer.effect: DropShadow {
@@ -59,12 +59,12 @@ Item {
                     right: parent.right
                     top: hasImage ? parent.top : undefined
                     verticalCenter: !hasImage
-                                    && messageText.visible ? parent.verticalCenter : undefined
+                                    && messageText_id.visible ? parent.verticalCenter : undefined
                 }
-                spacing: messageText.visible && hasImage ? 8 : 0
+                spacing: messageText_id.visible && hasImage ? 8 : 0
 
                 Image {
-                    id: image
+                    id: image_id
                     width: {
                         if (!hasImage)
                             return 0
@@ -99,15 +99,15 @@ Item {
                     layer.enabled: true
                     layer.effect: OpacityMask {
                         maskSource: Rectangle {
-                            width: image.width
-                            height: image.height
+                            width: image_id.width
+                            height: image_id.height
                             radius: 8
                         }
                     }
                 }
 
                 TextEdit {
-                    id: messageText
+                    id: messageText_id
                     width: parent.width - (hasImage ? 16 : 32)
                     anchors {
                         left: parent.left
@@ -139,6 +139,8 @@ Item {
         delegate: messageDelegate
 
         ScrollBar.vertical: ScrollBar {
+            active: pressed || listViewDisplayPanel_id.moving
+            opacity: active ? 1:0
             policy: ScrollBar.AsNeeded
             width: 8
             background: Rectangle {
