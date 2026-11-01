@@ -3,6 +3,7 @@
 #include <QString>
 #include <QFile>
 #include <QCoreApplication>
+#include <QDebug>
 
 DialogsManager::DialogsManager(QObject *parent) : QObject(parent)
 {
@@ -11,6 +12,11 @@ DialogsManager::DialogsManager(QObject *parent) : QObject(parent)
 
 void DialogsManager::CreateNewChat(std::optional<int> userId, int chatId, const QString &userToName)
 {
+    if (userToName.isEmpty()) {
+        qWarning() << "[EMPTY-NAME] DialogsManager::CreateNewChat called with EMPTY userToName."
+                   << "userId=" << (userId ? QString::number(*userId) : "nullopt")
+                   << "chatId=" << chatId;
+    }
     if (userId){
         m_UserToChat[userId.value()] = chatId;
     }
@@ -75,6 +81,15 @@ void DialogsManager::SaveDialogs() const
 
         out << static_cast<uint64_t>(m_modelData.size());
         for (auto &dialog : m_modelData){
+            const bool dnEmpty = dialog->m_dialogName.has_value() && dialog->m_dialogName->isEmpty();
+            const bool inEmpty = dialog->m_InterlocutorName.has_value() && dialog->m_InterlocutorName->isEmpty();
+            if ((dnEmpty || !dialog->m_dialogName.has_value()) &&
+                (inEmpty || !dialog->m_InterlocutorName.has_value())) {
+                qWarning() << "[EMPTY-NAME] DialogsManager::SaveDialogs persisting dialog with empty/missing name."
+                           << "chatId=" << dialog->GetChatId()
+                           << "m_dialogName.has_value=" << dialog->m_dialogName.has_value()
+                           << "m_InterlocutorName.has_value=" << dialog->m_InterlocutorName.has_value();
+            }
             out << *dialog;
         }
 
@@ -109,10 +124,21 @@ void DialogsManager::LoadDialogs()
 
         uint64_t dialogsCount = 0;
         in >> dialogsCount;
+        qDebug() << "LoadDialogs: file" << inFile.fileName() << "contains" << dialogsCount << "dialog(s)";
 
         for (uint64_t i = 0; i < dialogsCount; i++){
             std::shared_ptr<Dialog> currentDialog = std::make_shared<Dialog>();
             in >> *currentDialog;
+
+            const bool dnEmpty = currentDialog->m_dialogName.has_value() && currentDialog->m_dialogName->isEmpty();
+            const bool inEmpty = currentDialog->m_InterlocutorName.has_value() && currentDialog->m_InterlocutorName->isEmpty();
+            if ((dnEmpty || !currentDialog->m_dialogName.has_value()) &&
+                (inEmpty || !currentDialog->m_InterlocutorName.has_value())) {
+                qWarning() << "[EMPTY-NAME] DialogsManager::LoadDialogs loaded dialog with empty/missing name."
+                           << "chatId=" << currentDialog->GetChatId()
+                           << "m_dialogName.has_value=" << currentDialog->m_dialogName.has_value()
+                           << "m_InterlocutorName.has_value=" << currentDialog->m_InterlocutorName.has_value();
+            }
 
             if (!currentDialog->m_messages.empty()) {
                 m_modelData.push_back(currentDialog);
@@ -138,4 +164,11 @@ void DialogsManager::LoadDialogs()
 int DialogsManager::DialogsCount() const
 {
     return m_modelData.size();
+}
+
+void DialogsManager::Clear()
+{
+    m_modelData.clear();
+    m_IdToDialog.clear();
+    m_UserToChat.clear();
 }

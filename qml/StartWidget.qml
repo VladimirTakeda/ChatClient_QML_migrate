@@ -3,6 +3,8 @@ import QtQuick.Controls
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 
+import StyleModule 1.0
+
 
 Rectangle{
     //TODO: collapse hides a part of content
@@ -57,12 +59,12 @@ Rectangle{
                     id: startMessageRec_id
                     height: 35
                     radius: 4
-                    color: "#0088CC"
+                    color: Style.baseFilled_color
                     MouseArea{
                         anchors.fill: parent
                         hoverEnabled: true
-                        onEntered: startMessageRec_id.color = Qt.darker("#0088CC", 1.4)
-                        onExited: startMessageRec_id.color = "#0088CC"
+                        onEntered: startMessageRec_id.color = Qt.darker(Style.baseFilled_color, 1.4)
+                        onExited: startMessageRec_id.color = Style.baseFilled_color
                     }
                 }
                 onClicked: {

@@ -30,6 +30,8 @@ class ChatClient : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString SearchPrefix READ SearchPrefix WRITE setSearchPrefix NOTIFY SearchPrefixChanged FINAL)
+    Q_PROPERTY(QString currentChatName READ currentChatName NOTIFY currentChatNameChanged FINAL)
+    Q_PROPERTY(QString currentUserName READ currentUserName NOTIFY currentUserNameChanged FINAL)
 public:
     ChatClient(std::shared_ptr<ContactsModel> contactsModel,
                std::shared_ptr<SearchModel> searchModel,
@@ -42,6 +44,10 @@ public:
     QString SearchPrefix() const;
     /// @brief Set up a new search prefix
     void setSearchPrefix(const QString &newSearchPrefix);
+    /// @brief Return the name of the currently-selected chat (empty if none)
+    QString currentChatName() const;
+    /// @brief Return the current user's own display name (empty if not registered)
+    QString currentUserName() const;
 
     /// @brief Loads dialogs from local memory
     Q_INVOKABLE void loadDialogs();
@@ -59,6 +65,9 @@ public:
     Q_INVOKABLE void sendImage(const QString& path, const QString& message);
     /// @brief Send user credentials and gets his id
     Q_INVOKABLE void registerUser(const QString& login, const QString& password);
+    /// @brief Tear down the session: close socket, clear in-memory state,
+    /// delete settings.ini / dialogs / images, and transition to StartWidget.
+    Q_INVOKABLE void logout();
 
     /// @brief Save information about current user to local storage
     void SaveUserInfo(int userId, const QString& deviceId, const QString& userName);
@@ -70,6 +79,12 @@ signals:
     void dialogIndexChanged(int index);
     /// @brief We wants to see main widget with dialogs
     void goToMainWidget();
+    /// @brief Session ended — show the start/registration screen
+    void goToStartWidget();
+    /// @brief The current chat changed (name/avatar in the top bar should refresh)
+    void currentChatNameChanged();
+    /// @brief The current user's own name changed (e.g. after registration)
+    void currentUserNameChanged();
 
     void AttachmentsDownloaded();
 

@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 
+import StyleModule 1.0
+
 Rectangle{
     readonly property real minSize_: textSecond_id.width
     readonly property real heightFields_: 27
@@ -112,12 +114,12 @@ Rectangle{
                     id: signUpRec_id
                     height: 35
                     radius: 4
-                    color: "#0088CC"
+                    color: Style.baseFilled_color
                     MouseArea{
                         anchors.fill: parent
                         hoverEnabled: true
-                        onEntered: signUpRec_id.color = Qt.darker("#0088CC", 1.4)
-                        onExited: signUpRec_id.color = "#0088CC"
+                        onEntered: signUpRec_id.color = Qt.darker(Style.baseFilled_color, 1.4)
+                        onExited: signUpRec_id.color = Style.baseFilled_color
                     }
                 }
 

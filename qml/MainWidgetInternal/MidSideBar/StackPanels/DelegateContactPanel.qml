@@ -9,10 +9,11 @@ Rectangle{
     property alias __delegatContactMouseArea: mouseCursor_id
     readonly property ListView __lv: ListView.view
     readonly property real leftRightInnerMargin: 10
+    readonly property bool isSelected: __lv.currentIndex === model.index
     id: delegat_id
     implicitHeight: 62
     implicitWidth: __lv.width
-    color: __lv.currentIndex === model.index ? Style.baseFilled_color : "transparent"
+    color: isSelected ? Style.baseFilled_color : "transparent"
 
     MouseArea{
         id: mouseCursor_id
@@ -58,6 +59,7 @@ Rectangle{
             Text{
                 id: userInfo_id
                 text: model.chatName
+                color: delegat_id.isSelected ? Style.row_selected_text_color : "black"
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop
                 Layout.topMargin: dataDelegat_id.marginInner
@@ -66,6 +68,7 @@ Rectangle{
             Text{
                 id: timeMessage_id
                 text: model.lastMessageTime
+                color: delegat_id.isSelected ? Style.row_selected_text_color : Style.row_text_secondary
                 Layout.alignment: Qt.AlignRight
                 Layout.topMargin: dataDelegat_id.marginInner
                 Layout.rightMargin: delegat_id.leftRightInnerMargin
@@ -76,6 +79,7 @@ Rectangle{
             Layout.alignment: Qt.AlignBottom
             Text{
                 id: lastText_id
+                color: delegat_id.isSelected ? Style.row_selected_text_color : Style.row_text_secondary
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignBottom
                 Layout.bottomMargin: dataDelegat_id.marginInner
@@ -94,13 +98,14 @@ Rectangle{
             Rectangle{
                 id: missMassages_id
                 readonly property int sizeMissMessage: 19
+                visible: model.missedMessageCount > 0
                 width: sizeMissMessage
                 height: sizeMissMessage
                 radius: width / 2
                 Layout.alignment: Qt.AlignRight | Qt.AlignBottom
                 Layout.rightMargin: delegat_id.leftRightInnerMargin
                 Layout.bottomMargin: 12
-                color: Style.filledDark_color
+                color: delegat_id.isSelected ? Style.row_selected_text_color : Style.unread_badge_color
                 Text{
                     anchors {
                         fill: parent
@@ -109,6 +114,7 @@ Rectangle{
                     }
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
+                    color: delegat_id.isSelected ? Style.baseFilled_color : "white"
                     text: model.missedMessageCount
                 }
             }

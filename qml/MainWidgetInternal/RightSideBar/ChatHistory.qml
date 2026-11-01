@@ -14,7 +14,7 @@ Rectangle{
         id: walls_id
         anchors.fill: parent
         source: "qrc:/ChatClient/ChatClient_QML/icons/walls2.jpg"
-        fillMode: Image.Stretch
+        fillMode: Image.Tile
     }
 
     ColumnLayout{

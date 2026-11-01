@@ -52,6 +52,7 @@ qt_add_qml_module(appChatClient_QML
         qml/StartWidget.qml
         qml/Registration.qml
         qml/MainWidget.qml
+        qml/ProfileWidget.qml
         qml/StyleModule/Style.qml
         qml/MainWidgetInternal/LeftSideBar/LeftToolPanel.qml
         qml/MainWidgetInternal/MidSideBar/MidPanel.qml

@@ -34,6 +34,8 @@ public:
 
     /// @brief Returns the size of dialogs model, i.e. the number of dialogs
     int DialogsCount() const;
+    /// @brief Wipe in-memory dialog state. Does not touch disk.
+    void Clear();
 
 private:
     // Saves dialogs model to local memory

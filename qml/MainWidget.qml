@@ -8,6 +8,7 @@ Rectangle{
     id: mainWidget_id
     implicitWidth: 1034
     implicitHeight: 734
+
     RowLayout{
         id: rowLayout_id
         anchors.fill: parent
@@ -20,6 +21,7 @@ Rectangle{
             Layout.maximumWidth: 72
             Layout.fillWidth: true
             Layout.fillHeight: true
+            onProfileRequested: midToolPanel_id.profileOpen = true
         }
         SplitView{
             id: splitView_id

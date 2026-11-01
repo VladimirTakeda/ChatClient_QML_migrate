@@ -6,6 +6,7 @@
 #include <QSettings>
 #include <QJsonArray>
 #include <QDir>
+#include <QFile>
 #include <QFileDialog>
 #include <QHttpMultiPart>
 #include <QUrlQuery>
@@ -107,8 +108,18 @@ void ChatClient::GotNewMessage(WebSocket::Message msg)
     auto processMessage = [this, msg](){
         qDebug() << "We are inside the lambda";
         if (!m_dialogsManager->IsChatExist(msg.chatTo)){
+            if (!msg.chatName.has_value() || msg.chatName->isEmpty()) {
+                qWarning() << "[EMPTY-NAME] GotNewMessage: inbound WebSocket Message has empty chatName."
+                           << "has_value=" << msg.chatName.has_value()
+                           << "userFrom=" << msg.userFrom
+                           << "chatTo=" << msg.chatTo;
+            }
             m_dialogsManager->CreateNewChat(msg.userFrom, msg.chatTo, msg.chatName.value());
         }
+        qDebug() << "[TIME] ChatClient::GotNewMessage storing msg.time valid=" << msg.time.isValid()
+                 << "value=" << msg.time.toString(Qt::ISODate)
+                 << "chatTo=" << msg.chatTo
+                 << "isMyMessage=" << msg.isMyMessage;
         m_dialogsManager->AddMessage(msg.chatTo, {msg.text, msg.isMyMessage, msg.time, msg.attachments});
         //if it's current dialog then update otherwise no
         bool IsSelectedDialog = false;
@@ -219,6 +230,42 @@ void ChatClient::updateCurrentChat(int index){
     m_currChat->m_unreadCount = 0;
     m_contactsModel->SetDataSource(m_dialogsManager);
     m_chatHistoryModel->SetDataSource(m_currChat);
+    emit currentChatNameChanged();
+}
+
+QString ChatClient::currentChatName() const {
+    return m_currChat ? m_currChat->GetName() : QString();
+}
+
+QString ChatClient::currentUserName() const {
+    return getCurrUserName();
+}
+
+void ChatClient::logout()
+{
+    qDebug() << "logout";
+    m_client.reset();
+    m_currChat.reset();
+    m_dialogsManager->Clear();
+    m_contactsModel->SetDataSource(m_dialogsManager);
+    m_chatHistoryModel->SetDataSource(nullptr);
+
+#ifdef Q_OS_WIN
+    const QString basePath = QCoreApplication::applicationDirPath();
+    QFile::remove(basePath + "/settings.ini");
+    QFile::remove("dialogs");
+    QDir(basePath + "/images").removeRecursively();
+#endif
+#ifdef Q_OS_MAC
+    const QString basePath = QCoreApplication::applicationDirPath() + "/../../..";
+    QFile::remove(basePath + "/settings.ini");
+    QFile::remove(basePath + "/dialogs");
+    QDir(basePath + "/images").removeRecursively();
+#endif
+
+    emit currentChatNameChanged();
+    emit currentUserNameChanged();
+    emit goToStartWidget();
 }
 
 QString ScaleSizeImage(const QString& filePath){
@@ -338,6 +385,11 @@ void ChatClient::SetNewDialog(int index)
     QString login = m_searchModel->data(m_searchModel->index(index), ContactsRoles::ChatNameRole).toString();
     int userId = m_searchModel->data(m_searchModel->index(index), ContactsRoles::UserIdRole).toInt();
 
+    if (login.isEmpty()) {
+        qWarning() << "[EMPTY-NAME] SetNewDialog: SearchModel ChatNameRole is empty."
+                   << "searchIndex=" << index << "userId=" << userId;
+    }
+
     if (!m_dialogsManager->IsDialogWithUserExist(userId)){
         SendCreateDialogReq(getCurrUserId(), userId, login);
     }
@@ -348,6 +400,7 @@ void ChatClient::SetNewDialog(int index)
         qDebug() << "chat already created: " << index;
         emit dialogIndexChanged(index);
         m_chatHistoryModel->SetDataSource(m_currChat);
+        emit currentChatNameChanged();
     }
 }
 
@@ -376,12 +429,19 @@ void ChatClient::CreateChatReply(QNetworkReply *reply){
     if (reply->error() == QNetworkReply::NoError) {
         QJsonDocument itemDoc = QJsonDocument::fromJson(reply->readAll());
         QJsonObject rootObject = itemDoc.object();
-        m_dialogsManager->CreateNewChat(reply->property("toUserId").toInt(), rootObject.value("chatId").toInt(), reply->property("toUserName").toString());
+        const QString toUserName = reply->property("toUserName").toString();
+        if (toUserName.isEmpty()) {
+            qWarning() << "[EMPTY-NAME] CreateChatReply: reply->property(\"toUserName\") is empty."
+                       << "toUserId=" << reply->property("toUserId").toInt()
+                       << "chatId=" << rootObject.value("chatId").toInt();
+        }
+        m_dialogsManager->CreateNewChat(reply->property("toUserId").toInt(), rootObject.value("chatId").toInt(), toUserName);
         m_contactsModel->SetDataSource(m_dialogsManager);
         m_currChat = m_dialogsManager->GetDialogByIndex(0);
         qDebug() << "changed index by new dialog";
         emit dialogIndexChanged(0);
         m_chatHistoryModel->SetDataSource(m_currChat);
+        emit currentChatNameChanged();
     }
     else {
         qDebug() << "Failure" <<reply->errorString();
@@ -465,6 +525,7 @@ void ChatClient::RegisterUserReply(QNetworkReply *reply){
         qDebug() << rootObject;
         SaveUserInfo(rootObject.value("userId").toInt(), rootObject.value("deviceId").toString(),  reply->property("currUserName").toString());
         SetUpWSConnection();
+        emit currentUserNameChanged();
         emit goToMainWidget();
     }
     else {

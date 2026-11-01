@@ -1,6 +1,12 @@
 #include "chathistorymodel.h"
 
+#include <QDebug>
+
 #include <src/model/data/dialog.h>
+
+namespace {
+const QString timeFormat = "h:mm AP";
+}
 
 ChatHistoryModel::ChatHistoryModel(QObject *parent)
     : QAbstractListModel{parent}, m_signalConnected{false}
@@ -28,6 +34,14 @@ QVariant ChatHistoryModel::data(const QModelIndex &index, int role) const
     if (role == AttachmentRole){
         return message->attachments;
     }
+    if (role == MessageTimeRole){
+        const QString formatted = message->time.toString(timeFormat);
+        qDebug() << "[TIME] ChatHistoryModel::data row=" << index.row()
+                 << "time.isValid=" << message->time.isValid()
+                 << "iso=" << message->time.toString(Qt::ISODate)
+                 << "formatted=" << formatted;
+        return formatted;
+    }
 
     return {};
 }
@@ -50,6 +64,7 @@ QHash<int, QByteArray> ChatHistoryModel::roleNames() const
         {MessageRole, "message"},
         {IsMyMessageRole, "isMyMessage"},
         {AttachmentRole, "attachments"},
+        {MessageTimeRole, "messageTime"},
     };
     return roles;
 }

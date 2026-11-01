@@ -47,7 +47,7 @@ void WebSocketClient::OnCloseConnection(){
 }
 
 void WebSocketClient::OnTextMessageRecieved(QString message){
-    qDebug() << message;
+    qDebug() << "[TIME] WS raw frame:" << message;
     QJsonDocument itemDoc = QJsonDocument::fromJson(message.toUtf8());
     QJsonObject rootObject = itemDoc.object();
     Message msg;
@@ -63,7 +63,18 @@ void WebSocketClient::OnTextMessageRecieved(QString message){
         msg.attachments.push_back(value.toString());
     }
 
-    msg.time = QDateTime::fromString(rootObject.value("time").toString(), Qt::ISODate).toLocalTime();
+    const QJsonValue timeField = rootObject.value("time");
+    const QString timeStr = timeField.toString();
+    qDebug() << "[TIME] WS time field: present=" << (timeField.type() != QJsonValue::Undefined)
+             << "type=" << timeField.type()
+             << "raw=" << timeStr;
+    msg.time = QDateTime::fromString(timeStr, Qt::ISODate).toLocalTime();
+    qDebug() << "[TIME] WS parsed msg.time valid=" << msg.time.isValid()
+             << "value=" << msg.time.toString(Qt::ISODate);
+    if (!msg.time.isValid()) {
+        msg.time = QDateTime::currentDateTime();
+        qDebug() << "[TIME] WS fallback to currentDateTime:" << msg.time.toString(Qt::ISODate);
+    }
 
     m_callBack(msg);
 }

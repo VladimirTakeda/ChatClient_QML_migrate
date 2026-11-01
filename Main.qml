@@ -34,5 +34,8 @@ ApplicationWindow {
        function onGoToMainWidget() {
            mainWindowStack_id.replace("qrc:/ChatClient/ChatClient_QML/qml/MainWidget.qml")
        }
+       function onGoToStartWidget() {
+           mainWindowStack_id.replace("qrc:/ChatClient/ChatClient_QML/qml/StartWidget.qml")
+       }
     }
 }

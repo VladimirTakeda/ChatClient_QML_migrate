@@ -1,5 +1,7 @@
 #include "contactsmodel.h"
 
+#include <QDebug>
+
 #include <src/model/data/dialogsmanager.h>
 
 namespace {
@@ -34,8 +36,15 @@ QVariant ContactsModel::data(const QModelIndex &index, int role) const
     }
     if (role == LastMessageTimeRole){
         auto lastMessage = dialog->GetLastMessage();
-        if (lastMessage)
-            return lastMessage->time.toString(timeFormat);
+        if (lastMessage) {
+            const QString formatted = lastMessage->time.toString(timeFormat);
+            qDebug() << "[TIME] ContactsModel::data row=" << index.row()
+                     << "chatId=" << dialog->GetChatId()
+                     << "time.isValid=" << lastMessage->time.isValid()
+                     << "iso=" << lastMessage->time.toString(Qt::ISODate)
+                     << "formatted=" << formatted;
+            return formatted;
+        }
         return "";
     }
     if(role == MissedMessageCountRole)

@@ -17,7 +17,8 @@ class ChatHistoryModel : public QAbstractListModel
     enum ContactsRoles{
         MessageRole = Qt::UserRole + 1,
         IsMyMessageRole,
-        AttachmentRole
+        AttachmentRole,
+        MessageTimeRole
     };
 
 public:
