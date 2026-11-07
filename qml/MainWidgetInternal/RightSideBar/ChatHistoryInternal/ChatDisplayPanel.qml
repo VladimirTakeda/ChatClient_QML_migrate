@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import Qt5Compat.GraphicalEffects
+import QtQuick.Effects
 
 import StyleModule 1.0
 
@@ -118,13 +118,26 @@ Item {
                         : ""
 
                     layer.enabled: delegateRoot.hasImage
-                    layer.effect: OpacityMask {
-                        maskSource: Rectangle {
-                            width: image_id.width
-                            height: image_id.height
-                            // Round only the top corners when text follows below;
-                            // round all four for image-only bubbles.
-                            radius: delegateRoot.hasText ? 0 : root_id._bubbleRadius
+                    layer.smooth: true
+                    layer.effect: MultiEffect {
+                        maskEnabled: true
+                        maskSource: imageMask_id
+                    }
+                    Item {
+                        id: imageMask_id
+                        visible: false
+                        layer.enabled: true
+                        layer.smooth: true
+                        width: image_id.width
+                        height: image_id.height
+
+                        Rectangle {
+                            width: parent.width
+                            // Если снизу текст, прямоугольник вытягивается за нижнюю границу,
+                            // и скруглёнными остаются только верхние углы.
+                            height: parent.height + (delegateRoot.hasText ? root_id._bubbleRadius : 0)
+                            radius: root_id._bubbleRadius
+                            color: "black"
                         }
                     }
                 }

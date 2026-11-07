@@ -1,6 +1,8 @@
 #pragma once
 
+#include <QDataStream>
 #include <QString>
+#include <optional>
 
 /// Return curr user id from QSettings file
 int getCurrUserId();
@@ -9,31 +11,28 @@ QString getCurrDeviceId();
 /// Return curr user name from QSettings file
 QString getCurrUserName();
 
-
 template<typename T>
 QDataStream& operator<<(QDataStream& out, const std::optional<T>& opt)
 {
-    QChar value = opt.has_value() ? QChar::fromLatin1(0) : QChar::fromLatin1(1);
-    out << value;
+    out << opt.has_value();
     if (opt.has_value()) {
-        out << opt.value();
+        out << *opt;
     }
     return out;
 }
 
-// Оператор >> для чтения std::optional<T> из QDataStream
 template<typename T>
 QDataStream& operator>>(QDataStream& in, std::optional<T>& opt)
 {
-    QChar hasValue;
+    bool hasValue = false;
     in >> hasValue;
 
-    if (hasValue.isNull()) {
-        T value;
+    if (hasValue) {
+        T value{};
         in >> value;
         opt = std::move(value);
     } else {
-        opt = std::nullopt;
+        opt.reset();
     }
     return in;
 }
