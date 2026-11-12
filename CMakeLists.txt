@@ -7,7 +7,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD 20)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Quick WebSockets Widgets)
 
 qt_standard_project_setup()

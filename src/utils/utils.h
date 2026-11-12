@@ -1,6 +1,8 @@
 #pragma once
 
+#include <QDataStream>
 #include <QString>
+#include <optional>
 
 /// Return curr user id from QSettings file
 int getCurrUserId();
