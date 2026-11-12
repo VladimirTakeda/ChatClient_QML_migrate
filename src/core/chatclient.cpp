@@ -24,7 +24,7 @@
 #include <src/utils/utils.h>
 
 //const int port = 49313;
-const QString host = "myapp.local";
+const QString host = "zloypes.com";
 //const QString host = "localhost";
 
 class QListWidgetItem;
@@ -68,7 +68,7 @@ ChatClient::ChatClient(std::shared_ptr<ContactsModel> contactsModel, std::shared
 ChatClient::~ChatClient(){};
 
 void ChatClient::SetUpWSConnection(){
-    QString url = QString("ws://%1/create?user_id=%2&device_id=%3").arg(host).arg(getCurrUserId()).arg(getCurrDeviceId());
+    QString url = QString("wss://%1/create?user_id=%2&device_id=%3").arg(host).arg(getCurrUserId()).arg(getCurrDeviceId());
     m_client.reset(new WebSocket::WebSocketClient(QUrl(url), std::bind(&ChatClient::GotNewMessage, this, std::placeholders::_1)));
     connect(&m_client->m_socket, &QWebSocket::connected, this, []() {
         qDebug() << "WebSocket connected successfully";
@@ -210,7 +210,7 @@ void ChatClient::DownLoadAttachments(const QString& attachedFileName){
 
         QUrl url;
 
-        url.setScheme("http");
+        url.setScheme("https");
         url.setHost(host);
         url.setPath("/getFile");
         request.setUrl(url);
@@ -311,7 +311,7 @@ void ChatClient::sendImage(const QString& path, const QString& message){
     multiPart->append(filePart);
 
     QUrl url;
-    url.setScheme("http");
+    url.setScheme("https");
     url.setHost(host);
     url.setPath("/uploadFile");
 
@@ -355,7 +355,7 @@ void ChatClient::LookingForPeople(const QString& prefix)
 
     QUrl url;
 
-    url.setScheme("http");
+    url.setScheme("https");
     url.setHost(host);
     url.setPath("/get_users_by_prefix");
     request.setUrl(url);
@@ -415,7 +415,7 @@ void ChatClient::SendCreateDialogReq(int fromUser, int toUser, const QString& to
 
     QUrl url;
 
-    url.setScheme("http");
+    url.setScheme("https");
     url.setHost(host);
     url.setPath("/chats");
     request.setUrl(url);
@@ -508,7 +508,7 @@ void ChatClient::registerUser(const QString& login, const QString& password)
 
     QUrl url;
 
-    url.setScheme("http");
+    url.setScheme("https");
     url.setHost(host);
     url.setPath("/user/register");
     request.setUrl(url);
