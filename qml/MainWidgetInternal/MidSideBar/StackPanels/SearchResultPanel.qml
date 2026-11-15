@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import StyleModule 1.0
+import ChatClient_QML 1.0
 
 Item{
     id: searchResultPanel_id
@@ -10,7 +11,7 @@ Item{
         anchors.fill: parent
         interactive: false
         clip: true
-        model: searchModel
+        model: SearchModel
         spacing: 0
 
         delegate: DelegateSearchPanel{

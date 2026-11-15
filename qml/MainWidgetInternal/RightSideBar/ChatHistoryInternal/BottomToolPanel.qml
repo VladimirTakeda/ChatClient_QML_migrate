@@ -72,7 +72,7 @@ Rectangle{
                     Keys.onPressed:(event)=>{
                                        if ((event.key === Qt.Key_Enter || event.key === Qt.Key_Return) &&
                                            messageField_id.length) {
-                                           chatClientObj.sendNewMessage(messageField_id.text, {})
+                                           ChatClient.sendNewMessage(messageField_id.text, {})
                                            messageField_id.clear()
                                        }
                                    }
@@ -110,7 +110,7 @@ Rectangle{
                     onEntered: sendMessage_id.icon.color = Qt.darker("#23B8EE", 1.2)
                     onExited: sendMessage_id.icon.color = "transparent"
                     onClicked: {
-                        chatClientObj.sendNewMessage(messageField_id.text, {})
+                        ChatClient.sendNewMessage(messageField_id.text, {})
                         messageField_id.clear()
                     }
                 }

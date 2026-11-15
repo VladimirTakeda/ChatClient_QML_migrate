@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import ChatClient_QML 1.0
 
 Rectangle{
     id: delegat_id
@@ -18,7 +19,7 @@ Rectangle{
         readonly property string pathSearchResultPanel: "qrc:/ChatClient/ChatClient_QML/qml/MainWidgetInternal/MidSideBar/StackPanels/SearchResultPanel.qml"
         onClicked:{
             console.log("current index", index)
-            searchModel.onItemClicked(index)
+            SearchModel.onItemClicked(index)
             stackViewSearchPanel_id.replace(contactStack_id)
 
             searchPanel_id.innerSearch.messageBox_id.clear()

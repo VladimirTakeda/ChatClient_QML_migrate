@@ -2,6 +2,7 @@
 
 #include <QAbstractListModel>
 #include <QObject>
+#include <QPointer>
 #include <QQmlEngine>
 #include <QCoreApplication>
 
@@ -12,6 +13,7 @@ class ChatHistoryModel : public QAbstractListModel
 {
     Q_OBJECT
     QML_ELEMENT
+    QML_SINGLETON
     Q_PROPERTY(QString imagesPath READ imagesPath CONSTANT)
 
     enum ContactsRoles{
@@ -22,7 +24,10 @@ class ChatHistoryModel : public QAbstractListModel
     };
 
 public:
-    explicit ChatHistoryModel(QObject *parent = nullptr);
+    /// No default argument on purpose, see ContactsModel
+    explicit ChatHistoryModel(QObject *parent);
+    /// QML_SINGLETON factory: gives the QML engine the one ChatHistoryModel that main() created
+    static ChatHistoryModel *create(QQmlEngine *, QJSEngine *);
 
     /// returns the information about message by index and role (index represents the message, role represents the exact info about the message)
     QVariant data(const QModelIndex &index = {}, int role = Qt::DisplayRole) const override;
@@ -47,6 +52,7 @@ signals:
     void scrollToBottom();
 
 private:
+    static inline QPointer<ChatHistoryModel> s_instance;
 
     std::shared_ptr<Dialog> m_chatHistory;
     bool m_signalConnected;

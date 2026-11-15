@@ -2,6 +2,7 @@
 
 #include <QAbstractListModel>
 #include <QObject>
+#include <QPointer>
 #include <QQmlEngine>
 
 struct UserInfo
@@ -23,8 +24,14 @@ enum ContactsRoles{
 class SearchModel : public QAbstractListModel
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
+
 public:
-    explicit SearchModel(QObject *parent = nullptr);
+    /// No default argument on purpose, see ContactsModel
+    explicit SearchModel(QObject *parent);
+    /// QML_SINGLETON factory: gives the QML engine the one SearchModel that main() created
+    static SearchModel *create(QQmlEngine *, QJSEngine *);
 
     QVariant data(const QModelIndex &index = {}, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
@@ -45,6 +52,8 @@ signals:
     void ItemClicked(int index);
 
 private:
+    static inline QPointer<SearchModel> s_instance;
+
     std::vector<UserInfo> m_foundedUsers;
     bool m_signalConnected;
 };

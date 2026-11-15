@@ -14,13 +14,13 @@ Rectangle{
     // Mirror the C++ side's current chat name into a local property. We update
     // it explicitly via Connections — relying on the Q_PROPERTY NOTIFY alone
     // is fragile if AUTOMOC regen hasn't fully caught up.
-    property string chatName: chatClientObj.currentChatName
+    property string chatName: ChatClient.currentChatName
     readonly property bool hasChat: chatName.length > 0
 
     Connections {
-        target: chatClientObj
+        target: ChatClient
         function onCurrentChatNameChanged() {
-            topPanel_id.chatName = chatClientObj.currentChatName
+            topPanel_id.chatName = ChatClient.currentChatName
         }
     }
 

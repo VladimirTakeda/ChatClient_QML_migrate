@@ -124,7 +124,7 @@ Rectangle {
                         Text {
                             anchors.centerIn: parent
                             text: {
-                                var n = chatClientObj.currentUserName
+                                var n = ChatClient.currentUserName
                                 return n && n.length > 0 ? n.charAt(0).toUpperCase() : "?"
                             }
                             color: "white"
@@ -135,7 +135,7 @@ Rectangle {
 
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: chatClientObj.currentUserName || qsTr("User")
+                        text: ChatClient.currentUserName || qsTr("User")
                         font.pixelSize: 22
                         font.weight: Font.DemiBold
                         color: "black"
@@ -430,7 +430,7 @@ Rectangle {
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
                             confirmLogout_id.close()
-                            chatClientObj.logout()
+                            ChatClient.logout()
                         }
                     }
                 }

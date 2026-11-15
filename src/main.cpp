@@ -1,6 +1,5 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <QQmlContext>
 
 #include <src/model/contactsmodel.h>
 #include <src/model/searchmodel.h>
@@ -12,19 +11,17 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    std::shared_ptr<SearchModel> searchModel = std::make_shared<SearchModel>();
-    std::shared_ptr<ContactsModel> contactsModel = std::make_shared<ContactsModel>();
-    std::shared_ptr<ChatHistoryModel> historyModel = std::make_shared<ChatHistoryModel>();
+    std::shared_ptr<SearchModel> searchModel = std::make_shared<SearchModel>(nullptr);
+    std::shared_ptr<ContactsModel> contactsModel = std::make_shared<ContactsModel>(nullptr);
+    std::shared_ptr<ChatHistoryModel> historyModel = std::make_shared<ChatHistoryModel>(nullptr);
 
+    // ChatClient and the three models are QML_SINGLETON types: each one remembers its only instance
+    // in its constructor and QML gets it from the static create(). So they must be constructed
+    // here, before the engine loads Main.qml. QML then uses them by type name (ChatClient, ContactsModel, ...).
     ChatClient chatClient(contactsModel, searchModel, historyModel);
 
     QQmlApplicationEngine engine;
     engine.addImportPath(":/ChatClient");
-    engine.rootContext()->setContextProperty("chatClientObj", &chatClient);
-    engine.rootContext()->setContextProperty("searchModel", searchModel.get());
-    engine.rootContext()->setContextProperty("contactsModel", contactsModel.get());
-    engine.rootContext()->setContextProperty("chatHistoryModel", historyModel.get());
-    //engine.setInitialProperties({{"chatClientObj", QVariant::fromValue(&chatClient)}});
 
     const QUrl url(QStringLiteral("qrc:/ChatClient/ChatClient_QML/Main.qml"));
 

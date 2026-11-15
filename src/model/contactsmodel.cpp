@@ -3,6 +3,7 @@
 #include <QDebug>
 
 #include <src/model/data/dialogsmanager.h>
+#include <src/utils/qmlsingleton.h>
 
 namespace {
 const QString timeFormat = "h:mm AP";
@@ -12,6 +13,13 @@ ContactsModel::ContactsModel(QObject *parent)
     : QAbstractListModel{parent}, m_signalConnected{false}
 
 {
+    Q_ASSERT_X(!s_instance, "ContactsModel", "ContactsModel must be created only once");
+    s_instance = this;
+}
+
+ContactsModel *ContactsModel::create(QQmlEngine *, QJSEngine *)
+{
+    return ExposeExistingInstance(s_instance.data());
 }
 
 int ContactsModel::rowCount(const QModelIndex &parent) const

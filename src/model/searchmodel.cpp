@@ -1,5 +1,7 @@
 #include "searchmodel.h"
 
+#include <src/utils/qmlsingleton.h>
+
 UserInfo::UserInfo(int userId, QString&& userNickname) : userId(userId), userLogin(std::move(userNickname)){
 
 }
@@ -12,7 +14,13 @@ SearchModel::SearchModel(QObject *parent)
     : QAbstractListModel{parent}, m_signalConnected{false}
 
 {
+    Q_ASSERT_X(!s_instance, "SearchModel", "SearchModel must be created only once");
+    s_instance = this;
+}
 
+SearchModel *SearchModel::create(QQmlEngine *, QJSEngine *)
+{
+    return ExposeExistingInstance(s_instance.data());
 }
 
 int SearchModel::rowCount(const QModelIndex &parent) const

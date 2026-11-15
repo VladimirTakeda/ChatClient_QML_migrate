@@ -2,6 +2,7 @@
 
 #include <QAbstractListModel>
 #include <QObject>
+#include <QPointer>
 #include <QQmlEngine>
 
 class DialogsManager;
@@ -11,6 +12,7 @@ class ContactsModel : public QAbstractListModel
 {
     Q_OBJECT
     QML_ELEMENT
+    QML_SINGLETON
 
     enum ContactsRoles{
         ChatNameRole = Qt::UserRole + 1,
@@ -21,7 +23,11 @@ class ContactsModel : public QAbstractListModel
     };
 
 public:
-    explicit ContactsModel(QObject *parent = nullptr);
+    /// No default argument on purpose: a default-constructible QML_SINGLETON is created by the QML engine
+    /// with `new`, ignoring create(), and QML would get a second, empty model (see qmlsingleton.h)
+    explicit ContactsModel(QObject *parent);
+    /// QML_SINGLETON factory: gives the QML engine the one ContactsModel that main() created
+    static ContactsModel *create(QQmlEngine *, QJSEngine *);
 
     /// returns the information about contact by index and role (index represents the contact, role represents the exact info about the contact)
     QVariant data(const QModelIndex &index = {}, int role = Qt::DisplayRole) const override;
@@ -37,6 +43,7 @@ public:
     std::shared_ptr<DialogsManager> dataSource() const;
 
 private:
+    static inline QPointer<ContactsModel> s_instance;
 
     std::shared_ptr<DialogsManager> m_dialogsManager;
     bool m_signalConnected;

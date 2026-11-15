@@ -3,6 +3,7 @@
 #include <QDebug>
 
 #include <src/model/data/dialog.h>
+#include <src/utils/qmlsingleton.h>
 
 namespace {
 const QString timeFormat = "h:mm AP";
@@ -12,6 +13,13 @@ ChatHistoryModel::ChatHistoryModel(QObject *parent)
     : QAbstractListModel{parent}, m_signalConnected{false}
 
 {
+    Q_ASSERT_X(!s_instance, "ChatHistoryModel", "ChatHistoryModel must be created only once");
+    s_instance = this;
+}
+
+ChatHistoryModel *ChatHistoryModel::create(QQmlEngine *, QJSEngine *)
+{
+    return ExposeExistingInstance(s_instance.data());
 }
 
 int ChatHistoryModel::rowCount(const QModelIndex &parent) const

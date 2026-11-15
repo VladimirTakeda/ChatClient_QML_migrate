@@ -4,12 +4,14 @@
 
 #include <QString>
 #include <QObject>
+#include <QPointer>
 #include <QQmlEngine>
+#include <QDateTime>
+#include <QNetworkReply>
 
 #include <qqml.h>
 
 class QNetworkAccessManager;
-class QNetworkReply;
 class HttpClient;
 class UserInfo;
 
@@ -29,6 +31,8 @@ class Dialog;
 class ChatClient : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
     Q_PROPERTY(QString SearchPrefix READ SearchPrefix WRITE setSearchPrefix NOTIFY SearchPrefixChanged FINAL)
     Q_PROPERTY(QString currentChatName READ currentChatName NOTIFY currentChatNameChanged FINAL)
     Q_PROPERTY(QString currentUserName READ currentUserName NOTIFY currentUserNameChanged FINAL)
@@ -38,6 +42,8 @@ public:
                std::shared_ptr<ChatHistoryModel> chatHistoryModel,
                QObject *parent = nullptr);
     ~ChatClient();
+    /// @brief QML_SINGLETON factory: gives the QML engine the one ChatClient that main() created
+    static ChatClient *create(QQmlEngine *, QJSEngine *);
     /// @brief Establish websocket connection between desktop client and backend side
     void SetUpWSConnection();
     /// @brief Return search prefix for users name
@@ -111,6 +117,8 @@ private slots:
     void OnGotNotification(const QString& name, const QString& text, int64_t unreadCount, const QDateTime& time);
 
 private:
+    /// The only instance (set in the constructor), it is what create() hands to QML
+    static inline QPointer<ChatClient> s_instance;
 
     std::unique_ptr<WebSocket::WebSocketClient> m_client;
     std::shared_ptr<HttpClient> m_httpClient;

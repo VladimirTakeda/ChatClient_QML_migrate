@@ -24,7 +24,7 @@ Rectangle{
         Text {
             anchors.centerIn: parent
             text: {
-                var n = chatClientObj.currentUserName
+                var n = ChatClient.currentUserName
                 return n && n.length > 0 ? n.charAt(0).toUpperCase() : "?"
             }
             color: "white"

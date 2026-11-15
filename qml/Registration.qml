@@ -3,6 +3,7 @@ import QtQuick.Controls.Basic
 import QtQuick.Layouts
 
 import StyleModule 1.0
+import ChatClient_QML 1.0
 
 Rectangle{
     readonly property real minSize_: textSecond_id.width
@@ -124,7 +125,7 @@ Rectangle{
                 }
 
                 onClicked: {
-                    chatClientObj.registerUser(login_id.text, password.text)
+                    ChatClient.registerUser(login_id.text, password.text)
                 }
             }
 
