@@ -1,34 +1,32 @@
-#ifndef WEBSOCKETCLIENT_H
-#define WEBSOCKETCLIENT_H
+#pragma once
 
-
-#include <QtWebSockets/QWebSocketServer>
-#include <QtWebSockets/QWebSocket>
-
-#include <QObject>
 #include <QDebug>
+#include <QObject>
+#include <QtWebSockets/QWebSocket>
+#include <QtWebSockets/QWebSocketServer>
 
-namespace WebSocket{
+namespace WebSocket {
 
 /// A struct for websocket message
-struct Message{
+struct Message {
     QString text;
     std::optional<QString> chatName;
     int userFrom;
     int chatTo;
     bool isMyMessage;
-    QVector<QString> attachments; //vector of path (1 right now)
+    QVector<QString> attachments; // vector of path (1 right now)
     QDateTime time;
 };
 
 /// A class to provide websocket (bidirectional) connection
-class WebSocketClient : public QObject{
+class WebSocketClient : public QObject {
 public:
     /// @brief Creates a socket and set up the slots for connection
-    WebSocketClient(const QUrl &url, std::function<void(Message)> callBack, QObject* parent = nullptr);
+    WebSocketClient(const QUrl &url, std::function<void(Message)> callBack,
+                    QObject *parent = nullptr);
     ~WebSocketClient();
     /// @brief send text message to socket
-    void SendTextMessage(const QString& msg);
+    void SendTextMessage(const QString &msg);
 private slots:
     /// @brief Set up slot to message recieving
     void OnNewConnection();
@@ -38,12 +36,12 @@ private slots:
     void OnTextMessageRecieved(QString message);
     /// @brief We don't use ssl right now, may be delete this?
     void handle_ssl_errors(const QList<QSslError> &errors);
+
 public:
     QWebSocket m_socket;
+
 private:
     std::function<void(Message)> m_callBack;
 };
 
-}
-
-#endif // WEBSOCKETCLIENT_H
+} // namespace WebSocket

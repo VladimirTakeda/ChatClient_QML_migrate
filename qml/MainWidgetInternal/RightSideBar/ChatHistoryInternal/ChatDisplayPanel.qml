@@ -3,6 +3,7 @@ import QtQuick.Controls.Basic
 import Qt5Compat.GraphicalEffects
 
 import StyleModule 1.0
+import ChatClient_QML 1.0
 
 Item {
     property alias __listViewDisplayPanel: listViewDisplayPanel_id
@@ -114,7 +115,7 @@ Item {
                     asynchronous: true
                     cache: true
                     source: delegateRoot.hasImage
-                        ? Qt.resolvedUrl(chatHistoryModel.imagesPath + model.attachments[0])
+                        ? Qt.resolvedUrl(ChatHistoryModel.imagesPath + model.attachments[0])
                         : ""
 
                     layer.enabled: delegateRoot.hasImage
@@ -215,7 +216,7 @@ Item {
         anchors.rightMargin: 4
         clip: true
         spacing: 3
-        model: chatHistoryModel
+        model: ChatHistoryModel
         delegate: messageDelegate
 
         ScrollBar.vertical: ScrollBar {
@@ -229,7 +230,7 @@ Item {
         }
 
         Connections {
-            target: chatHistoryModel
+            target: ChatHistoryModel
             function onScrollToBottom() {
                 listViewDisplayPanel_id.positionViewAtEnd()
             }

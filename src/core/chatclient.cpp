@@ -10,6 +10,7 @@
 #include <QFileDialog>
 #include <QHttpMultiPart>
 #include <QUrlQuery>
+#include <utility>
 
 #include "chatclient.h"
 
@@ -22,6 +23,7 @@
 #include <src/network/httpclient.h>
 
 #include <src/utils/utils.h>
+#include <src/utils/qmlsingleton.h>
 
 //const int port = 49313;
 const QString host = "zloypes.com";
@@ -39,7 +41,7 @@ std::vector<UserInfo> ParseUsers(QByteArray reply)
     QJsonArray array = rootObject.value("users").toArray();
     std::vector<UserInfo> answer;
     int currUserId = getCurrUserId();
-    for (const QJsonValue & value : array) {
+    for (const auto & value : std::as_const(array)) {
         QJsonObject obj = value.toObject();
         if (obj["id"].toInt() != currUserId)
             answer.emplace_back(obj["id"].toInt(), obj["nickname"].toString());
@@ -57,6 +59,9 @@ ChatClient::ChatClient(std::shared_ptr<ContactsModel> contactsModel, std::shared
     m_searchModel(searchModel),
     m_chatHistoryModel(chatHistoryModel)
 {
+    Q_ASSERT_X(!s_instance, "ChatClient", "ChatClient must be created only once");
+    s_instance = this;
+
     loadDialogs();
 
     m_contactsModel->SetDataSource(m_dialogsManager);
@@ -66,6 +71,11 @@ ChatClient::ChatClient(std::shared_ptr<ContactsModel> contactsModel, std::shared
 
 //need because of std::unique_ptr<WebSocket::WebSocketClient> m_client field
 ChatClient::~ChatClient(){};
+
+ChatClient *ChatClient::create(QQmlEngine *, QJSEngine *)
+{
+    return ExposeExistingInstance(s_instance.data());
+}
 
 void ChatClient::SetUpWSConnection(){
     QString url = QString("wss://%1/create?user_id=%2&device_id=%3").arg(host).arg(getCurrUserId()).arg(getCurrDeviceId());
@@ -303,8 +313,13 @@ void ChatClient::sendImage(const QString& path, const QString& message){
     QHttpPart filePart;
     filePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"file\"; filename=\"" + scalesPath + "\""));
 
-    QFile *file = new QFile(scalesPath);
-    file->open(QIODevice::ReadOnly);
+    QFile *file = new QFile(scalesPath, multiPart);   // parent сразу
+    if (!file->open(QIODevice::ReadOnly)) {
+        qWarning() << "sendImage: cannot open" << scalesPath << file->errorString();
+        delete multiPart;                              // удалит и file как дочерний
+        return;
+    }
+    filePart.setBodyDevice(file);
     filePart.setBodyDevice(file);
     file->setParent(multiPart);
 

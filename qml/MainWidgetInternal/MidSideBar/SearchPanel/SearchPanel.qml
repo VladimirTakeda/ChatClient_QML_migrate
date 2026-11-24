@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import StyleModule 1.0
+import ChatClient_QML 1.0
 
 Rectangle{
     property alias innerSearch: innerSearchArea_id
@@ -36,7 +37,7 @@ Rectangle{
                 } else if (text.trim() !== "" && stackViewSearchPanel_id.currentItem !== searchResultStack_id) {
                     stackViewSearchPanel_id.replace(searchResultStack_id)
                 }
-                chatClientObj.SearchPrefix = text
+                ChatClient.SearchPrefix = text
             }
         }
 

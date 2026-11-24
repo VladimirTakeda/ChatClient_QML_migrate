@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import StyleModule 1.0
+import ChatClient_QML 1.0
 
 
 Rectangle{
@@ -22,7 +23,7 @@ Rectangle{
         onClicked: {
             chatHistory_id.__bottomToolPanel.__staticBox.__rowLayoutBottomToolPanel_id.__inputContainer.__messageBox.forceActiveFocus()
             __lv.currentIndex = model.index
-            chatClientObj.updateCurrentChat(model.index)
+            ChatClient.updateCurrentChat(model.index)
         }
         onEntered: {
             if(__lv.currentIndex !== model.index)

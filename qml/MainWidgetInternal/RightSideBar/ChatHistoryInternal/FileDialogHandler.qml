@@ -4,6 +4,7 @@ import QtQuick.Controls.Basic
 import QtQuick.Dialogs
 
 import StyleModule 1.0
+import ChatClient_QML 1.0
 
 Rectangle{
     id: fileDialogHandler_id
@@ -336,7 +337,7 @@ Rectangle{
                     text: "Send"
 
                     onClicked: {
-                        chatClientObj.sendImage(folderDialog_id.selectedFile, messageBox_id.text)
+                        ChatClient.sendImage(folderDialog_id.selectedFile, messageBox_id.text)
                         dialog_id.close()
                     }
                     contentItem: Text {

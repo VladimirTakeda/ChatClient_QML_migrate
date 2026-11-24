@@ -10,8 +10,7 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Quick WebSockets Widgets)
 
-qt_standard_project_setup()
-
+qt_standard_project_setup(REQUIRES 6.8)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(appChatClient_QML
@@ -23,22 +22,16 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/network/httpclient.cpp
         src/model/data/dialog.cpp
         src/model/data/dialogsmanager.cpp
-
-
         src/core/chatclient.cpp
-
         src/utils/utils.cpp
-
 
         src/network/websocketclient.h
         src/network/httpclient.h
         src/model/data/dialog.h
         src/model/data/dialogsmanager.h
-
-
         src/core/chatclient.h
-
         src/utils/utils.h
+        src/utils/qmlsingleton.h
     )
 endif()
 

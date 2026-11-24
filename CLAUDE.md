@@ -24,7 +24,7 @@ The app follows a QML view ⇄ C++ model/controller split. `main.cpp` wires ever
 
 1. Instantiates three `QAbstractListModel` subclasses (`ContactsModel`, `SearchModel`, `ChatHistoryModel`) as `std::shared_ptr`s.
 2. Constructs the central `ChatClient`, passing it the three models.
-3. Exposes `chatClientObj` and the three models to QML via `QQmlContext::setContextProperty` (not `qmlRegisterType`) — QML files reference them by those names directly.
+3. Nothing is registered by hand. `ChatClient` and the three models are `QML_ELEMENT` + `QML_SINGLETON` types of the `ChatClient_QML` module. Each keeps its only instance in a static `s_instance` (set in the constructor) and its static `create()` returns it to the engine through `ExposeExistingInstance` (`src/utils/qmlsingleton.h`), which marks it C++-owned. QML files `import ChatClient_QML 1.0` and use the type names directly: `ChatClient`, `ContactsModel`, `SearchModel`, `ChatHistoryModel` (formerly the context properties `chatClientObj`, `contactsModel`, `searchModel`, `chatHistoryModel`).
 
 ### ChatClient (`src/core/chatclient.{h,cpp}`)
 
@@ -46,7 +46,7 @@ Orchestration hub between QML and the network/data layers. Owns the `WebSocketCl
 
 ### QML (`qml/`, `Main.qml`)
 
-Entry point is `Main.qml` → `StackView` that initially shows `StartWidget.qml` or `MainWidget.qml` depending on `chatClientObj.isUserRegistered()`. `MainWidget` is split into three panels under `qml/MainWidgetInternal/{LeftSideBar,MidSideBar,RightSideBar}/`. Shared styling lives in `qml/StyleModule/Style.qml`, which is built as a separate static Qt library (`StyleLib` / module `StyleModule`) via `qml/StyleModule/CMakeLists.txt`.
+Entry point is `Main.qml` → `StackView` that initially shows `StartWidget.qml` or `MainWidget.qml` depending on `ChatClient.isUserRegistered()`. `MainWidget` is split into three panels under `qml/MainWidgetInternal/{LeftSideBar,MidSideBar,RightSideBar}/`. Shared styling lives in `qml/StyleModule/Style.qml`, which is built as a separate static Qt library (`StyleLib` / module `StyleModule`) via `qml/StyleModule/CMakeLists.txt`.
 
 ### Local state
 
@@ -54,4 +54,5 @@ Per-user identity (user id, device id, user name) lives in `QSettings` (→ `set
 
 ## Gotchas
 
+- **Singletons must exist before QML loads:** the four singleton objects are constructed in `main()` before `engine.load()`, exactly once (constructors assert it). Do not give them a default constructor (e.g. `parent = nullptr` on a model): the engine would then build its own instance with `new` and ignore `create()`. A new QML file that uses any of them needs `import ChatClient_QML 1.0`, otherwise the name is an unresolved reference at runtime.
 - **Adding a QML file:** `qt_add_qml_module(...)` in the root `CMakeLists.txt` lists every QML file explicitly in `QML_FILES`. A new `.qml` not added there will not land in the `qrc:/ChatClient/` resource prefix and will fail to load at runtime with no compile error. This bites almost every UI change.

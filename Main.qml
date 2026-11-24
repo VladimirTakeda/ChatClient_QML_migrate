@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import ChatClient_QML 1.0
 
 ApplicationWindow {
     id: appWindow_id
@@ -15,7 +16,7 @@ ApplicationWindow {
     StackView{
         id: mainWindowStack_id
         anchors.fill: parent
-        initialItem: chatClientObj.isUserRegistered() ? "qml/MainWidget.qml" : "qml/StartWidget.qml"
+        initialItem: ChatClient.isUserRegistered() ? "qml/MainWidget.qml" : "qml/StartWidget.qml"
     }
     Item{
         focus: true
@@ -23,19 +24,19 @@ ApplicationWindow {
     }
 
     Connections {
-       target: Qt.application
-       function onAboutToQuit() {
-          chatClientObj.saveDialogs()
-       }
+        target: Qt.application
+        function onAboutToQuit() {
+            ChatClient.saveDialogs()
+        }
     }
 
     Connections {
-       target: chatClientObj
-       function onGoToMainWidget() {
-           mainWindowStack_id.replace("qrc:/ChatClient/ChatClient_QML/qml/MainWidget.qml")
-       }
-       function onGoToStartWidget() {
-           mainWindowStack_id.replace("qrc:/ChatClient/ChatClient_QML/qml/StartWidget.qml")
-       }
+        target: ChatClient
+        function onGoToMainWidget() {
+            mainWindowStack_id.replace("qrc:/ChatClient/ChatClient_QML/qml/MainWidget.qml")
+        }
+        function onGoToStartWidget() {
+            mainWindowStack_id.replace("qrc:/ChatClient/ChatClient_QML/qml/StartWidget.qml")
+        }
     }
 }

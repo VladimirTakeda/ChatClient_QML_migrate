@@ -1,22 +1,22 @@
 #pragma once
 
-#include <memory>
-
-#include <QString>
+#include <QDateTime>
+#include <QNetworkReply>
 #include <QObject>
+#include <QPointer>
 #include <QQmlEngine>
-
+#include <QString>
+#include <memory>
 #include <qqml.h>
 
 class QNetworkAccessManager;
-class QNetworkReply;
 class HttpClient;
 class UserInfo;
 
-namespace WebSocket{
+namespace WebSocket {
 class Message;
 class WebSocketClient;
-}
+} // namespace WebSocket
 
 class ContactsModel;
 class SearchModel;
@@ -26,19 +26,27 @@ class DialogsManager;
 class Dialog;
 
 /// Core engine for communication between UI and C++
-class ChatClient : public QObject
-{
+class ChatClient : public QObject {
     Q_OBJECT
-    Q_PROPERTY(QString SearchPrefix READ SearchPrefix WRITE setSearchPrefix NOTIFY SearchPrefixChanged FINAL)
-    Q_PROPERTY(QString currentChatName READ currentChatName NOTIFY currentChatNameChanged FINAL)
-    Q_PROPERTY(QString currentUserName READ currentUserName NOTIFY currentUserNameChanged FINAL)
+    QML_ELEMENT
+    QML_SINGLETON
+    Q_PROPERTY(QString SearchPrefix READ SearchPrefix WRITE setSearchPrefix NOTIFY
+                   SearchPrefixChanged FINAL)
+    Q_PROPERTY(QString currentChatName READ currentChatName NOTIFY
+                   currentChatNameChanged FINAL)
+    Q_PROPERTY(QString currentUserName READ currentUserName NOTIFY
+                   currentUserNameChanged FINAL)
 public:
     ChatClient(std::shared_ptr<ContactsModel> contactsModel,
                std::shared_ptr<SearchModel> searchModel,
                std::shared_ptr<ChatHistoryModel> chatHistoryModel,
                QObject *parent = nullptr);
     ~ChatClient();
-    /// @brief Establish websocket connection between desktop client and backend side
+    /// @brief QML_SINGLETON factory: gives the QML engine the one ChatClient that
+    /// main() created
+    static ChatClient *create(QQmlEngine *, QJSEngine *);
+    /// @brief Establish websocket connection between desktop client and backend
+    /// side
     void SetUpWSConnection();
     /// @brief Return search prefix for users name
     QString SearchPrefix() const;
@@ -46,34 +54,39 @@ public:
     void setSearchPrefix(const QString &newSearchPrefix);
     /// @brief Return the name of the currently-selected chat (empty if none)
     QString currentChatName() const;
-    /// @brief Return the current user's own display name (empty if not registered)
+    /// @brief Return the current user's own display name (empty if not
+    /// registered)
     QString currentUserName() const;
 
     /// @brief Loads dialogs from local memory
     Q_INVOKABLE void loadDialogs();
     /// @brief Saves dialogs to local memory
     Q_INVOKABLE void saveDialogs() const;
-    /// @brief Check if current user has been registered (if yes - establish websocket connection)
+    /// @brief Check if current user has been registered (if yes - establish
+    /// websocket connection)
     Q_INVOKABLE bool isUserRegistered();
     /// @brief Send a text message from current user to another (using websocket)
-    Q_INVOKABLE void sendNewMessage(const QString& message, QVector<QString> attachments);
+    Q_INVOKABLE void sendNewMessage(const QString &message,
+                                    QVector<QString> attachments);
     /// @brief Download the attachment if it doesn't presented in local storage
-    void DownLoadAttachments(const QString& message);
+    void DownLoadAttachments(const QString &message);
     /// @brief Set up curretn chat across the models by index (on UI update)
     Q_INVOKABLE void updateCurrentChat(int index);
     /// @brief Send image to backend and get it's id
-    Q_INVOKABLE void sendImage(const QString& path, const QString& message);
+    Q_INVOKABLE void sendImage(const QString &path, const QString &message);
     /// @brief Send user credentials and gets his id
-    Q_INVOKABLE void registerUser(const QString& login, const QString& password);
+    Q_INVOKABLE void registerUser(const QString &login, const QString &password);
     /// @brief Tear down the session: close socket, clear in-memory state,
     /// delete settings.ini / dialogs / images, and transition to StartWidget.
     Q_INVOKABLE void logout();
 
     /// @brief Save information about current user to local storage
-    void SaveUserInfo(int userId, const QString& deviceId, const QString& userName);
+    void SaveUserInfo(int userId, const QString &deviceId,
+                      const QString &userName);
 
 signals:
-    /// @brief We need to make a request to backend to get a new user list according the new prefix
+    /// @brief We need to make a request to backend to get a new user list
+    /// according the new prefix
     void SearchPrefixChanged();
     /// @brief We clicked to another dialog and wee need to redraw all messages
     void dialogIndexChanged(int index);
@@ -81,7 +94,8 @@ signals:
     void goToMainWidget();
     /// @brief Session ended — show the start/registration screen
     void goToStartWidget();
-    /// @brief The current chat changed (name/avatar in the top bar should refresh)
+    /// @brief The current chat changed (name/avatar in the top bar should
+    /// refresh)
     void currentChatNameChanged();
     /// @brief The current user's own name changed (e.g. after registration)
     void currentUserNameChanged();
@@ -90,15 +104,16 @@ signals:
 
 private:
     /// @brief Set the result of searching contacts to Search Model
-    void SetSearchResults(std::vector<UserInfo>&& results);
-    /// @brief Create a new dialog with one contact from Search Model or set up an existina dialog
+    void SetSearchResults(std::vector<UserInfo> &&results);
+    /// @brief Create a new dialog with one contact from Search Model or set up an
+    /// existina dialog
     void SetNewDialog(int index);
     /// @brief Send http request to create a new dialog
-    void SendCreateDialogReq(int fromUser, int toUser, const QString& toUserName);
+    void SendCreateDialogReq(int fromUser, int toUser, const QString &toUserName);
     /// @brief Qt slot to recieve a new message from any contact
     void GotNewMessage(WebSocket::Message mgs);
     /// @brief Send http request to search for contacts by prefix
-    void LookingForPeople(const QString& prefix);
+    void LookingForPeople(const QString &prefix);
 
 private slots:
     void RegisterUserReply(QNetworkReply *reply);
@@ -108,9 +123,13 @@ private slots:
     void DownLoadAttachmentsReply(QNetworkReply *reply);
 
     /// @brief TODO: it's a slot for push notifications
-    void OnGotNotification(const QString& name, const QString& text, int64_t unreadCount, const QDateTime& time);
+    void OnGotNotification(const QString &name, const QString &text,
+                           int64_t unreadCount, const QDateTime &time);
 
 private:
+    /// The only instance (set in the constructor), it is what create() hands to
+    /// QML
+    static inline QPointer<ChatClient> s_instance;
 
     std::unique_ptr<WebSocket::WebSocketClient> m_client;
     std::shared_ptr<HttpClient> m_httpClient;

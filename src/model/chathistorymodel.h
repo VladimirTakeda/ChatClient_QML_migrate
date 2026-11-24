@@ -1,20 +1,21 @@
 #pragma once
 
 #include <QAbstractListModel>
-#include <QObject>
-#include <QQmlEngine>
 #include <QCoreApplication>
+#include <QObject>
+#include <QPointer>
+#include <QQmlEngine>
 
 class Dialog;
 
 /// A QML model that represents the curretn dialog i.e. it's messages
-class ChatHistoryModel : public QAbstractListModel
-{
+class ChatHistoryModel : public QAbstractListModel {
     Q_OBJECT
     QML_ELEMENT
+    QML_SINGLETON
     Q_PROPERTY(QString imagesPath READ imagesPath CONSTANT)
 
-    enum ContactsRoles{
+    enum ContactsRoles {
         MessageRole = Qt::UserRole + 1,
         IsMyMessageRole,
         AttachmentRole,
@@ -22,12 +23,19 @@ class ChatHistoryModel : public QAbstractListModel
     };
 
 public:
-    explicit ChatHistoryModel(QObject *parent = nullptr);
+    /// No default argument on purpose, see ContactsModel
+    explicit ChatHistoryModel(QObject *parent);
+    /// QML_SINGLETON factory: gives the QML engine the one ChatHistoryModel that
+    /// main() created
+    static ChatHistoryModel *create(QQmlEngine *, QJSEngine *);
 
-    /// returns the information about message by index and role (index represents the message, role represents the exact info about the message)
-    QVariant data(const QModelIndex &index = {}, int role = Qt::DisplayRole) const override;
+    /// returns the information about message by index and role (index represents
+    /// the message, role represents the exact info about the message)
+    QVariant data(const QModelIndex &index = {},
+                  int role = Qt::DisplayRole) const override;
     /// set an information about the message by index
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+    bool setData(const QModelIndex &index, const QVariant &value,
+                 int role = Qt::EditRole) override;
     /// Returns the current model size
     int rowCount(const QModelIndex &parent = {}) const override;
     /// ????
@@ -40,13 +48,15 @@ public:
     std::shared_ptr<Dialog> dataSource() const;
 
     QString imagesPath() const {
-        return QString("file:///") + QCoreApplication::applicationDirPath() + "/../../../images/";
+        return QString("file:///") + QCoreApplication::applicationDirPath() +
+               "/../../../images/";
     }
 signals:
     /// A sigmal to QML to draw the history from the end (not from the start)
     void scrollToBottom();
 
 private:
+    static inline QPointer<ChatHistoryModel> s_instance;
 
     std::shared_ptr<Dialog> m_chatHistory;
     bool m_signalConnected;

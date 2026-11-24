@@ -3,6 +3,7 @@
 #include <QDebug>
 
 #include <src/model/data/dialogsmanager.h>
+#include <src/utils/qmlsingleton.h>
 
 namespace {
 const QString timeFormat = "h:mm AP";
@@ -12,29 +13,34 @@ ContactsModel::ContactsModel(QObject *parent)
     : QAbstractListModel{parent}, m_signalConnected{false}
 
 {
+    Q_ASSERT_X(!s_instance, "ContactsModel",
+               "ContactsModel must be created only once");
+    s_instance = this;
 }
 
-int ContactsModel::rowCount(const QModelIndex &parent) const
-{
+ContactsModel *ContactsModel::create(QQmlEngine *, QJSEngine *) {
+    return ExposeExistingInstance(s_instance.data());
+}
+
+int ContactsModel::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent)
     return m_dialogsManager->DialogsCount();
 }
 
-QVariant ContactsModel::data(const QModelIndex &index, int role) const
-{
+QVariant ContactsModel::data(const QModelIndex &index, int role) const {
     if (index.row() < 0 || index.row() >= m_dialogsManager->DialogsCount())
         return {};
 
     const auto &dialog = m_dialogsManager->GetDialogByIndex(index.row());
     if (role == ChatNameRole)
         return dialog->GetName();
-    if (role == LastMessageRole){
+    if (role == LastMessageRole) {
         auto lastMessage = dialog->GetLastMessage();
         if (lastMessage)
             return lastMessage->text;
         return "";
     }
-    if (role == LastMessageTimeRole){
+    if (role == LastMessageTimeRole) {
         auto lastMessage = dialog->GetLastMessage();
         if (lastMessage) {
             const QString formatted = lastMessage->time.toString(timeFormat);
@@ -47,43 +53,38 @@ QVariant ContactsModel::data(const QModelIndex &index, int role) const
         }
         return "";
     }
-    if(role == MissedMessageCountRole)
+    if (role == MissedMessageCountRole)
         return dialog->GetUnreadCount();
 
     return {};
 }
 
-bool ContactsModel::setData(const QModelIndex &index, const QVariant &value, int role)
-{
+bool ContactsModel::setData(const QModelIndex &index, const QVariant &value,
+                            int role) {
     return false;
 }
 
-Qt::ItemFlags ContactsModel::flags(const QModelIndex &index) const
-{
-    if(!index.isValid()) return Qt::NoItemFlags;
+Qt::ItemFlags ContactsModel::flags(const QModelIndex &index) const {
+    if (!index.isValid())
+        return Qt::NoItemFlags;
     return Qt::ItemIsEditable;
 }
 
-//names will be used in qml
-QHash<int, QByteArray> ContactsModel::roleNames() const
-{
-    QHash<int, QByteArray> roles{
-        {ChatNameRole, "chatName"},
-        {LastMessageRole, "lastMessage"},
-        {LastMessageTimeRole, "lastMessageTime"},
-        {MissedMessageCountRole, "missedMessageCount"}
-    };
+// names will be used in qml
+QHash<int, QByteArray> ContactsModel::roleNames() const {
+    QHash<int, QByteArray> roles{{ChatNameRole, "chatName"},
+                                 {LastMessageRole, "lastMessage"},
+                                 {LastMessageTimeRole, "lastMessageTime"},
+                                 {MissedMessageCountRole, "missedMessageCount"}};
     return roles;
 }
 
-std::shared_ptr<DialogsManager> ContactsModel::dataSource() const
-{
+std::shared_ptr<DialogsManager> ContactsModel::dataSource() const {
     return m_dialogsManager;
 }
 
-void ContactsModel::SetDataSource(std::shared_ptr<DialogsManager> manager)
-{
-    beginResetModel();      //reset data of model
+void ContactsModel::SetDataSource(std::shared_ptr<DialogsManager> manager) {
+    beginResetModel(); // reset data of model
 
     m_dialogsManager = manager;
 

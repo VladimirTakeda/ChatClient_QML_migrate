@@ -2,32 +2,40 @@
 
 #include <QAbstractListModel>
 #include <QObject>
+#include <QPointer>
 #include <QQmlEngine>
 
-struct UserInfo
-{
-    UserInfo(int, QString&&);
+struct UserInfo {
+    UserInfo(int, QString &&);
     QString userLogin;
     int userId;
 };
 
-bool operator == (const UserInfo& left, const UserInfo& right);
+bool operator==(const UserInfo &left, const UserInfo &right);
 
-enum ContactsRoles{
+enum ContactsRoles {
     ChatNameRole = Qt::UserRole + 1,
     UserIdRole,
     DialogIconRole
 };
 
 /// A QML model that represents founded users by prefix
-class SearchModel : public QAbstractListModel
-{
+class SearchModel : public QAbstractListModel {
     Q_OBJECT
-public:
-    explicit SearchModel(QObject *parent = nullptr);
+    QML_ELEMENT
+    QML_SINGLETON
 
-    QVariant data(const QModelIndex &index = {}, int role = Qt::DisplayRole) const override;
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+public:
+    /// No default argument on purpose, see ContactsModel
+    explicit SearchModel(QObject *parent);
+    /// QML_SINGLETON factory: gives the QML engine the one SearchModel that
+    /// main() created
+    static SearchModel *create(QQmlEngine *, QJSEngine *);
+
+    QVariant data(const QModelIndex &index = {},
+                  int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex &index, const QVariant &value,
+                 int role = Qt::EditRole) override;
 
     int rowCount(const QModelIndex &parent = {}) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
@@ -36,15 +44,18 @@ public:
     /// Set a new data source
     void SetDataSource(std::vector<UserInfo> &&results);
     /// Returns curretn data source
-    const std::vector<UserInfo>& dataSource() const;
+    const std::vector<UserInfo> &dataSource() const;
 
-    /// It's a slot to avaluate the click on item of the model, in this slot we should set up the dialog with clicked user
+    /// It's a slot to avaluate the click on item of the model, in this slot we
+    /// should set up the dialog with clicked user
     Q_INVOKABLE void onItemClicked(int index);
 
 signals:
     void ItemClicked(int index);
 
 private:
+    static inline QPointer<SearchModel> s_instance;
+
     std::vector<UserInfo> m_foundedUsers;
     bool m_signalConnected;
 };

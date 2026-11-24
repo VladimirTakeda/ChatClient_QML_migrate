@@ -2,8 +2,7 @@
 
 #include "dialog.h"
 
-QDataStream &operator<<(QDataStream &out, const Message& message)
-{
+QDataStream &operator<<(QDataStream &out, const Message &message) {
     out << message.isMyMessage;
     QByteArray text = message.text.toUtf8();
     uint64_t msgSize = static_cast<uint64_t>(text.size());
@@ -12,15 +11,14 @@ QDataStream &operator<<(QDataStream &out, const Message& message)
     out << message.time;
 
     out << static_cast<uint64_t>(message.attachments.size());
-    for (const auto& elem : message.attachments){
+    for (const auto &elem : message.attachments) {
         out << elem;
     }
 
     return out;
 }
 
-QDataStream &operator>>(QDataStream &in, Message& message)
-{
+QDataStream &operator>>(QDataStream &in, Message &message) {
     in >> message.isMyMessage;
     uint64_t size;
     in >> size;
@@ -34,7 +32,7 @@ QDataStream &operator>>(QDataStream &in, Message& message)
 
     uint64_t attachmentsSize;
     in >> attachmentsSize;
-    for (int i = 0; i < attachmentsSize; ++i){
+    for (int i = 0; i < attachmentsSize; ++i) {
         QString attachment;
         in >> attachment;
         message.attachments.push_back(attachment);
@@ -43,52 +41,38 @@ QDataStream &operator>>(QDataStream &in, Message& message)
     return in;
 }
 
-Dialog::Dialog(){};
+Dialog::Dialog() {};
 
-Dialog::Dialog(int64_t chatId, const QString& name) : m_chatId(chatId), m_dialogName(name), m_unreadCount(0)
-{
-}
+Dialog::Dialog(int64_t chatId, const QString &name)
+    : m_chatId(chatId), m_dialogName(name), m_unreadCount(0) {}
 
-size_t Dialog::Size() const
-{
-    return m_messages.size();
-}
+size_t Dialog::Size() const { return m_messages.size(); }
 
-void Dialog::addMessage(const Message& msg)
-{
+void Dialog::addMessage(const Message &msg) {
     m_messages.push_back(std::make_shared<Message>(msg));
 }
 
-int Dialog::GetChatId() const
-{
-    return m_chatId;
-}
+int Dialog::GetChatId() const { return m_chatId; }
 
-QString Dialog::GetName() const
-{
+QString Dialog::GetName() const {
     if (m_dialogName.has_value())
         return m_dialogName.value();
     return m_InterlocutorName.value();
 }
 
-std::shared_ptr<Message> Dialog::GetLastMessage() const
-{
+std::shared_ptr<Message> Dialog::GetLastMessage() const {
     return m_messages.empty() ? nullptr : m_messages.back();
 }
 
-int Dialog::GetUnreadCount() const{
-    return m_unreadCount;
-}
+int Dialog::GetUnreadCount() const { return m_unreadCount; }
 
-std::shared_ptr<Message> Dialog::operator[](size_t index) const{
+std::shared_ptr<Message> Dialog::operator[](size_t index) const {
     if (m_messages.size() <= index)
         throw std::out_of_range("");
     return m_messages[index];
 }
 
-
-QDataStream &operator<<(QDataStream &out, const Dialog &dialog)
-{
+QDataStream &operator<<(QDataStream &out, const Dialog &dialog) {
     out << dialog.m_chatId;
     out << dialog.m_unreadCount;
     out << dialog.m_dialogName;
@@ -96,14 +80,13 @@ QDataStream &operator<<(QDataStream &out, const Dialog &dialog)
 
     out << static_cast<uint64_t>(dialog.m_messages.size());
 
-    for (const std::shared_ptr<Message>& msg : dialog.m_messages) {
+    for (const std::shared_ptr<Message> &msg : dialog.m_messages) {
         out << *msg;
     }
     return out;
 }
 
-QDataStream &operator>>(QDataStream &in, Dialog &dialog)
-{
+QDataStream &operator>>(QDataStream &in, Dialog &dialog) {
     in >> dialog.m_chatId;
     in >> dialog.m_unreadCount;
     in >> dialog.m_dialogName;

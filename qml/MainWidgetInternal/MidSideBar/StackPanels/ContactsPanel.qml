@@ -16,10 +16,10 @@ Item{
             interactive: true
             clip: true
             spacing: 0
-            model: contactsModel
+            model: ContactsModel
 
             Connections {
-                target: chatClientObj
+                target: ChatClient
                 function onDialogIndexChanged(index) {
                     console.log("curr hightlight dialog is idx " + index)
                     listViewContacts_id.currentIndex = index;
