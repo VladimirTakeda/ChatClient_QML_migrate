@@ -24,19 +24,19 @@ ApplicationWindow {
     }
 
     Connections {
-       target: Qt.application
-       function onAboutToQuit() {
-          ChatClient.saveDialogs()
-       }
+        target: Qt.application
+        function onAboutToQuit() {
+            ChatClient.saveDialogs()
+        }
     }
 
     Connections {
-       target: ChatClient
-       function onGoToMainWidget() {
-           mainWindowStack_id.replace("qrc:/ChatClient/ChatClient_QML/qml/MainWidget.qml")
-       }
-       function onGoToStartWidget() {
-           mainWindowStack_id.replace("qrc:/ChatClient/ChatClient_QML/qml/StartWidget.qml")
-       }
+        target: ChatClient
+        function onGoToMainWidget() {
+            mainWindowStack_id.replace("qrc:/ChatClient/ChatClient_QML/qml/MainWidget.qml")
+        }
+        function onGoToStartWidget() {
+            mainWindowStack_id.replace("qrc:/ChatClient/ChatClient_QML/qml/StartWidget.qml")
+        }
     }
 }

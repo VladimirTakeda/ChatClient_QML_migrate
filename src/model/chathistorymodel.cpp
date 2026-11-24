@@ -73,7 +73,7 @@ QHash<int, QByteArray> ChatHistoryModel::roleNames() const
         {IsMyMessageRole, "isMyMessage"},
         {AttachmentRole, "attachments"},
         {MessageTimeRole, "messageTime"},
-    };
+        };
     return roles;
 }
 
